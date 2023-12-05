@@ -1,0 +1,32 @@
+// Place all the styles related to the Pokemon controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+// .form-check-input {
+//     display: none; /* Hide the default radio buttons */
+// }
+$main-color: #de9400;
+$secondary-color: #fff6a4;
+
+form {
+  padding: 4rem;
+  background-color: $main-color;
+  border-radius: 10px;
+
+  .bg-input {
+    background-color: $secondary-color;
+
+    &:focus {
+      background-color: $secondary-color;
+    }
+  }
+}
+
+.card-body {
+  background-color: $secondary-color;
+  
+  &:hover {
+    border: 1px solid $main-color;
+    border-radius: 5px;
+  }
+}

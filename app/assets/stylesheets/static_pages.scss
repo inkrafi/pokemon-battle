@@ -3,7 +3,7 @@
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
 // Variabel warna overlay (misalnya, hitam dengan kekakuan 0.5)
-$overlay-color: rgba(0, 0, 0, 0.6);
+$overlay-color: rgba(0, 0, 0, 0.7);
 $primary-color: #d8940c;
 
 .button-primary {
@@ -15,22 +15,25 @@ $primary-color: #d8940c;
   cursor: pointer;
 }
 
-.background {
-  background: url('background.png');
-  background-size: cover; /* atau background-size: contain; tergantung kebutuhan Anda */
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 100vh; /* Sesuaikan tinggi sesuai kebutuhan Anda */
-  color: white; /* Warna teks agar terlihat jelas di atas gambar */
-  text-align: center; /* Pusatkan teks */
-  padding: 20px; /* Berikan padding agar teks tidak terlalu dekat dengan tepi div */
-}
+// .background {
+//   background: url('background.png');
+//   background-size: cover; /* atau background-size: contain; tergantung kebutuhan Anda */
+//   background-position: center;
+//   background-repeat: no-repeat;
+//   height: 100vh; /* Sesuaikan tinggi sesuai kebutuhan Anda */
+//   color: white; /* Warna teks agar terlihat jelas di atas gambar */
+//   text-align: center; /* Pusatkan teks */
+//   padding: 20px; /* Berikan padding agar teks tidak terlalu dekat dengan tepi div */
+// }
 
 // Gaya elemen dengan background overlay
 .background-overlay {
   position: relative;
   width: 100%;
-  height: 100vh; // Sesuaikan tinggi sesuai kebutuhan
+  height: 100vh;
+  overflow-y: auto;
+
+  background: url('background.png') center/cover no-repeat;
 
   // Elemen utama
   &::before {
@@ -48,6 +51,7 @@ $primary-color: #d8940c;
     position: relative;
     z-index: 1; // Pastikan konten di atas overlay
     color: white; // Atur warna teks sesuai kebutuhan
-    top: 30%;
+    text-align: center;
+    top: 2rem;
   }
 }

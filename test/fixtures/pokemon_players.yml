@@ -3,7 +3,11 @@
 one:
   name: MyString
   pokedex: one
+  skill: one
+  skill: one
 
 two:
   name: MyString
   pokedex: two
+  skill: two
+  skill: two
