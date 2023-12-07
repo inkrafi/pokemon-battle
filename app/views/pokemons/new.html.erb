@@ -1,0 +1,74 @@
+<h1>New Pokemon</h1>
+<form action="<%= pokemons_path %>" accept-charset="UTF-8" method="post" class="text-dark">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-8">
+            <div class="mb-5">
+                <label for="pokemon_name" class="form-label"><h4>Name</h4></label>
+                <input type="text" class="form-control" id="pokemon_name" name="pokemon[name]" placeholder="Your name" required>
+            </div>
+            <div class="mb-5">
+                <h4>Pokedex</h4>
+                <select id="pokedex-select" class="form-select" name="pokemon[pokedex_id]" aria-label="Default select example">
+                    <option selected>Choose Pokedex</option>
+                    <% @pokedexes.each do |pokedex| %>
+                        <option value="<%= pokedex.id %>" data-type-id="<%= pokedex.type.id %>"><%= pokedex.name %></option>
+                    <% end %>
+                </select>
+            </div>
+            <div class="mb-5">
+                <h4>Choose Skills (max: 4)</h4>
+                <div id="skills-container">
+                    <% @skills.each do |skill| %>
+                        <div class="btn-group skill-checkbox d-none" role="group" aria-label="Skill checkbox group" data-type-id="<%= skill.type.id %>">
+                            <input type="checkbox" name="pokemon[skill_ids][]" class="btn-check" id="<%= "skill_#{skill.id}" %>" value="<%= skill.id %>" autocomplete="off">
+                            <label class="btn btn-outline-light" for="<%= "skill_#{skill.id}" %>">
+                                <p><%= skill.name %></p>
+                            </label>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button type="submit" class="btn btn-warning">SUBMIT</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var pokedexSelect = document.getElementById('pokedex-select');
+        var skillsContainer = document.getElementById('skills-container');
+        var selectedSkills = 0;
+
+        pokedexSelect.addEventListener('change', function() {
+            var selectedTypeId = pokedexSelect.options[pokedexSelect.selectedIndex].getAttribute('data-type-id');
+
+            // Hide all skill containers
+            var skillContainers = document.querySelectorAll('.skill-checkbox');
+            skillContainers.forEach(function(container) {
+                container.classList.add('d-none');
+            });
+
+            // Show skill containers with the selected type
+            var selectedTypeContainers = document.querySelectorAll('.skill-checkbox[data-type-id="' + selectedTypeId + '"]');
+            selectedTypeContainers.forEach(function(container) {
+                container.classList.remove('d-none');
+            });
+        });
+
+        skillsContainer.addEventListener('change', function(event) {
+            var checkbox = event.target;
+            if (checkbox.checked) {
+                // Check if the maximum limit is reached
+                if (selectedSkills >= 4) {
+                    checkbox.checked = false;
+                } else {
+                    selectedSkills++;
+                }
+            } else {
+                selectedSkills--;
+            }
+        });
+    });
+</script>

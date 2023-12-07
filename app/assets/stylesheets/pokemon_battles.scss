@@ -1,0 +1,47 @@
+// Place all the styles related to the pokemon_battles controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+.game-container {
+  position: relative;
+  margin: 0 auto;
+  width: 1000px;
+  height: 570px;
+  background: url('bg-battle.png') center/contain no-repeat;
+  border: 10px solid #111;
+  padding: 20px;
+
+  .row {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .player-info {
+    margin-bottom: 20px;
+    background-color: rgb(243, 250, 222);
+    border-radius: 10px;
+    margin: auto;
+    padding-top: 10px;
+
+    .hp-bar {
+      margin: auto;
+      width: 70%;
+      height: 1rem;
+      background-color: green;
+      border: 3px solid #333;
+      border-radius: 5px;
+    }
+  
+    #player-hp-text {
+      margin-bottom: 20px;
+    }
+  }
+
+  .box-info {
+    background-color: #333;
+    width: 100%;
+    height: 200px;
+    border: 0.5rem solid #111;
+  }
+}
+

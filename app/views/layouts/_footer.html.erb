@@ -7,30 +7,49 @@
 =end%>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
     <!-- Custom JavaScript -->
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        var pokedexCards = document.querySelectorAll('.pokedex-card');
-        var skillCheckboxes = document.querySelectorAll('.skill-checkbox');
+      $(document).ready(function() {
+        var selectedTypeIds = {}; // Gunakan objek untuk menyimpan selectedTypeId untuk setiap player.
 
-        pokedexCards.forEach(function (card) {
-          card.addEventListener('click', function () {
-            var selectedTypeId = card.getAttribute('data-type-id');
+        function updateSkillsOptions(playerNumber, containerId) {
+          var skills = <%= raw @skills.to_json %>;
+          var container = $(containerId);
 
-            // Sembunyikan semua checkbox skill menggunakan kelas Bootstrap d-none
-            skillCheckboxes.forEach(function (checkbox) {
-              checkbox.classList.add('d-none');
+          if (container.length) {
+            container.empty();
+
+            skills.forEach(function(skill) {
+              // Tambahkan logika if-else berdasarkan nilai selectedTypeId untuk player tertentu
+              if (selectedTypeIds[playerNumber] == skill.type_id) {
+                var skillCheckbox = $('<div class="btn-group skill-checkbox" role="group" aria-label="Skill checkbox group" data-type-id="' + skill.type_id + '">');
+                skillCheckbox.append('<input type="checkbox" name="pokemon_' + playerNumber + '[skill_ids][]" class="btn-check" id="skill_' + skill.id + '_' + playerNumber + '" value="' + skill.id + '" autocomplete="off">');
+                skillCheckbox.append('<label class="btn btn-outline-light fw-bold" for="skill_' + skill.id + '_' + playerNumber + '"><p>' + skill.name + '</p></label>');
+
+                container.append(skillCheckbox);
+              } else {
+                // Tambahkan logika jika selectedTypeId tidak cocok dengan skill.type_id
+                // Misalnya, tampilkan pesan atau lakukan tindakan lain
+              }
             });
+          } else {
+            console.error('Container element not found:', containerId);
+          }
+        }
 
-            // Tampilkan hanya checkbox skill yang sesuai dengan tipe yang dipilih
-            var selectedTypeSkillCheckboxes = document.querySelectorAll('.skill-checkbox[data-type-id="' + selectedTypeId + '"]');
-            selectedTypeSkillCheckboxes.forEach(function (checkbox) {
-              checkbox.classList.remove('d-none');
-            });
-          });
+        $('#pokemon-select-1').change(function() {
+          selectedTypeIds[1] = $(this).find(':selected').data('type-id');
+          updateSkillsOptions(1, '#skills-container-1');
+        });
+
+        $('#pokemon-select-2').change(function() {
+          selectedTypeIds[2] = $(this).find(':selected').data('type-id');
+          updateSkillsOptions(2, '#skills-container-2');
         });
       });
     </script>
+
   </body>
 </html>

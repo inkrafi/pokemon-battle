@@ -1,6 +1,6 @@
 require "test_helper"
 
-class PokemonBattleControllerTest < ActionDispatch::IntegrationTest
+class PokemonBattlesControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end

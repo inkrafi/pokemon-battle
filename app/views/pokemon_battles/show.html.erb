@@ -1,0 +1,65 @@
+<%
+=begin%>
+ <h1>Pokemon Battle</h1>
+<div class="game-container">
+  <div class="row">
+    <% @pokemon_battle_details.each_with_index do |pokemon_battle_detail, index| %>
+      <div class="col-md-3">
+        <div class="player-info text-dark" id="player-info">
+          <h5>Player <%= index + 1 %>: <%= pokemon_battle_detail.pokemon_player.name %></h5>
+          <p>(<%= pokemon_battle_detail.pokemon_player.pokedex.name %>)</p>
+          <div class="hp-bar" id="player-hp"></div>
+          <p id="player-hp-text">HP: <%= pokemon_battle_detail.pokemon_player.current_hp %></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="d-flex">
+    <% @pokemon_battle_details.each do |pokemon_battle_detail| %>
+      <div class="col-md-6">
+        <div class="pokemon-container">
+          <img src="<%= pokemon_battle_detail.pokemon_player.pokedex.image_url %>" alt="pokemon" width="200">
+        </div>
+      </div> 
+    <% end %>
+    </div>
+  </div>
+</div> 
+<%
+=end%>
+
+<h1>Pokemon Battle</h1>
+<div class="game-container">
+  <div class="row">
+    <% @pokemon_battle_details.each_with_index do |pokemon_battle_detail, index| %>
+      <div class="col-md-4">
+        <div class="col">
+          <div class="player-info text-dark" id="player-info">
+            <h5>Player <%= index + 1 %>: <%= pokemon_battle_detail.pokemon_player.name %></h5>
+            <span><%= pokemon_battle_detail.pokemon_player.pokedex.name %> (<%= pokemon_battle_detail.pokemon_player.pokedex.type.name %>)</span>
+            <div class="hp-bar" id="player-hp"></div>
+            <p id="player-hp-text">HP: <%= pokemon_battle_detail.pokemon_player.current_hp %></p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="pokemon-container">
+            <img src="<%= pokemon_battle_detail.pokemon_player.pokedex.image_url %>" alt="pokemon" width="250">
+          </div>
+        </div>
+      </div> 
+    <% end %>
+  </div>
+
+  <div class="box-info">
+    <% @pokemon_battle_details.each do |pokemon_battle_detail| %>
+        <% pokemon_battle_detail.pokemon_player.skills.each do |skill| %>
+          <div class="btn btn-dark">
+            <%= skill.name %>
+            <%= skill.max_pp %>
+          </div>
+        <% end %>
+    <% end %>
+  </div>
+</div>
+
+

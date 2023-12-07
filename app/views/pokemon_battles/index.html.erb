@@ -1,0 +1,27 @@
+<h1>Pokemon Battles</h1>
+
+<p>
+  <%= link_to 'Create Battle', new_pokemon_battle_path, class: 'btn btn-warning' %> 
+</p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID Battle</th>
+      <th>Time</th>
+      <th>Status</th>
+      <th>Detail</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @pokemon_battles.each do |battle| %>
+    <tr>
+      <td><%= battle.id %></td>
+      <td><%= battle.time %></td>
+      <td><%= battle.status %></td>
+      <td><%= link_to 'Detail', pokemon_battle_details_path %></td>
+    </tr>
+    <% end %>
+  </tbody>
+  
+</table>
