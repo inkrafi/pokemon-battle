@@ -1,6 +1,6 @@
 require "test_helper"
 
-class PokedexSkillTest < ActiveSupport::TestCase
+class PokedexesControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end

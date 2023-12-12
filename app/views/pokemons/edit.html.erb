@@ -1,5 +1,5 @@
 <h1>Edit Pokemon</h1>
-<form action="<%= pokemon_path(@pokemon) %>" accept-charset="UTF-8" method="post" class="text-dark">
+<form action="<%= pokemon_path(@pokemon) %>" accept-charset="UTF-8" method="post" class="form text-dark">
     <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
     <input type="hidden" name="_method" value="patch">
     <div class="row d-flex justify-content-center">

@@ -25,7 +25,8 @@ class PokemonsController < ApplicationController
     pokemon = PokemonPlayer.new(pokemon_attributes)
 
     if pokemon.save
-      redirect_to pokemons_url, notice: 'Pokemon berhasil dibuat.'
+      flash[:success] = "New Pokemon #{pokemon.name} added to the list!"
+      redirect_to pokemons_url
     else
       render 'new'
     end
@@ -36,8 +37,9 @@ class PokemonsController < ApplicationController
   end
 
   def destroy
-    @pokemon = PokemonPlayer.find(params[:id])
-    @pokemon.destroy
+    pokemon = PokemonPlayer.find(params[:id])
+    pokemon.destroy
+    flash[:success] = "Pokemon #{pokemon.name} deleted."
     redirect_to pokemons_url
   end
 
@@ -50,6 +52,7 @@ class PokemonsController < ApplicationController
   def update
     @pokemon = PokemonPlayer.find(params[:id])
     if @pokemon.update(pokemon_params)
+      flash[:success] = 'Pokemon updated.'
       redirect_to pokemons_url
     else
       render 'edit'

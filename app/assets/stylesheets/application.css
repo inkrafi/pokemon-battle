@@ -14,6 +14,19 @@
  *= require_self
  */
 
+ @font-face {
+    font-family: "MyFont";
+    font-style: normal;
+    font-weight: 400;
+    font-display: block;
+    src: url('Pokemon\ Solid.ttf')
+}
+
+body {
+    font-family: "MyFont";
+}
+
+
 * {
     box-sizing: border-box;
 }

@@ -10,19 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_12_07_024125) do
+ActiveRecord::Schema.define(version: 2023_12_12_075838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "pokedex_skills", force: :cascade do |t|
-    t.bigint "pokedex_id", null: false
-    t.bigint "skill_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["pokedex_id"], name: "index_pokedex_skills_on_pokedex_id"
-    t.index ["skill_id"], name: "index_pokedex_skills_on_skill_id"
-  end
 
   create_table "pokedexes", force: :cascade do |t|
     t.string "name"
@@ -52,6 +43,13 @@ ActiveRecord::Schema.define(version: 2023_12_07_024125) do
     t.string "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "current_turn"
+    t.integer "pokemon1_id"
+    t.integer "pokemon2_id"
+    t.integer "pokemon_winner_id"
+    t.integer "pokemon_loser_id"
+    t.integer "pokemon1_max_hp"
+    t.integer "pokemon2_max_hp"
   end
 
   create_table "pokemon_player_skills", force: :cascade do |t|
@@ -59,6 +57,7 @@ ActiveRecord::Schema.define(version: 2023_12_07_024125) do
     t.bigint "skill_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "current_pp"
     t.index ["pokemon_player_id"], name: "index_pokemon_player_skills_on_pokemon_player_id"
     t.index ["skill_id"], name: "index_pokemon_player_skills_on_skill_id"
   end
@@ -73,9 +72,7 @@ ActiveRecord::Schema.define(version: 2023_12_07_024125) do
     t.integer "attack"
     t.integer "defense"
     t.integer "speed"
-    t.bigint "skill_id"
     t.index ["pokedex_id"], name: "index_pokemon_players_on_pokedex_id"
-    t.index ["skill_id"], name: "index_pokemon_players_on_skill_id"
   end
 
   create_table "skills", force: :cascade do |t|
@@ -94,13 +91,10 @@ ActiveRecord::Schema.define(version: 2023_12_07_024125) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  add_foreign_key "pokedex_skills", "pokedexes"
-  add_foreign_key "pokedex_skills", "skills"
   add_foreign_key "pokedexes", "types"
   add_foreign_key "pokemon_battle_details", "pokemon_battles"
   add_foreign_key "pokemon_battle_details", "pokemon_players"
   add_foreign_key "pokemon_player_skills", "skills"
   add_foreign_key "pokemon_players", "pokedexes"
-  add_foreign_key "pokemon_players", "skills"
   add_foreign_key "skills", "types"
 end

@@ -1,0 +1,9 @@
+<h1>Edit Pokedex</h1>
+<form action="<%= pokedex_path(@pokedex) %>" accept-charset="UTF-8" method="post" class="form text-dark">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <input type="hidden" name="_method" value="patch">
+
+    <%= render 'form' %>
+    
+    <button type="submit" class="btn btn-warning">UPDATE</button>
+</form>

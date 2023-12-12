@@ -1,0 +1,41 @@
+<div class="row d-flex justify-content-center">
+    <div class="col-md-6">
+        <div class="mb-5">
+            <label for="pokedex_name" class="form-label"><h4>Name</h4></label>
+            <input type="text" class="form-control" id="pokedex_name" name="pokedex[name]" placeholder="Pokedex name" required>
+        </div>
+        <div class="mb-5">
+            <label for="pokedex_image_url" class="form-label"><h4>Image URL</h4></label>
+            <input type="text" class="form-control" id="pokedex_image_url" name="pokedex[image_url]" placeholder="Image URL" required>
+        </div>
+        <div class="mb-5">
+            <label for="pokedex_base_hp" class="form-label"><h4>Base HP</h4></label>
+            <input type="text" class="form-control" id="pokedex_base_hp" name="pokedex[base_hp]" placeholder="Base HP" required>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="mb-5">
+            <label for="pokedex_base_attack" class="form-label"><h4>Base Attack</h4></label>
+            <input type="text" class="form-control" id="pokedex_base_attack" name="pokedex[base_attack]" placeholder="Base Attack" required>
+        </div>
+        <div class="mb-5">
+            <label for="pokedex_base_defense" class="form-label"><h4>Base Defense</h4></label>
+            <input type="text" class="form-control" id="pokedex_base_defense" name="pokedex[base_defense]" placeholder="Base Defense" required>
+        </div>
+        <div class="mb-5">
+            <label for="pokedex_base_speed" class="form-label"><h4>Base Speed</h4></label>
+            <input type="text" class="form-control" id="pokedex_base_speed" name="pokedex[base_speed]" placeholder="Base Speed" required>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="mb-5">
+            <h4>Element Type</h4>
+            <select id="type-select" class="form-select" name="pokedex[type_id]" aria-label="Default select example">
+                <option selected>Choose element type</option>
+                <% @types.each do |type| %>
+                    <option value="<%= type.id %>"><%= type.name %></option>
+                <% end %>
+            </select>
+        </div>
+    </div>
+</div>

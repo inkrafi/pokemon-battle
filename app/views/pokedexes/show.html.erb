@@ -1,0 +1,21 @@
+<div class="d-flex justify-content-center">
+    <div class="card" style="width: 44rem;">
+        <div class="card-body">
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-md-4">
+                    <img src="<%= @pokedex.image_url %>" alt="image" width="250">
+                    <h3><%= @pokedex.name %></h3>
+                    <h5><%= @pokedex.type.name %></h5>
+                </div>
+                <div class="col-md-6">
+                    <p>Base HP: <%= @pokedex.base_hp %></p>
+                    <p>Base Attack: <%= @pokedex.base_attack %></p>
+                    <p>Base Defense: <%= @pokedex.base_defense %></p>
+                    <p>Base Speed: <%= @pokedex.base_speed %></p>
+                </div>
+            </div>
+            <%= link_to 'Edit', edit_pokedex_path(@pokedex), class: 'btn btn-success' %>
+            <%= link_to 'Delete', pokedex_path(@pokedex), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<h1>List Pokedex</h1>
+
+<p class="my-4">
+  <%= link_to 'Create Pokedex', new_pokedex_path, class: 'btn btn-warning' %> 
+</p>
+
+<table class="table table-warning table-striped align-middle table-bordered">
+
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Image</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Base HP</th>
+      <th>Base Attack</th>
+      <th>Base Defense</th>
+      <th>Base Speed</th>
+      <th>Detail</th>
+    </tr>
+  </thead>
+  
+  <tbody>
+    <% @pokedexes.each do |pokedex| %>
+      <tr>
+        <% @i %>
+        <td><%= pokedex.id %></td>
+        <td><img src="<%= pokedex.image_url %>" alt="image" width="50"></td>
+        <td><%= pokedex.name %></td>
+        <td><%= pokedex.type.name %></td>
+        <td><%= pokedex.base_hp %></td>
+        <td><%= pokedex.base_attack %></td>
+        <td><%= pokedex.base_defense %></td>
+        <td><%= pokedex.base_speed %></td>
+        <td>
+          <%= link_to 'Show', pokedex_path(pokedex), class: 'btn btn-dark' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+  
+</table>

@@ -1,65 +1,141 @@
-<%
-=begin%>
- <h1>Pokemon Battle</h1>
-<div class="game-container">
-  <div class="row">
-    <% @pokemon_battle_details.each_with_index do |pokemon_battle_detail, index| %>
-      <div class="col-md-3">
-        <div class="player-info text-dark" id="player-info">
-          <h5>Player <%= index + 1 %>: <%= pokemon_battle_detail.pokemon_player.name %></h5>
-          <p>(<%= pokemon_battle_detail.pokemon_player.pokedex.name %>)</p>
-          <div class="hp-bar" id="player-hp"></div>
-          <p id="player-hp-text">HP: <%= pokemon_battle_detail.pokemon_player.current_hp %></p>
-        </div>
-      </div>
-    <% end %>
-  </div>
-  <div class="d-flex">
-    <% @pokemon_battle_details.each do |pokemon_battle_detail| %>
-      <div class="col-md-6">
-        <div class="pokemon-container">
-          <img src="<%= pokemon_battle_detail.pokemon_player.pokedex.image_url %>" alt="pokemon" width="200">
-        </div>
-      </div> 
-    <% end %>
-    </div>
-  </div>
-</div> 
-<%
-=end%>
-
 <h1>Pokemon Battle</h1>
 <div class="game-container">
   <div class="row">
-    <% @pokemon_battle_details.each_with_index do |pokemon_battle_detail, index| %>
+    <% if @pokemon_battle.status == "ON BATTLE" %>
+
       <div class="col-md-4">
         <div class="col">
           <div class="player-info text-dark" id="player-info">
-            <h5>Player <%= index + 1 %>: <%= pokemon_battle_detail.pokemon_player.name %></h5>
-            <span><%= pokemon_battle_detail.pokemon_player.pokedex.name %> (<%= pokemon_battle_detail.pokemon_player.pokedex.type.name %>)</span>
+            <h5>Player 1: <%= @pokemon_battle.pokemon1.name %></h5>
+            <span><%= @pokemon_battle.pokemon1.pokedex.name %> (<%= @pokemon_battle.pokemon1.pokedex.type.name %>)</span>
             <div class="hp-bar" id="player-hp"></div>
-            <p id="player-hp-text">HP: <%= pokemon_battle_detail.pokemon_player.current_hp %></p>
+            <p id="player-hp-text">HP: <%= @pokemon_battle.pokemon1.current_hp %></p>
           </div>
         </div>
         <div class="col">
           <div class="pokemon-container">
-            <img src="<%= pokemon_battle_detail.pokemon_player.pokedex.image_url %>" alt="pokemon" width="250">
+            <img src="<%= @pokemon_battle.pokemon1.pokedex.image_url %>" alt="pokemon" width="250">
           </div>
         </div>
-      </div> 
+      </div>
+      <div class="col-md-4">
+        <div class="col">
+          <div class="player-info text-dark" id="player-info">
+            <h5>Player 2: <%= @pokemon_battle.pokemon2.name %></h5>
+            <span><%= @pokemon_battle.pokemon2.pokedex.name %> (<%= @pokemon_battle.pokemon2.pokedex.type.name %>)</span>
+            <div class="hp-bar" id="player-hp"></div>
+            <p id="player-hp-text">HP: <%= @pokemon_battle.pokemon2.current_hp %></p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="pokemon-container">
+            <img src="<%= @pokemon_battle.pokemon2.pokedex.image_url %>" alt="pokemon" width="250">
+          </div>
+        </div>
+      </div>
+
+    <% elsif @pokemon_battle.status == "FINISHED" %>
+      <div class="col-md-4">
+        <div class="col">
+          <div class="player-info text-dark" id="player-info">
+            <h5>Player 1: <%= @pokemon_battle.pokemon1.name %></h5>
+            <span><%= @pokemon_battle.pokemon1.pokedex.name %> (<%= @pokemon_battle.pokemon1.pokedex.type.name %>)</span>
+            <div class="hp-bar" id="player-hp"></div>
+            <p id="player-hp-text">HP: <%= @pokemon_battle.pokemon1.current_hp %></p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="pokemon-container">
+            <img src="<%= @pokemon_battle.pokemon1.pokedex.image_url %>" alt="pokemon" width="250">
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="col">
+          <div class="player-info text-dark" id="player-info">
+            <h5>Player 2: <%= @pokemon_battle.pokemon2.name %></h5>
+            <span><%= @pokemon_battle.pokemon2.pokedex.name %> (<%= @pokemon_battle.pokemon2.pokedex.type.name %>)</span>
+            <div class="hp-bar" id="player-hp"></div>
+            <p id="player-hp-text">HP: <%= @pokemon_battle.pokemon2.current_hp %></p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="pokemon-container">
+            <img src="<%= @pokemon_battle.pokemon2.pokedex.image_url %>" alt="pokemon" width="250">
+          </div>
+        </div>
+      </div>
+
+      <% if @winner.present? %>
+        <div class="box-result">
+          <h2 class="text-dark">
+            WINNER:<br><br>
+            <%= @winner.name %>
+          </h2>
+        </div>
+      <% end %>
+
     <% end %>
   </div>
 
   <div class="box-info">
-    <% @pokemon_battle_details.each do |pokemon_battle_detail| %>
-        <% pokemon_battle_detail.pokemon_player.skills.each do |skill| %>
-          <div class="btn btn-dark">
-            <%= skill.name %>
-            <%= skill.max_pp %>
-          </div>
+    <% if @pokemon_battle.status == "ON BATTLE" %>
+      <% if @current_turn.odd? %>
+        <h3>Player 1: <%= @attacker.name %></h3>
+        <% @attacker.pokemon_player_skills.each do |pokemon_skill| %>
+          <form action="<%= pokemon_battles_attack_path %>" accept-charset="UTF-8" method="post">
+          <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+            <div class="mb-3">
+              <label for="pokemon_battle_skill" class="form-label">
+                <button type="submit" class="btn btn-dark" >
+                  <%= pokemon_skill.skill.name %>
+                  <br>
+                  <%= pokemon_skill.current_pp %> / <%= pokemon_skill.skill.max_pp %>
+                </button>
+              </label>
+              <input type="hidden" id="pokemon_battle_skill" name="pokemon_battle[skill_id]" value="<%= pokemon_skill.skill.id %>">
+              <input type="hidden" id="current_turn" name="current_turn" value="<%= @pokemon_battle.current_turn %>">
+              <input type="hidden" id="pokemon_battle" name="pokemon_battle[pokemon_battle_id]" value="<%= @pokemon_battle.id %>">
+              <!--
+              <input type="hidden" id="pokemon_battle_detail" name="pokemon_battle_detail[pokemon_battle_detail_id]" value="<%= @pokemon_battle_details %>">
+              -->
+            </div>
+          </form>
         <% end %>
+      <% else %>
+        <h3>Player 2: <%= @opponent.name %></h3>
+        <% @opponent.pokemon_player_skills.each do |pokemon_skill| %>
+          <form action="<%= pokemon_battles_attack_path %>" accept-charset="UTF-8" method="post">
+          <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+            <div class="mb-3">
+              <label for="pokemon_battle_skill" class="form-label">
+                <button type="submit" class="btn btn-dark" >
+                  <%= pokemon_skill.skill.name %>
+                  <br>
+                  <%= pokemon_skill.current_pp %> / <%= pokemon_skill.skill.max_pp %>
+                </button>
+              </label>
+              <input type="hidden" id="pokemon_battle_skill" name="pokemon_battle[skill_id]" value="<%= pokemon_skill.skill.id %>">
+              <input type="hidden" id="current_turn" name="current_turn" value="<%= @pokemon_battle.current_turn %>">
+              <input type="hidden" id="pokemon_battle" name="pokemon_battle[pokemon_battle_id]" value="<%= @pokemon_battle.id %>">
+              <!--
+              <input type="hidden" id="pokemon_battle_detail" name="pokemon_battle_detail[pokemon_battle_detail_id]" value="<%= @pokemon_battle_details %>">
+              -->
+            </div>
+          </form>
+        <% end %>
+      <% end %> 
+      
+    <% elsif @pokemon_battle.status == "FINISHED" %>
+      <h2>CONGRATULATIONS!!!</h2>
     <% end %>
   </div>
+
+  <% if @pokemon_battle.status == "FINISHED" %>
+    <div class="d-flex justify-content-around my-4">
+      <%= link_to "Back to Battles", pokemon_battles_path, class: "btn btn-secondary" %>
+      <%= link_to "See Battle Details", pokemon_battles_path, class: "btn btn-warning" %>
+    </div>
+  <% end %>
+  
 </div>
-
-

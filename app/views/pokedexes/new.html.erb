@@ -1,0 +1,8 @@
+<h1>New Pokedex</h1>
+<form action="<%= pokedexes_path %>" accept-charset="UTF-8" method="post" class="form text-dark">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    
+    <%= render 'form' %>
+    
+    <button type="submit" class="btn btn-warning">SUBMIT</button>
+</form>
