@@ -1,0 +1,43 @@
+<h1>Battle History</h1>
+
+<table class="table table-warning table-striped align-middle table-bordered my-4">
+
+  <thead>
+    <tr>
+      <th>ID Battle</th>
+      <th>Date</th>
+      <th>Winner</th>
+      <th>Loser</th>
+      <th>Turn</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @battle_results.each do |result| %>
+      <tr>
+        <td><%= result[:battle_id] %></td>
+        <td><%= result[:date].strftime("%B %d, %Y") %></td>
+        <td>
+          <% if result[:status] == "ON BATTLE" %>
+            -- <%= result[:status] %> --
+          <% else %>
+            <%= result[:winner_name] %>
+          <% end %>
+        </td>
+        <td>
+          <% if result[:status] == "ON BATTLE" %>
+            -- <%= result[:status] %> --
+          <% else %>
+            <%= result[:loser_name] %>
+          <% end %>
+        </td>
+        <td><%= result[:turn] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+  
+</table>
+
+<div class="d-flex justify-content-center my-4">
+  <%= paginate @pokemon_battles %>
+</div>

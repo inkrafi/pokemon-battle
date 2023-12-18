@@ -1,11 +1,11 @@
 class PokemonsController < ApplicationController
 
   def index
-    @pokemons = PokemonPlayer.all
+    @pokemons = PokemonPlayer.page(params[:page]).per(12)
   end
 
   def new
-    @pokedexes = Pokedex.all
+    @pokedexes = Pokedex.all.order(:id)
     @skills = Skill.all
   end
 
@@ -25,7 +25,7 @@ class PokemonsController < ApplicationController
     pokemon = PokemonPlayer.new(pokemon_attributes)
 
     if pokemon.save
-      flash[:success] = "New Pokemon #{pokemon.name} added to the list!"
+      flash[:success] = "Pokemon #{pokemon.name} added to the list!"
       redirect_to pokemons_url
     else
       render 'new'
@@ -45,7 +45,7 @@ class PokemonsController < ApplicationController
 
   def edit
     @pokemon = PokemonPlayer.find(params[:id])
-    @pokedexes = Pokedex.all
+    @pokedexes = Pokedex.all.order(:id)
     @skills = Skill.all
   end
 

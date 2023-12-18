@@ -1,4 +1,4 @@
-class RenamePokedexStats < ActiveRecord::Migration[6.1]
+class RenamePokedexStats < ActiveRecord::Migration[7.1]
   def change
     change_table(:pokedexes) do |t|
       t.rename(:hp, :base_hp)

@@ -22,6 +22,43 @@
     justify-content: space-around;
   }
 
+  .pokemon-container {
+    margin: 3rem 0 1rem 0;
+    position: relative;
+
+    .damage-text {
+      position: absolute;
+      font-size: 1.75rem;
+      font-weight: bold;
+      color: red;
+      z-index: 1;
+      animation: fadeInOut 0.5s ease-out;
+      opacity: 0;
+      
+      @keyframes fadeInOut {
+        0%, 100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+      }
+    }
+  
+    #attacker-damage-text {
+      right: 70px;
+    }
+  
+    #opponent-damage-text {
+      left: 70px;
+    }
+  }
+
   .player-info {
     margin-bottom: 20px;
     background-color: rgb(243, 250, 222);
@@ -82,5 +119,35 @@
     align-items: center;
     border-radius: 1rem;
   }
-}
 
+  .attack-animation-attacker {
+    animation: attackMoveAttacker 0.5s ease-in-out;
+  }
+  
+  .attack-animation-opponent {
+    animation: attackMoveOpponent 0.5s ease-in-out;
+  }
+  
+  @keyframes attackMoveAttacker {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(400px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @keyframes attackMoveOpponent {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-400px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+}

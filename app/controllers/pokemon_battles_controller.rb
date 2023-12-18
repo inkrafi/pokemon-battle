@@ -2,7 +2,7 @@ class PokemonBattlesController < ApplicationController
   include PokemonBattlesHelper
 
   def index
-    @pokemon_battles = PokemonBattle.all
+    @pokemon_battles = PokemonBattle.page(params[:page]).per(15)
   end
 
   def new
@@ -36,14 +36,17 @@ class PokemonBattlesController < ApplicationController
 
   def show
     @pokemon_battle = PokemonBattle.find(params[:id])
+    @damage_received = params[:damage_received].to_i
+    @show_damage_received = params[:show_damage_received] == 'true'
 
     @current_turn = @pokemon_battle.current_turn
     @attacker     = @pokemon_battle.pokemon1
     @opponent     = @pokemon_battle.pokemon2
     @winner       = @pokemon_battle.pokemon_winner
+    @loser        = @pokemon_battle.pokemon_loser
 
-    @attacker.pokemon_player_skills.sort
-    @opponent.pokemon_player_skills.sort
+    @attacker.pokemon_player_skills.order(:id)
+    @opponent.pokemon_player_skills.order(:id)
   end
 
   def attack
@@ -76,7 +79,27 @@ class PokemonBattlesController < ApplicationController
     # Memeriksa apakah battle sudah selesai
     check_battle_status(pokemon_battle_id)
 
-    redirect_to pokemon_battle_path(pokemon_battle_id)
+    redirect_to pokemon_battle_path(pokemon_battle_id, show_damage_received: true, damage_received: damage)
   end
 
+  def history
+    @pokemon_battles = PokemonBattle.page(params[:page]).per(15)
+    @battle_results = []
+
+    @pokemon_battles.each do |battle|
+      winner = battle.pokemon_winner
+      loser = battle.pokemon_loser
+
+      battle_result = {
+        battle_id: battle.id,
+        date: battle.time,
+        winner_name: winner&.name, 
+        loser_name: loser&.name,
+        turn: battle.current_turn,
+        status: battle.status
+      }
+
+      @battle_results << battle_result
+    end
+  end
 end

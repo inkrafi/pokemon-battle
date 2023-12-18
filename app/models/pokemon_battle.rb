@@ -9,7 +9,6 @@ class PokemonBattle < ApplicationRecord
 	belongs_to :pokemon_loser, class_name: 'PokemonPlayer',
 												foreign_key: 'pokemon_loser_id',
 												optional: true
-  has_many 	 :pokemon_battle_details, dependent: :destroy
 
   default_scope -> { order(created_at: :desc) }
 

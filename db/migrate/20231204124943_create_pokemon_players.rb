@@ -1,4 +1,4 @@
-class CreatePokemonPlayers < ActiveRecord::Migration[6.1]
+class CreatePokemonPlayers < ActiveRecord::Migration[7.1]
   def change
     create_table :pokemon_players do |t|
       t.string :name

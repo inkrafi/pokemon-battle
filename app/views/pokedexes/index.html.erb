@@ -1,7 +1,7 @@
 <h1>List Pokedex</h1>
 
 <p class="my-4">
-  <%= link_to 'Create Pokedex', new_pokedex_path, class: 'btn btn-warning' %> 
+  <%# link_to 'Create Pokedex', new_pokedex_path, class: 'btn btn-warning' %> 
 </p>
 
 <table class="table table-warning table-striped align-middle table-bordered">
@@ -23,16 +23,52 @@
   <tbody>
     <% @pokedexes.each do |pokedex| %>
       <tr>
-        <% @i %>
         <td><%= pokedex.id %></td>
         <td><img src="<%= pokedex.image_url %>" alt="image" width="50"></td>
         <td><%= pokedex.name %></td>
-        <td><%= pokedex.type.name %></td>
+        <td class="text-uppercase">
+          <% if pokedex.type.name == "Grass" %>
+            <p class="badge bg-grass"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Fire" %>
+            <p class="badge bg-fire"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Water" %>
+            <p class="badge bg-water"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Normal" %>
+            <p class="badge bg-normal"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Electric" %>
+            <p class="badge bg-electric"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Bug" %>
+            <p class="badge bg-bug"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Fighting" %>
+            <p class="badge bg-fighting"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Poison" %>
+            <p class="badge bg-poison"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Flying" %>
+            <p class="badge bg-flying"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Ice" %>
+            <p class="badge bg-ice"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Ground" %>
+            <p class="badge bg-ground"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Psychic" %>
+            <p class="badge bg-psychic"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Rock" %>
+            <p class="badge bg-rock"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Ghost" %>
+            <p class="badge bg-ghost"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Dragon" %>
+            <p class="badge bg-dragon"><%= pokedex.type.name %></p>
+          <% elsif pokedex.type.name == "Fairy" %>
+            <p class="badge bg-fairy"><%= pokedex.type.name %></p>
+          <% else %>
+            <%= pokedex.type.name %>
+          <% end %>
+        </td>
         <td><%= pokedex.base_hp %></td>
         <td><%= pokedex.base_attack %></td>
         <td><%= pokedex.base_defense %></td>
         <td><%= pokedex.base_speed %></td>
         <td>
+          <%# link_to 'Edit', edit_pokedex_path(pokedex), class: 'btn btn-success' %>
           <%= link_to 'Show', pokedex_path(pokedex), class: 'btn btn-dark' %>
         </td>
       </tr>
@@ -40,3 +76,7 @@
   </tbody>
   
 </table>
+
+<div class="d-flex justify-content-center my-4">
+  <%= paginate @pokedexes %>
+</div>

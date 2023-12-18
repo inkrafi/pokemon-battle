@@ -14,18 +14,7 @@
  *= require_self
  */
 
- @font-face {
-    font-family: "MyFont";
-    font-style: normal;
-    font-weight: 400;
-    font-display: block;
-    src: url('Pokemon\ Solid.ttf')
-}
-
-body {
-    font-family: "MyFont";
-}
-
+@import "kaminari-bootstrap";
 
 * {
     box-sizing: border-box;
@@ -33,4 +22,8 @@ body {
 
 li {
     list-style: none;
+}
+
+a {
+    text-decoration: none;
 }

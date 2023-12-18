@@ -1,4 +1,4 @@
-<h1>Pokemon Battle</h1>
+<h1 class="mb-4">Battle</h1>
 <div class="game-container">
   <div class="row">
     <% if @pokemon_battle.status == "ON BATTLE" %>
@@ -13,8 +13,11 @@
           </div>
         </div>
         <div class="col">
-          <div class="pokemon-container">
-            <img src="<%= @pokemon_battle.pokemon1.pokedex.image_url %>" alt="pokemon" width="250">
+          <div class="pokemon-container" id="attacker-attack">
+            <% if @show_damage_received && @current_turn.odd? %>
+              <div class="damage-text" id="attacker-damage-text">-<%= @damage_received %></div>
+            <% end %>
+            <img src="<%= @pokemon_battle.pokemon1.pokedex.image_url %>" alt="pokemon" width="220">
           </div>
         </div>
       </div>
@@ -28,8 +31,11 @@
           </div>
         </div>
         <div class="col">
-          <div class="pokemon-container">
-            <img src="<%= @pokemon_battle.pokemon2.pokedex.image_url %>" alt="pokemon" width="250">
+          <div class="pokemon-container" id="opponent-attack">
+            <% if @show_damage_received && @current_turn.even? %>
+              <div class="damage-text" id="opponent-damage-text">-<%= @damage_received %></div>
+            <% end %>
+            <img src="<%= @pokemon_battle.pokemon2.pokedex.image_url %>" alt="pokemon" width="220">
           </div>
         </div>
       </div>
@@ -87,11 +93,19 @@
           <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
             <div class="mb-3">
               <label for="pokemon_battle_skill" class="form-label">
-                <button type="submit" class="btn btn-dark" >
-                  <%= pokemon_skill.skill.name %>
-                  <br>
-                  <%= pokemon_skill.current_pp %> / <%= pokemon_skill.skill.max_pp %>
-                </button>
+                <% if pokemon_skill.current_pp == 0 %>
+                  <button type="submit" class="btn btn-dark disabled" onclick="playAttackerAnimation('attacker-attack')">
+                    <%= pokemon_skill.skill.name %>
+                    <br>
+                    <%= pokemon_skill.current_pp %> / <%= pokemon_skill.skill.max_pp %>
+                  </button>
+                <% else %>
+                  <button type="submit" class="btn btn-dark" onclick="playAttackerAnimation('attacker-attack')">
+                    <%= pokemon_skill.skill.name %>
+                    <br>
+                    <%= pokemon_skill.current_pp %> / <%= pokemon_skill.skill.max_pp %>
+                  </button>
+                <% end %>
               </label>
               <input type="hidden" id="pokemon_battle_skill" name="pokemon_battle[skill_id]" value="<%= pokemon_skill.skill.id %>">
               <input type="hidden" id="current_turn" name="current_turn" value="<%= @pokemon_battle.current_turn %>">
@@ -109,11 +123,19 @@
           <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
             <div class="mb-3">
               <label for="pokemon_battle_skill" class="form-label">
-                <button type="submit" class="btn btn-dark" >
-                  <%= pokemon_skill.skill.name %>
-                  <br>
-                  <%= pokemon_skill.current_pp %> / <%= pokemon_skill.skill.max_pp %>
-                </button>
+                <% if pokemon_skill.current_pp == 0 %>
+                  <button type="submit" class="btn btn-dark disabled" onclick="playOpponentAnimation('opponent-attack')">
+                    <%= pokemon_skill.skill.name %>
+                    <br>
+                    <%= pokemon_skill.current_pp %> / <%= pokemon_skill.skill.max_pp %>
+                  </button>
+                <% else %>
+                  <button type="submit" class="btn btn-dark" onclick="playOpponentAnimation('opponent-attack')">
+                    <%= pokemon_skill.skill.name %>
+                    <br>
+                    <%= pokemon_skill.current_pp %> / <%= pokemon_skill.skill.max_pp %>
+                  </button>
+                <% end %>
               </label>
               <input type="hidden" id="pokemon_battle_skill" name="pokemon_battle[skill_id]" value="<%= pokemon_skill.skill.id %>">
               <input type="hidden" id="current_turn" name="current_turn" value="<%= @pokemon_battle.current_turn %>">
@@ -127,15 +149,59 @@
       <% end %> 
       
     <% elsif @pokemon_battle.status == "FINISHED" %>
-      <h2>CONGRATULATIONS!!!</h2>
+      <h1>Congratulations!!!</h1>
     <% end %>
   </div>
 
   <% if @pokemon_battle.status == "FINISHED" %>
-    <div class="d-flex justify-content-around my-4">
-      <%= link_to "Back to Battles", pokemon_battles_path, class: "btn btn-secondary" %>
-      <%= link_to "See Battle Details", pokemon_battles_path, class: "btn btn-warning" %>
+    <table class="table table-dark table-striped align-middle table-bordered my-4">
+
+      <thead>
+        <tr>
+          <th>ID Battle</th>
+          <th>Winner</th>
+          <th>Loser</th>
+          <th>Turn</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td><%= @pokemon_battle.id %></td>
+          <td><%= @winner.name %></td>
+          <td><%= @loser.name %></td>
+          <td><%= @current_turn %></td>
+        </tr>
+      </tbody>
+      
+    </table>
+    
+    <div class="d-flex justify-content-center my-4">
+      <%= link_to "Back", pokemon_battles_path, class: "btn btn-secondary" %>
     </div>
   <% end %>
   
 </div>
+
+<%# animation %>
+<script>
+  function playAttackerAnimation(attackerAttack) {
+    const attacker = document.getElementById(attackerAttack);
+
+    attacker.classList.add('attack-animation-attacker');
+
+    setTimeout(() => {
+      attacker.classList.remove('attack-animation-attacker');
+    }, 500);
+  }
+
+  function playOpponentAnimation(opponentAttack) {
+    const opponent = document.getElementById(opponentAttack);
+
+    opponent.classList.add('attack-animation-opponent');
+
+    setTimeout(() => {
+      opponent.classList.remove('attack-animation-opponent');
+    }, 500);
+  }
+</script>

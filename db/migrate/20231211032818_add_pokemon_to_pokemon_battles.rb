@@ -1,4 +1,4 @@
-class AddPokemonToPokemonBattles < ActiveRecord::Migration[6.1]
+class AddPokemonToPokemonBattles < ActiveRecord::Migration[7.1]
   def change
     add_column :pokemon_battles, :pokemon1_id, :integer
     add_column :pokemon_battles, :pokemon2_id, :integer

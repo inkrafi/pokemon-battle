@@ -1,4 +1,4 @@
-class RemoveColumn < ActiveRecord::Migration[6.1]
+class RemoveColumn < ActiveRecord::Migration[7.1]
   def change
     remove_column :pokemon_players, :skill_id
   end

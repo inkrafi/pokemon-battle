@@ -1,35 +1,88 @@
+<h1 class="mb-4">Pokemon</h1>
 <div class="d-flex justify-content-center">
-    <div class="card" style="width: 44rem;">
+    <div class="card" style="width: 60rem;">
         <div class="card-body">
             <div class="row d-flex justify-content-center align-items-center">
-                <div class="col-md-4">
+                <div class="col-lg-4">
                     <img src="<%= @pokemon.pokedex.image_url %>" alt="image" width="250">
                     <h3><%= @pokemon.name %></h3>
                     <h5>(<%= @pokemon.pokedex.name %>)</h5>
-                    <h5><%= @pokemon.pokedex.type.name %></h5>
+                    <h5 class="text-uppercase">
+                        <% if @pokemon.pokedex.type.name == "Grass" %>
+                            <p class="badge bg-grass"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Fire" %>
+                            <p class="badge bg-fire"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Water" %>
+                            <p class="badge bg-water"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Normal" %>
+                            <p class="badge bg-normal"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Electric" %>
+                            <p class="badge bg-electric"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Bug" %>
+                            <p class="badge bg-bug"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Fighting" %>
+                            <p class="badge bg-fighting"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Poison" %>
+                            <p class="badge bg-poison"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Flying" %>
+                            <p class="badge bg-flying"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Ice" %>
+                            <p class="badge bg-ice"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Ground" %>
+                            <p class="badge bg-ground"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Psychic" %>
+                            <p class="badge bg-psychic"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Rock" %>
+                            <p class="badge bg-rock"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Ghost" %>
+                            <p class="badge bg-ghost"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Dragon" %>
+                            <p class="badge bg-dragon"><%= @pokemon.pokedex.type.name %></p>
+                        <% elsif @pokemon.pokedex.type.name == "Fairy" %>
+                            <p class="badge bg-fairy"><%= @pokemon.pokedex.type.name %></p>
+                        <% else %>
+                            <%= @pokemon.pokedex.type.name %>
+                        <% end %>
+                    </h5>
                 </div>
-                <div class="col-md-6">
-                    <p>Max HP: <%= @pokemon.max_hp %></p>
-                    <p>Current HP: <%= @pokemon.current_hp %></p>
-                    <p>Attack: <%= @pokemon.attack %></p>
-                    <p>Defense: <%= @pokemon.defense %></p>
-                    <p>Speed: <%= @pokemon.speed %></p>
+                <div class="col-lg-6">
+                    <table class="table table-warning mb-5">
+                        <thead>
+                            <tr>
+                                <th>Max HP</th>
+                                <th>Current HP</th>
+                                <th>Attack</th>
+                                <th>Defense</th>
+                                <th>Speed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><%= @pokemon.max_hp %></td>
+                                <td><%= @pokemon.current_hp %></td>
+                                <td><%= @pokemon.attack %></td>
+                                <td><%= @pokemon.defense %></td>
+                                <td><%= @pokemon.speed %></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <% if (@pokemon.skills.present?) %>
-                        <p class="d-flex">
-                            <p>Skills:</p>
-                            <% @pokemon.skills.each do |skill| %>
-                                <li>
-                                    <%= skill.name %>
+                        <h5 class="mb-3">Moves:</h5>
+                        <h4 class="d-flex flex-wrap justify-content-center gap-2">
+                            <% @pokemon.pokemon_player_skills.each do |skill| %>
+                                <li class="badge bg-warning text-dark fw-medium">
+                                    <div class="mb-2"><%= skill.skill.name %></div>
+                                    <%= skill.current_pp %> / <%= skill.skill.max_pp %>
                                 </li>
                             <% end %>
-                        </p>
+                        </h4>
                     <% else %>
-                        <p>No skills available.</p>
+                        <h5>No moves available.</h5>
                     <% end %>
                 </div>
             </div>
             <%= link_to 'Edit', edit_pokemon_path(@pokemon), class: 'btn btn-success' %>
-            <%= link_to 'Delete', pokemon_path(@pokemon), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+            <%#  link_to 'Delete', pokemon_path(@pokemon), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %> 
         </div>
     </div>
 </div>

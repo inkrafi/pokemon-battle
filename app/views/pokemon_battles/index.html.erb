@@ -1,7 +1,8 @@
 <h1>Pokemon Battles</h1>
 
 <p class="my-4">
-  <%= link_to 'Create Battle', new_pokemon_battle_path, class: 'btn btn-warning' %> 
+  <%= link_to 'Create Battle', new_pokemon_battle_path, class: 'btn btn-warning mx-2' %> 
+  <%= link_to 'Battle History', pokemon_battles_history_path, class: 'btn btn-secondary mx-2' %>
 </p>
 
 <table class="table table-warning table-striped align-middle table-bordered">
@@ -11,7 +12,7 @@
       <th>ID Battle</th>
       <th>Date</th>
       <th>Status</th>
-      <th>Detail</th>
+      <th>Action</th>
     </tr>
   </thead>
 
@@ -20,13 +21,22 @@
       <tr>
         <td><%= battle.id %></td>
         <td><%= battle.time.strftime("%B %d, %Y") %></td>
-        <td><%= battle.status %></td>
+        <td>
+          <% if battle.status == "ON BATTLE" %>
+            <strong>-- <%= battle.status %> --</strong>
+          <% else %>
+              <div class="badge bg-warning fs-6"><%= battle.status %></div>
+          <% end %>
+        </td>
         <td>
           <%= link_to 'Show', pokemon_battle_path(battle), class: 'btn btn-dark' %>
-          <%= link_to 'Details', pokemon_battle_details_path, class: 'btn btn-secondary' %>
         </td>
       </tr>
     <% end %>
   </tbody>
   
 </table>
+
+<div class="d-flex justify-content-center my-4">
+  <%= paginate @pokemon_battles %>
+</div>

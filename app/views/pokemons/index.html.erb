@@ -1,21 +1,38 @@
 <h1>All Pokemons</h1>
 
 <p class="my-4">
-  <%= link_to 'Create Pokemon', new_pokemon_path, class: 'btn btn-warning' %> 
+    <%= link_to 'Create Pokemon', new_pokemon_path, class: 'btn btn-warning' %> 
 </p>
 
 <div class="row">
     <% @pokemons.each do |pokemon| %>
         <div class="col-md-3 d-flex flex-wrap justify-content-center">
-            <div class="card m-3" style="width: 14rem;">
-                <div class="card-body">
-                    <a href="<%= pokemon_path(pokemon) %>" class="text-dark">
-                        <img src="<%= pokemon.pokedex.image_url %>" alt="image" width="150">
-                        <h5><%= pokemon.name %></h5>
-                        <h6>(<%= pokemon.pokedex.name %>)</h6>
-                    </a>
+            <% if pokemon.current_hp > 0 %>
+                <div class="card m-3" style="width: 14rem;">
+                    <div class="card-body">
+                        <a href="<%= pokemon_path(pokemon) %>" class="text-dark">
+                            <img src="<%= pokemon.pokedex.image_url %>" alt="image" width="150">
+                            <h5><%= pokemon.name %></h5>
+                            <h6>(<%= pokemon.pokedex.name %>)</h6>
+                        </a>
+                    </div>
                 </div>
-            </div>
+            <% elsif pokemon.current_hp == 0 %>
+                <div class="card opacity-75 m-3" style="width: 14rem;">
+                    <div class="card-body">
+                        <a href="<%= pokemon_path(pokemon) %>" class="text-dark">
+                            <img src="<%= pokemon.pokedex.image_url %>" alt="image" width="150">
+                            <h5><%= pokemon.name %></h5>
+                            <h6>(<%= pokemon.pokedex.name %>)</h6>
+                        </a>
+                        <%# <i>Need to heal</i> %>
+                    </div>
+                </div>
+            <% end %>
         </div>
     <% end %>
+</div>
+
+<div class="d-flex justify-content-center my-4">
+    <%= paginate @pokemons %>
 </div>

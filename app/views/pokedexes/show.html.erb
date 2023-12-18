@@ -1,11 +1,48 @@
+<h1 class="mb-4">Pokedex</h1>
 <div class="d-flex justify-content-center">
     <div class="card" style="width: 44rem;">
         <div class="card-body">
             <div class="row d-flex justify-content-center align-items-center">
                 <div class="col-md-4">
-                    <img src="<%= @pokedex.image_url %>" alt="image" width="250">
+                    <img src="<%= @pokedex.image_url %>" alt="<%= @pokedex.name %>" width="250">
                     <h3><%= @pokedex.name %></h3>
-                    <h5><%= @pokedex.type.name %></h5>
+                    <h5 class="text-uppercase">
+                        <% if @pokedex.type.name == "Grass" %>
+                            <p class="badge bg-grass"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Fire" %>
+                            <p class="badge bg-fire"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Water" %>
+                            <p class="badge bg-water"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Normal" %>
+                            <p class="badge bg-normal"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Electric" %>
+                            <p class="badge bg-electric"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Bug" %>
+                            <p class="badge bg-bug"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Fighting" %>
+                            <p class="badge bg-fighting"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Poison" %>
+                            <p class="badge bg-poison"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Flying" %>
+                            <p class="badge bg-flying"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Ice" %>
+                            <p class="badge bg-ice"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Ground" %>
+                            <p class="badge bg-ground"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Psychic" %>
+                            <p class="badge bg-psychic"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Rock" %>
+                            <p class="badge bg-rock"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Ghost" %>
+                            <p class="badge bg-ghost"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Dragon" %>
+                            <p class="badge bg-dragon"><%= @pokedex.type.name %></p>
+                        <% elsif @pokedex.type.name == "Fairy" %>
+                            <p class="badge bg-fairy"><%= @pokedex.type.name %></p>
+                        <% else %>
+                            <%= @pokedex.type.name %>
+                        <% end %>
+                    </h5>
                 </div>
                 <div class="col-md-6">
                     <p>Base HP: <%= @pokedex.base_hp %></p>
@@ -14,8 +51,8 @@
                     <p>Base Speed: <%= @pokedex.base_speed %></p>
                 </div>
             </div>
-            <%= link_to 'Edit', edit_pokedex_path(@pokedex), class: 'btn btn-success' %>
-            <%= link_to 'Delete', pokedex_path(@pokedex), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+            <%# link_to 'Edit', edit_pokedex_path(@pokedex), class: 'btn btn-success' %>
+            <%# link_to 'Delete', pokedex_path(@pokedex), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
         </div>
     </div>
 </div>
