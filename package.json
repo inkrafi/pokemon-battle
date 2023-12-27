@@ -14,9 +14,5 @@
   "devDependencies": {
     "webpack": "^4.47.0",
     "webpack-dev-server": "3"
-  },
-  "scripts": {
-    "build": "webpack --mode=production",
-    "watch": "webpack --watch --mode=development"
   }
 }
