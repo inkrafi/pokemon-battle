@@ -12,6 +12,7 @@ module Pokemon
     config.load_defaults 7.1
     # config.hosts << "mg9tkpvv-3000.asse.devtunnels.ms"
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
+    config.file_watcher = ActiveSupport::EventedFileUpdateChecker
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

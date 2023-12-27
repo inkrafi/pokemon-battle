@@ -1,0 +1,18 @@
+.form {
+  padding: 4rem;
+  background-color: #d8a20c;
+  border-radius: 8px;
+}
+.form .bg-input {
+  background-color: #fff6a4;
+}
+.form .bg-input:focus {
+  background-color: #fff6a4;
+}
+
+.card-body {
+  background-color: #fff6a4;
+}
+.card-body a {
+  text-decoration: none;
+}/*# sourceMappingURL=pokemon.css.map */

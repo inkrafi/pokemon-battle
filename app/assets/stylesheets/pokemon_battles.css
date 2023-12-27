@@ -1,0 +1,134 @@
+.game-container {
+  position: relative;
+  margin: 0 auto;
+  width: 1000px;
+  height: 570px;
+  background: url("bg-battle.png") center/contain no-repeat;
+  border: 10px solid #111;
+  padding: 20px;
+}
+.game-container h2 {
+  letter-spacing: 2px;
+  font-weight: bolder;
+  font-size: 2.5rem;
+}
+.game-container .row {
+  display: flex;
+  justify-content: space-around;
+}
+.game-container .pokemon-container {
+  margin: 3rem 0 1rem 0;
+  position: relative;
+}
+.game-container .pokemon-container .damage-text {
+  position: absolute;
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: red;
+  z-index: 1;
+  animation: fadeInOut 0.5s ease-out;
+  opacity: 0;
+}
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+.game-container .pokemon-container #attacker-damage-text {
+  right: 70px;
+}
+.game-container .pokemon-container #opponent-damage-text {
+  left: 70px;
+}
+.game-container .player-info {
+  margin-bottom: 20px;
+  background-color: rgb(243, 250, 222);
+  opacity: 0.9;
+  border-radius: 10px;
+  margin: auto;
+  padding-top: 10px;
+}
+.game-container .player-info .hp-bar {
+  margin: auto;
+  width: 70%;
+  height: 1rem;
+  background-color: green;
+  border: 3px solid #333;
+  border-radius: 5px;
+}
+.game-container .player-info #player-hp-text {
+  margin-bottom: 20px;
+}
+.game-container .box-result {
+  position: absolute;
+  width: 45%;
+  height: 260px;
+  background-color: rgb(243, 250, 222);
+  opacity: 0.95;
+  margin: 60px auto;
+  border: 0.5rem solid #111;
+  border-radius: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: popup 0.3s;
+}
+@keyframes popup {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.game-container .box-info {
+  position: relative;
+  background-color: #333;
+  width: 100%;
+  height: 200px;
+  border: 0.5rem solid #111;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1rem;
+}
+.game-container .attack-animation-attacker {
+  animation: attackMoveAttacker 0.5s ease-in-out;
+}
+.game-container .attack-animation-opponent {
+  animation: attackMoveOpponent 0.5s ease-in-out;
+}
+@keyframes attackMoveAttacker {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(400px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes attackMoveOpponent {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-400px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}/*# sourceMappingURL=pokemon_battles.css.map */
