@@ -84,6 +84,7 @@ test:
 #
 production:
   <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
   database: pokemon_production
   username: pokemon
   password: <%= ENV['POKEMON_DATABASE_PASSWORD'] %>

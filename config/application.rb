@@ -10,7 +10,7 @@ module Pokemon
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.1
-    config.hosts << "mg9tkpvv-3000.asse.devtunnels.ms"
+    # config.hosts << "mg9tkpvv-3000.asse.devtunnels.ms"
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
     # Configuration for the application, engines, and railties goes here.
     #
