@@ -21,7 +21,7 @@ gem 'jbuilder', '~> 2.7'
 gem 'kaminari'
 gem 'kaminari-bootstrap'
 
-gem 'wdm', '>= 0.1.0'
+# gem 'wdm', '>= 0.1.0' if Gem.win_platform?
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
