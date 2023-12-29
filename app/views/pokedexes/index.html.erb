@@ -1,7 +1,7 @@
 <h1>List Pokedex</h1>
 
 <p class="my-4">
-  <%# link_to 'Create Pokedex', new_pokedex_path, class: 'btn btn-warning' %> 
+  <%= link_to 'Create Pokedex', new_pokedex_path, class: 'btn btn-warning' %> 
 </p>
 
 <table class="table table-warning table-striped align-middle table-bordered">
@@ -68,7 +68,7 @@
         <td><%= pokedex.base_defense %></td>
         <td><%= pokedex.base_speed %></td>
         <td>
-          <%# link_to 'Edit', edit_pokedex_path(pokedex), class: 'btn btn-success' %>
+          <%= link_to 'Edit', edit_pokedex_path(pokedex), class: 'btn btn-success' %>
           <%= link_to 'Show', pokedex_path(pokedex), class: 'btn btn-dark' %>
         </td>
       </tr>
