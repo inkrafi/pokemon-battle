@@ -1,0 +1,31 @@
+<form action="<%= skills_path %>" accept-charset="UTF-8" method="post" class="form text-dark">
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+
+  <div class="row d-flex justify-content-center">
+    <div class="col-md-6">
+        <div class="mb-5">
+            <label for="skill_name" class="form-label"><h4>Name</h4></label>
+            <input type="text" class="form-control" id="skill_name" name="skill[name]" value="<%= @skill.name %>" placeholder="skill name" required>
+        </div>
+        <div class="mb-5">
+            <label for="skill_power" class="form-label"><h4>Power</h4></label>
+            <input type="text" class="form-control" id="skill_power" name="skill[power]" value="<%= @skill.power %>" placeholder="Power" required>
+        </div>
+        <div class="mb-5">
+            <label for="skill_max_pp" class="form-label"><h4>Max PP</h4></label>
+            <input type="text" class="form-control" id="skill_max_pp" name="skill[max_pp]" value="<%= @skill.max_pp %>" placeholder="Max PP" required>
+        </div>
+        <div class="mb-5">
+            <h4>Element Type</h4>
+            <select id="type-select" class="form-select text-center" name="skill[type_id]" aria-label="Default select example">
+                <option selected>Choose element type</option>
+                <% @types.each do |type| %>
+                    <option value="<%= type.id %>"><%= type.name %></option>
+                <% end %>
+            </select>
+        </div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-warning">SUBMIT</button>
+</form>

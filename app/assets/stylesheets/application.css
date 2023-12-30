@@ -27,10 +27,17 @@ a {
 }
 
 /* Responsive */
-@media (max-width: 400px) {
+@media (max-width: 576px) {
+  form h4 {
+    font-size: 1rem;
+  }
   .image-pokedex__list {
     width: 25px;
     height: 25px;
+  }
+  .image-pokedex__show {
+    width: 175px;
+    height: 175px;
   }
   .table {
     width: 90%;
@@ -54,8 +61,8 @@ a {
   }
 
   .image-pokemon {
-    width: 200px;
-    height: 200px;
+    width: 175px;
+    height: 175px;
   }
 
   .skills-text {
@@ -63,9 +70,14 @@ a {
     margin-bottom: 2rem;
   }
 
+  .btn-show {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
   /* Battle */
   .table .finished-text {
-    font-size: 12px;
+    font-size: 10px;
   }
   .game-container {
     width: 100%;
@@ -91,10 +103,10 @@ a {
     padding-top: 2px;
     width: 150px;
     height: 70px;
-    font-size: 12px;
+    font-size: 10px;
   }
   .game-container .player-info h5 {
-    font-size: 12px;
+    font-size: 10px;
   }
   .game-container .player-info .hp-bar  {
     height: 0.5rem;
@@ -118,7 +130,7 @@ a {
     height: 150px;
   }
   .game-container .box-info h3 {
-    font-size: 14px;
+    font-size: 12px;
   }
   .game-container .box-info button {
     font-size: 10px;

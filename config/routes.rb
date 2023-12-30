@@ -6,5 +6,5 @@ Rails.application.routes.draw do
   resources :pokedexes#, only: [:index, :show]
   resources :pokemons
   resources :pokemon_battles
-  resource  :types
+  resources :skills
 end

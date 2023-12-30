@@ -9,7 +9,7 @@ class PokemonPlayer < ApplicationRecord
 
   default_scope -> { order(created_at: :desc) }
 
-  validates :name, presence: true
+  validates :name, presence: true, length: {maximum: 20}
   validates :pokedex_id, presence: true
   validates :skill_ids, presence: true
 end

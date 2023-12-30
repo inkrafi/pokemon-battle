@@ -26,7 +26,7 @@
         <td><%= pokedex.id %></td>
         <td><img src="<%= pokedex.image_url %>" alt="image" class="image-pokedex__list"></td>
         <td><%= pokedex.name %></td>
-        <td class="text-uppercase">
+        <td class="text-uppercase pt-3">
           <% if pokedex.type.name == "Grass" %>
             <p class="badge bg-grass"><%= pokedex.type.name %></p>
           <% elsif pokedex.type.name == "Fire" %>
@@ -69,7 +69,7 @@
         <td><%= pokedex.base_speed %></td>
         <td>
           <%= link_to 'Edit', edit_pokedex_path(pokedex), class: 'btn btn-success' %>
-          <%= link_to 'Show', pokedex_path(pokedex), class: 'btn btn-dark' %>
+          <%= link_to 'Show', pokedex_path(pokedex), class: 'btn-show' %>
         </td>
       </tr>
     <% end %>

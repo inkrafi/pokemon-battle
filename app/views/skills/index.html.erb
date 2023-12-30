@@ -1,0 +1,11 @@
+<%= link_to 'new', new_skill_path %>
+<% @skills.each do |skill| %>
+  <ol>
+    <li>
+        <%= skill.name %>
+        <%= skill.power %>
+        <%= skill.max_pp %>
+        (<%= skill.type.name %>)
+    </li>
+  </ol>
+<% end %>
