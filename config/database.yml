@@ -85,6 +85,6 @@ test:
 production:
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
-  database: pokemon_production
-  username: pokemon
+  database: postgres_jrrb
+  username: postgres_jrrb_user
   password: <%= ENV['POKEMON_DATABASE_PASSWORD'] %>
