@@ -4,7 +4,7 @@
         <div class="card-body">
             <div class="row d-flex justify-content-center align-items-center">
                 <div class="col-lg-4">
-                    <img src="<%= @pokemon.pokedex.image_url %>" alt="image" width="250">
+                    <img src="<%= @pokemon.pokedex.image_url %>" alt="image" class="image-pokemon">
                     <h3><%= @pokemon.name %></h3>
                     <h5>(<%= @pokemon.pokedex.name %>)</h5>
                     <h5 class="text-uppercase">
@@ -68,7 +68,7 @@
                     </table>
                     <% if (@pokemon.skills.present?) %>
                         <h5 class="mb-3">Moves:</h5>
-                        <h4 class="d-flex flex-wrap justify-content-center gap-2">
+                        <h4 class="d-flex flex-wrap justify-content-center gap-2 skills-text">
                             <% @pokemon.pokemon_player_skills.each do |skill| %>
                                 <li class="badge bg-warning text-dark fw-medium">
                                     <div class="mb-2"><%= skill.skill.name %></div>

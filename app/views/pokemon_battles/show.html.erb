@@ -3,7 +3,7 @@
   <div class="row">
     <% if @pokemon_battle.status == "ON BATTLE" %>
 
-      <div class="col-md-4">
+      <div class="col">
         <div class="col">
           <div class="player-info text-dark" id="player-info">
             <h5>Player 1: <%= @pokemon_battle.pokemon1.name %></h5>
@@ -17,11 +17,11 @@
             <% if @show_damage_received && @current_turn.odd? %>
               <div class="damage-text" id="attacker-damage-text">-<%= @damage_received %></div>
             <% end %>
-            <img src="<%= @pokemon_battle.pokemon1.pokedex.image_url %>" alt="pokemon" width="220">
+            <img src="<%= @pokemon_battle.pokemon1.pokedex.image_url %>" alt="pokemon" class="image-battle">
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col">
         <div class="col">
           <div class="player-info text-dark" id="player-info">
             <h5>Player 2: <%= @pokemon_battle.pokemon2.name %></h5>
@@ -35,13 +35,13 @@
             <% if @show_damage_received && @current_turn.even? %>
               <div class="damage-text" id="opponent-damage-text">-<%= @damage_received %></div>
             <% end %>
-            <img src="<%= @pokemon_battle.pokemon2.pokedex.image_url %>" alt="pokemon" width="220">
+            <img src="<%= @pokemon_battle.pokemon2.pokedex.image_url %>" alt="pokemon" class="image-battle">
           </div>
         </div>
       </div>
 
     <% elsif @pokemon_battle.status == "FINISHED" %>
-      <div class="col-md-4">
+      <div class="col">
         <div class="col">
           <div class="player-info text-dark" id="player-info">
             <h5>Player 1: <%= @pokemon_battle.pokemon1.name %></h5>
@@ -52,11 +52,11 @@
         </div>
         <div class="col">
           <div class="pokemon-container">
-            <img src="<%= @pokemon_battle.pokemon1.pokedex.image_url %>" alt="pokemon" width="250">
+            <img src="<%= @pokemon_battle.pokemon1.pokedex.image_url %>" alt="pokemon" class="image-battle">
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col">
         <div class="col">
           <div class="player-info text-dark" id="player-info">
             <h5>Player 2: <%= @pokemon_battle.pokemon2.name %></h5>
@@ -67,7 +67,7 @@
         </div>
         <div class="col">
           <div class="pokemon-container">
-            <img src="<%= @pokemon_battle.pokemon2.pokedex.image_url %>" alt="pokemon" width="250">
+            <img src="<%= @pokemon_battle.pokemon2.pokedex.image_url %>" alt="pokemon" class="image-battle">
           </div>
         </div>
       </div>
@@ -110,9 +110,6 @@
               <input type="hidden" id="pokemon_battle_skill" name="pokemon_battle[skill_id]" value="<%= pokemon_skill.skill.id %>">
               <input type="hidden" id="current_turn" name="current_turn" value="<%= @pokemon_battle.current_turn %>">
               <input type="hidden" id="pokemon_battle" name="pokemon_battle[pokemon_battle_id]" value="<%= @pokemon_battle.id %>">
-              <!--
-              <input type="hidden" id="pokemon_battle_detail" name="pokemon_battle_detail[pokemon_battle_detail_id]" value="<%= @pokemon_battle_details %>">
-              -->
             </div>
           </form>
         <% end %>
@@ -140,9 +137,6 @@
               <input type="hidden" id="pokemon_battle_skill" name="pokemon_battle[skill_id]" value="<%= pokemon_skill.skill.id %>">
               <input type="hidden" id="current_turn" name="current_turn" value="<%= @pokemon_battle.current_turn %>">
               <input type="hidden" id="pokemon_battle" name="pokemon_battle[pokemon_battle_id]" value="<%= @pokemon_battle.id %>">
-              <!--
-              <input type="hidden" id="pokemon_battle_detail" name="pokemon_battle_detail[pokemon_battle_detail_id]" value="<%= @pokemon_battle_details %>">
-              -->
             </div>
           </form>
         <% end %>

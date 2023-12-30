@@ -15,13 +15,140 @@
  */
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 li {
-    list-style: none;
+  list-style: none;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+  .image-pokedex__list {
+    width: 25px;
+    height: 25px;
+  }
+  .table {
+    width: 90%;
+  }
+  th, td {
+    font-size: 10px;
+  }
+
+  .pokemon-card {
+    width: 8rem;
+  }
+  .pokemon-card img {
+    width: 75px;
+    height: 75px;
+  }
+  .pokemon-card h5 {
+    font-size: 14px;
+  } 
+  .pokemon-card h6 {
+    font-size: 12px;
+  }
+
+  .image-pokemon {
+    width: 200px;
+    height: 200px;
+  }
+
+  .skills-text {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Battle */
+  .table .finished-text {
+    font-size: 12px;
+  }
+  .game-container {
+    width: 100%;
+    height: 215px;
+  }
+  .game-container h2 {
+    font-size: 1.4rem;
+    letter-spacing: 1.5px;
+  }
+  .game-container .box-result {
+    width: 65%;
+    height: 150px;
+    z-index: 2;
+    margin: 10px auto;
+  }
+  .game-container .image-battle {
+    width: 100px;
+    height: 100px;
+  }
+  .game-container .player-info {
+    position: absolute;
+    top: 5px;
+    padding-top: 2px;
+    width: 150px;
+    height: 70px;
+    font-size: 12px;
+  }
+  .game-container .player-info h5 {
+    font-size: 12px;
+  }
+  .game-container .player-info .hp-bar  {
+    height: 0.5rem;
+    border: 1px solid #333;
+    border-radius: 3px;
+  }
+  .game-container #player-hp-text {
+    margin-bottom: -10px;
+  }
+  .game-container .pokemon-container {
+    margin: 4rem 0 1rem 0;
+  }
+  .game-container .pokemon-container .damage-text {
+    font-size: 1rem;
+  }
+  .game-container .box-info {
+    position: absolute;
+    top: 220px;
+    left: 0;
+    width: 100%;
+    height: 150px;
+  }
+  .game-container .box-info h3 {
+    font-size: 14px;
+  }
+  .game-container .box-info button {
+    font-size: 10px;
+  }
+  .game-container .box-info .attack-animation-attacker {
+    animation: attackMoveAttacker 0.5s ease-in-out;
+  }
+  .game-container .box-info .attack-animation-opponent {
+    animation: attackMoveOpponent 0.5s ease-in-out;
+  }
+  @keyframes attackMoveAttacker {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(120px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @keyframes attackMoveOpponent {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-120px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
 }

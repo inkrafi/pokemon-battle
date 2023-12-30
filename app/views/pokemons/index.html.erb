@@ -6,22 +6,22 @@
 
 <div class="row">
     <% @pokemons.each do |pokemon| %>
-        <div class="col-md-3 d-flex flex-wrap justify-content-center">
+        <div class="col pokemon-index">
             <% if pokemon.current_hp > 0 %>
-                <div class="card m-3" style="width: 14rem;">
+                <div class="card m-3 pokemon-card">
                     <div class="card-body">
                         <a href="<%= pokemon_path(pokemon) %>" class="text-dark">
-                            <img src="<%= pokemon.pokedex.image_url %>" alt="image" width="150">
+                            <img src="<%= pokemon.pokedex.image_url %>" alt="image">
                             <h5><%= pokemon.name %></h5>
                             <h6>(<%= pokemon.pokedex.name %>)</h6>
                         </a>
                     </div>
                 </div>
             <% elsif pokemon.current_hp == 0 %>
-                <div class="card opacity-75 m-3" style="width: 14rem;">
+                <div class="card opacity-75 m-3 pokemon-card">
                     <div class="card-body">
                         <a href="<%= pokemon_path(pokemon) %>" class="text-dark">
-                            <img src="<%= pokemon.pokedex.image_url %>" alt="image" width="150">
+                            <img src="<%= pokemon.pokedex.image_url %>" alt="image">
                             <h5><%= pokemon.name %></h5>
                             <h6>(<%= pokemon.pokedex.name %>)</h6>
                         </a>

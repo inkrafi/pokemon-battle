@@ -24,7 +24,7 @@
     <% @pokedexes.each do |pokedex| %>
       <tr>
         <td><%= pokedex.id %></td>
-        <td><img src="<%= pokedex.image_url %>" alt="image" width="50"></td>
+        <td><img src="<%= pokedex.image_url %>" alt="image" class="image-pokedex__list"></td>
         <td><%= pokedex.name %></td>
         <td class="text-uppercase">
           <% if pokedex.type.name == "Grass" %>

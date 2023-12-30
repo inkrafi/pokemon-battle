@@ -30,3 +30,20 @@ $secondary-color: #fff6a4;
   }
 }
 
+.image-pokemon {
+  width: 250px;
+  height: 250px;
+}
+
+.pokemon-index {
+  display: flex;
+  flex-wrap: wrap;
+}
+.pokemon-card {
+  width: 14rem;
+
+  img {
+    width: 150px;
+    height: 150px;
+  }
+}

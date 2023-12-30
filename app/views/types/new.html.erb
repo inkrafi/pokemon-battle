@@ -1,0 +1,12 @@
+<form action="<%= types_path %>" accept-charset="UTF-8" method="post" class="form text-dark">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-6">
+            <div class="mb-5">
+                <label for="type_name" class="form-label"><h4>Name</h4></label>
+                <input type="text" class="form-control" id="type_name" name="type[name]" value="<%= @type.name %>" placeholder="type name" required>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-warning">SUBMIT</button>
+</form>

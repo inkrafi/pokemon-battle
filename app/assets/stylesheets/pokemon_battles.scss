@@ -2,6 +2,10 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
+.table .finished-text {
+  font-size: 1rem;
+}
+
 .game-container {
   position: relative;
   margin: 0 auto;
@@ -10,6 +14,11 @@
   background: url('bg-battle.png') center/contain no-repeat;
   border: 10px solid #111;
   padding: 20px;
+
+  .image-battle {
+    width: 220px;
+    height: 220px;
+  }
 
   h2 {
     letter-spacing: 2px;
@@ -60,6 +69,7 @@
   }
 
   .player-info {
+    width: 70%;
     margin-bottom: 20px;
     background-color: rgb(243, 250, 222);
     opacity: .9;
