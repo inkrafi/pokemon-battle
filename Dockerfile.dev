@@ -1,0 +1,18 @@
+# Development image: Ruby 3.2.2 + Node 16 (Webpacker 5 needs an old Node) + Yarn.
+FROM ruby:3.2.2
+
+# Node 16 from the official image, so we don't depend on the retired NodeSource scripts.
+COPY --from=node:16.20.2-bullseye-slim /usr/local/bin/node /usr/local/bin/node
+COPY --from=node:16.20.2-bullseye-slim /usr/local/lib/node_modules /usr/local/lib/node_modules
+RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+ && npm install -g yarn
+
+WORKDIR /app
+
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+COPY package.json yarn.lock ./
+RUN yarn install
+
+EXPOSE 3000

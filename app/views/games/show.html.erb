@@ -1,0 +1,16 @@
+<% provide :title, "Game ##{@game.id}" %>
+
+<%= link_to '‹ All games', games_path, class: 'breadcrumb-link' %>
+
+<% if @board.finished? %>
+  <%= render 'games/result', board: @board %>
+  <%= render 'games/board', board: @board %>
+<% elsif @board.viewer.nil? %>
+  <%= render 'games/handoff', board: @board %>
+<% elsif @board.setup? && @board.placed? %>
+  <%= render 'games/waiting_setup', board: @board %>
+<% elsif @board.setup? %>
+  <%= render 'games/setup', board: @board %>
+<% else %>
+  <%= render 'games/board', board: @board %>
+<% end %>

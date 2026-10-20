@@ -1,0 +1,7 @@
+<%# Shown on a shared screen between players, so nobody sees a hand that isn't theirs. %>
+<% seat = board.acting_seat %>
+<div class="handoff" role="status">
+  <h1>Pass the device to <%= board.seat_name(seat) %></h1>
+  <p><%= board.seat_name(seat) %> <%= board.why_seat_acts %> Nobody else should look until the button is pressed.</p>
+  <%= button_to "I am #{board.seat_name(seat)}", reveal_game_path(board.game), class: 'btn btn-primary btn-lg' %>
+</div>

@@ -1,0 +1,299 @@
+// Design tokens and base styles. Bootstrap's CSS is loaded before this file,
+// so rules here win on equal specificity.
+
+@font-face {
+  font-family: "Pokemon Solid";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: font-url("pokemon-solid.ttf");
+}
+
+:root {
+  --ink: #1c2340;
+  --slate: #5b6482;
+  --paper: #eef1f7;
+  --surface: #ffffff;
+  --line: #d9deea;
+  --red: #e4372a;
+  --red-deep: #c42b1f;
+  --yellow: #ffc93c;
+  --focus: #3355c4;
+
+  --radius-card: 16px;
+  --radius-control: 10px;
+  --shadow-card: 0 1px 0 rgba(28, 35, 64, 0.06), 0 14px 26px -14px rgba(28, 35, 64, 0.38);
+
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Nunito Sans", "Segoe UI", system-ui, sans-serif;
+
+  // Bootstrap hooks
+  --bs-body-font-family: var(--font-body);
+  --bs-body-color: var(--ink);
+  --bs-body-bg: var(--paper);
+  --bs-border-color: var(--line);
+  --bs-link-color-rgb: 51, 85, 196;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background-color: var(--paper);
+  // faint dot grid, like a playmat
+  background-image: radial-gradient(circle, rgba(28, 35, 64, 0.07) 1px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+main {
+  flex: 1;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+h1 { font-size: clamp(2rem, 4.2vw, 3rem); }
+h2 { font-size: clamp(1.5rem, 2.6vw, 1.9rem); }
+h3 { font-size: 1.25rem; }
+
+p { max-width: 68ch; }
+
+li { list-style: none; }
+
+a {
+  color: var(--focus);
+  text-decoration: none;
+}
+
+a:hover { text-decoration: underline; }
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 1100;
+  padding: 0.6rem 1rem;
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--radius-control);
+
+  &:focus {
+    top: 1rem;
+    color: #fff;
+  }
+}
+
+.text-slate { color: var(--slate) !important; }
+
+// ---------------------------------------------------------------- buttons
+.btn {
+  --bs-btn-font-weight: 700;
+  --bs-btn-border-radius: var(--radius-control);
+  --bs-btn-padding-x: 1.1rem;
+  --bs-btn-padding-y: 0.55rem;
+  font-family: var(--font-body);
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+
+  &:active:not(:disabled) { transform: translateY(1px); }
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--red);
+  --bs-btn-border-color: var(--red);
+  --bs-btn-hover-bg: var(--red-deep);
+  --bs-btn-hover-border-color: var(--red-deep);
+  --bs-btn-active-bg: var(--red-deep);
+  --bs-btn-active-border-color: var(--red-deep);
+  --bs-btn-focus-shadow-rgb: 228, 55, 42;
+  --bs-btn-color: #fff;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-active-color: #fff;
+}
+
+.btn-outline-dark {
+  --bs-btn-color: var(--ink);
+  --bs-btn-border-color: var(--ink);
+  --bs-btn-hover-bg: var(--ink);
+  --bs-btn-hover-border-color: var(--ink);
+  --bs-btn-active-bg: var(--ink);
+}
+
+.btn-outline-danger {
+  --bs-btn-color: var(--red-deep);
+  --bs-btn-border-color: var(--red);
+  --bs-btn-hover-bg: var(--red);
+  --bs-btn-hover-border-color: var(--red);
+  --bs-btn-active-bg: var(--red-deep);
+}
+
+.btn-sm {
+  --bs-btn-padding-y: 0.3rem;
+  --bs-btn-padding-x: 0.75rem;
+  --bs-btn-font-size: 0.875rem;
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+// ---------------------------------------------------------------- forms
+.form-panel {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+.form-label {
+  margin-bottom: 0.35rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.form-control,
+.form-select {
+  padding: 0.6rem 0.8rem;
+  border-color: #c3cadc;
+  border-radius: var(--radius-control);
+  background-color: #fff;
+  color: var(--ink);
+
+  &:focus {
+    border-color: var(--focus);
+    box-shadow: 0 0 0 3px rgba(51, 85, 196, 0.2);
+  }
+}
+
+.form-hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  color: var(--slate);
+}
+
+.field { margin-bottom: 1.5rem; }
+
+.error-summary {
+  margin-bottom: 1.5rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid #f0b4ae;
+  border-left: 5px solid var(--red);
+  border-radius: var(--radius-control);
+  background: #fff5f4;
+
+  p { margin: 0 0 0.25rem; font-weight: 700; }
+  ul { margin: 0; padding-left: 1.1rem; }
+  li { list-style: disc; }
+}
+
+// ---------------------------------------------------------------- tables
+.data-table {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+
+  th {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-align: left;
+    color: var(--slate);
+    background: #f7f8fc;
+    border-bottom: 1px solid var(--line);
+  }
+
+  td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--line);
+  }
+
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover td { background: #fafbfe; }
+
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+}
+
+.table-scroll {
+  overflow-x: auto;
+  border-radius: var(--radius-card);
+}
+
+// ---------------------------------------------------------------- pagination
+.pagination {
+  --bs-pagination-color: var(--ink);
+  --bs-pagination-hover-color: var(--ink);
+  --bs-pagination-active-bg: var(--ink);
+  --bs-pagination-active-border-color: var(--ink);
+  --bs-pagination-border-color: var(--line);
+  --bs-pagination-border-radius: var(--radius-control);
+  --bs-pagination-focus-box-shadow: 0 0 0 3px rgba(51, 85, 196, 0.2);
+  gap: 0.25rem;
+
+  .page-link { border-radius: var(--radius-control); }
+}
+
+// ---------------------------------------------------------------- small pieces
+.status-chip {
+  display: inline-block;
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--slate);
+  background: #e6e9f2;
+
+  &--live {
+    color: #7a4b00;
+    background: var(--yellow);
+  }
+}
+
+.empty-state {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: var(--surface);
+  border: 2px dashed #c3cadc;
+  border-radius: var(--radius-card);
+
+  h2 { font-size: 1.3rem; }
+  p { margin: 0.5rem auto 1.25rem; color: var(--slate); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

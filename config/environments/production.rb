@@ -24,6 +24,13 @@ Rails.application.configure do
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present? || ENV['RENDER'].present?
 
+  # Assets in /assets and /packs carry a digest in their name, so browsers can keep them for a year.
+  config.public_file_server.headers = { 'Cache-Control' => "public, max-age=#{1.year.to_i}, immutable" }
+
+  # Compress HTML and JSON (the pages are 5-10x smaller gzipped). Placed before the static file
+  # middleware so anything it serves uncompressed is covered too; already-gzipped assets are skipped.
+  config.middleware.insert_before ActionDispatch::Static, Rack::Deflater
+
   # Compress CSS using a preprocessor.
   # config.assets.css_compressor = :sass
 

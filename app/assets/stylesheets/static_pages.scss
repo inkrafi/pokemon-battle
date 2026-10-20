@@ -1,68 +1,230 @@
-// Place all the styles related to the StaticPages controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: https://sass-lang.com/
+// Home and guide pages.
 
-// Variabel warna overlay (misalnya, hitam dengan kekakuan 0.5)
-$overlay-color: rgba(0, 0, 0, 0.8);
-$primary-color: #d8a20c;
+// ---------------------------------------------------------------- home hero
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: center;
+  padding: clamp(0.5rem, 3vw, 2rem) 0 clamp(2rem, 5vw, 3.5rem);
 
-@font-face {
-  font-family: "Pokemon Solid";
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: font-url("pokemon-solid.ttf");
-}
-
-h1 {
-  font-family: "Pokemon Solid";
-  letter-spacing: 5px;
-}
-
-.button-primary {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: $primary-color;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 10px;
-
-  &:hover {
-    background-color: #ce8f12;
+  @media (min-width: 992px) {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 3rem;
   }
 
-  &:focus {
-    background-color: #b98110;
+  &__copy h1 {
+    max-width: 14ch;
+    margin: 0 0 1rem;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    line-height: 1.02;
+  }
+
+  &__lede {
+    margin: 0 0 1.75rem;
+    font-size: 1.15rem;
+    color: var(--slate);
   }
 }
 
-// Gaya elemen dengan background overlay
-.background-overlay {
-  position: relative;
-  width: 100%;
-  height: 200vh;
-  overflow-y: auto;
+// Three cards dealt like a hand. Only the first paint is animated.
+.card-fan {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 330px;
+  padding: 0.5rem 0 1.5rem;
 
-  background: url('background.webp') center/cover no-repeat;
+  &__item {
+    flex: none;
+    width: clamp(150px, 24vw, 236px);
+    margin: 0 -0.8rem;
+    transform: translateY(var(--y, 0)) rotate(var(--r, 0deg));
+    animation: deal 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(var(--i, 0) * 130ms + 150ms);
 
-  // Elemen utama
-  &::before {
+    &:nth-child(1) { --r: -7deg; --y: 16px; --i: 0; }
+    &:nth-child(2) { --r: 0deg;  --y: -12px; --i: 1; z-index: 2; }
+    &:nth-child(3) { --r: 7deg;  --y: 16px; --i: 2; }
+
+    .tcg-card { max-width: none; }
+    // the wide hand is for looking at; the compact footer would only add noise
+    .tcg-card__foot { display: none; }
+  }
+
+  // phones: two bigger cards instead of three cramped ones
+  @media (max-width: 575.98px) {
+    min-height: 300px;
+
+    &__item {
+      width: 150px;
+      margin: 0 -0.6rem;
+
+      &:nth-child(1) { --r: -6deg; --y: 12px; }
+      &:nth-child(2) { --r: 5deg; --y: -4px; }
+      &:nth-child(3) { display: none; }
+    }
+  }
+
+  @media (min-width: 576px) {
+    &__item { margin: 0 -1.1rem; }
+  }
+}
+
+@keyframes deal {
+  from {
+    opacity: 0;
+    transform: translateY(80px) rotate(0deg) scale(0.92);
+  }
+}
+
+// ---------------------------------------------------------------- how it works
+.steps {
+  display: grid;
+  gap: 1.75rem;
+  margin: 0;
+  padding: 2rem 0 0;
+  border-top: 1px solid var(--line);
+  counter-reset: step;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  li {
+    position: relative;
+    padding: 0 0 0 3.2rem;
+
+    @media (min-width: 768px) {
+      padding: 0 2rem 0 3.6rem;
+      &:not(:first-child) { border-left: 1px solid var(--line); padding-left: calc(2rem + 3.6rem); }
+      &:not(:first-child)::before { left: 2rem; }
+    }
+
+    &::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: -0.1rem;
+      display: grid;
+      place-items: center;
+      width: 2.3rem;
+      height: 2.3rem;
+      border-radius: 50%;
+      background: var(--yellow);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+  }
+
+  h2 { margin: 0 0 0.35rem; font-size: 1.2rem; }
+  p { margin: 0 0 0.6rem; color: var(--slate); }
+  a { font-weight: 700; }
+}
+
+.guide-teaser {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  margin-top: 3rem;
+  padding: 1.5rem 1.75rem;
+  border-radius: var(--radius-card);
+  background: var(--ink);
+  color: #fff;
+
+  h2 { margin: 0 0 0.25rem; font-size: 1.3rem; color: #fff; }
+  p { margin: 0; color: #c9d0e6; }
+
+  .btn-outline-light { --bs-btn-hover-color: var(--ink); }
+}
+
+// ---------------------------------------------------------------- guide
+.guide {
+  display: grid;
+  gap: 3rem;
+
+  &__section {
+    display: grid;
+    gap: 1rem;
+
+    h2 { margin: 0; }
+    p { margin: 0; }
+  }
+
+  &__split {
+    display: grid;
+    gap: 1.25rem 2.5rem;
+    @media (min-width: 768px) { grid-template-columns: 1fr 1fr; }
+  }
+}
+
+.glossary {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+
+  dt { font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; }
+  dd { margin: 0.1rem 0 0; color: var(--slate); max-width: 62ch; }
+}
+
+.rule-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  max-width: 68ch;
+
+  li { padding-left: 1.25rem; position: relative; }
+  li::before {
     content: "";
     position: absolute;
-    top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: $overlay-color;
+    top: 0.65em;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--red);
   }
+  strong { font-weight: 800; }
+}
 
-  // Gaya elemen lain di dalam background
-  .content {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    top: 2rem;
-    color: white;
+.tech-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+
+  li {
+    padding: 0.2rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    font-weight: 700;
+    font-size: 0.9rem;
   }
+}
+
+.fine-print {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--slate);
+}
+
+// ---------------------------------------------------------------- "this is a simulation" notice
+.sim-notice {
+  max-width: 52rem;
+  margin: 2rem 0;
+  padding: 1rem 1.25rem;
+  border: 1px dashed #98a3c4;
+  border-radius: var(--radius-card);
+  background: #f3f5fb;
+
+  h2 { margin: 0 0 0.4rem; font-size: 1.1rem; }
+  p { margin: 0; color: var(--slate); }
 }

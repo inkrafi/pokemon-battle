@@ -1,0 +1,26 @@
+<%# Looking through the deck for cards. Only the player searching ever sees this list. %>
+<section class="search-panel" aria-labelledby="search-heading">
+  <h2 id="search-heading">Search your deck</h2>
+  <p>
+    Choose up to <%= pluralize(board.search_limit, 'card') %> to put <%= board.search_destination == 'bench' ? 'on your Bench' : (board.search_destination == 'self' ? 'on your Active Pokémon' : 'in your hand') %>.
+    Cards that don't fit are greyed out. You may also take nothing.
+  </p>
+
+  <%= form_with url: actions_game_path(board.game) do %>
+    <%= hidden_field_tag :type, 'choose' %>
+    <%= hidden_field_tag :version, board.version, id: nil %>
+    <ul class="search-panel__cards">
+      <% board.search_options.each do |option| %>
+        <li class="search-card<%= ' is-dim' unless option.fits %>" data-type="<%= (option.card.type || 'Colorless').parameterize %>">
+          <label>
+            <%= check_box_tag 'cards[]', option.uid, false, id: nil, disabled: !option.fits %>
+            <%= energy_icon(option.card.type || 'Colorless', size: :sm) %>
+            <%= option.card.name %>
+            <small><%= option.card.pokemon? ? "#{option.card.stage_label}, HP #{option.card.hp}" : option.card.subtype.to_s.titleize %></small>
+          </label>
+        </li>
+      <% end %>
+    </ul>
+    <%= button_tag 'Take the chosen cards', type: 'submit', class: 'btn btn-primary' %>
+  <% end %>
+</section>

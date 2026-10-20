@@ -4,7 +4,7 @@ development:
 test:
   adapter: test
 
+# Postgres carries the messages, so the app needs no Redis. (It only says "the board changed".)
 production:
-  adapter: redis
-  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
+  adapter: postgresql
   channel_prefix: pokemon_production

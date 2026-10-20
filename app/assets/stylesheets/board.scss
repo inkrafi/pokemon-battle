@@ -1,0 +1,411 @@
+// The game table: both sides, Pokémon in play, the hand, controls and the log.
+
+.board-layout {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+
+  @media (min-width: 1100px) {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+}
+
+.board-main { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; min-width: 0; }
+.board-aside { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; min-width: 0; }
+
+// ---------------------------------------------------------------- one side of the table
+.mat {
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+
+  &--theirs { background: #e6eaf5; }
+  &--mine { background: #fdf3da; }
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 1.25rem;
+    margin-bottom: 0.75rem;
+
+    h2 { margin: 0; font-size: 1.1rem; }
+  }
+
+  &__turn {
+    margin-left: 0.4rem;
+    padding: 0.05rem 0.6rem;
+    border-radius: 999px;
+    background: var(--yellow);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  &__counts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin: 0;
+    padding: 0;
+    font-size: 0.85rem;
+    color: var(--slate);
+
+    b { color: var(--ink); }
+    summary { cursor: pointer; }
+  }
+
+  &__discard { max-width: 28rem; margin: 0.3rem 0 0; font-size: 0.8rem; }
+
+  &__field {
+    display: grid;
+    gap: 0.9rem;
+
+    @media (min-width: 900px) { grid-template-columns: 14rem minmax(0, 1fr); }
+  }
+
+  &__label {
+    margin: 0 0 0.3rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--slate);
+  }
+
+  &__bench-slots {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+
+    // phones: the Bench scrolls sideways instead of squeezing five tiles into a row
+    @media (max-width: 899.98px) {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: 9rem;
+      overflow-x: auto;
+      padding-bottom: 0.4rem;
+    }
+  }
+}
+
+.prizes {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.prize {
+  position: relative;
+  width: 0.95rem;
+  height: 1.3rem;
+  border-radius: 3px;
+  background: linear-gradient(160deg, #e4372a, #9b2118);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.55);
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 38% 30%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  // a Prize card that has been taken leaves an empty place
+  &.is-taken {
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px #b9c0d4;
+    border: 0;
+    &::after { display: none; }
+  }
+}
+
+// ---------------------------------------------------------------- a Pokémon in play
+.slot {
+  --tint: color-mix(in srgb, var(--type, #cfd2d9) 18%, #fff);
+  padding: 0.45rem 0.55rem 0.55rem;
+  border: 3px solid var(--type, #cfd2d9);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fff, var(--tint));
+  font-size: 0.78rem;
+  line-height: 1.3;
+
+  &__name { margin: 0; font-size: 0.95rem; line-height: 1.2; a { color: var(--ink); } }
+  &__stage { margin: 0 0 0.3rem; font-size: 0.7rem; color: var(--slate); }
+
+  &__hp {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__hp-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: #dfe3ee;
+    overflow: hidden;
+
+    i { display: block; height: 100%; background: #2e9d57; transition: width 0.4s ease-out; }
+  }
+
+  &__energy { display: flex; flex-wrap: wrap; gap: 2px; min-height: 1.15rem; margin: 0.35rem 0; }
+  &__none { font-size: 0.7rem; color: var(--slate); }
+
+  &__attacks {
+    margin-top: 0.3rem;
+    font-size: 0.72rem;
+
+    summary { cursor: pointer; font-weight: 700; }
+    ul { margin: 0.3rem 0; padding: 0; }
+    li { display: flex; flex-wrap: wrap; gap: 0.25rem; align-items: center; }
+    p { margin: 0; color: var(--slate); }
+  }
+
+  &__moves {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0.4rem 0 0;
+    padding: 0;
+  }
+
+  &--active { font-size: 0.85rem; }
+
+  &--empty {
+    display: grid;
+    place-items: center;
+    min-height: 5.5rem;
+    border: 2px dashed #b9c0d4;
+    background: transparent;
+    color: var(--slate);
+    text-align: center;
+  }
+
+  .btn { margin-top: 0.4rem; width: 100%; }
+}
+
+.attack-btn {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border: 2px solid var(--type, #cfd2d9);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s;
+
+  &__cost { display: inline-flex; gap: 2px; }
+  &__name { font-weight: 800; }
+  &__damage { font-family: var(--font-display); font-weight: 800; }
+
+  &:hover:not(:disabled) { background: color-mix(in srgb, var(--type, #cfd2d9) 22%, #fff); }
+  &:disabled { opacity: 0.45; cursor: not-allowed; }
+}
+
+// ---------------------------------------------------------------- the hand
+.hand {
+  h2 { margin: 0 0 0.6rem; font-size: 1.1rem; small { color: var(--slate); font-weight: 600; } }
+
+  &__cards {
+    display: flex;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0.2rem 0.2rem 0.6rem;
+    overflow-x: auto;
+  }
+}
+
+.hand-card {
+  flex: 0 0 11.5rem;
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  padding: 0.6rem;
+  border: 2px solid var(--type, #cfd2d9);
+  border-radius: 12px;
+  background: #fff;
+
+  header { display: flex; align-items: center; gap: 0.45rem; strong a { color: var(--ink); } }
+  &__kind { margin: 0; font-size: 0.78rem; color: var(--slate); }
+  &__actions { display: grid; gap: 0.3rem; form { margin: 0; } .btn { width: 100%; text-align: left; } }
+}
+
+// ---------------------------------------------------------------- sidebar
+.controls,
+.game-log {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+
+  h2 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+  p { margin: 0 0 0.5rem; }
+}
+
+.retreat {
+  margin-top: 0.5rem;
+
+  summary { cursor: pointer; font-weight: 800; }
+  form { padding-top: 0.6rem; }
+  &__energy { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.25rem; }
+}
+
+.game-log {
+  ol { max-height: 22rem; margin: 0; padding: 0; overflow-y: auto; font-size: 0.85rem; }
+
+  &__entry {
+    padding: 0.35rem 0 0.35rem 0.6rem;
+    border-left: 3px solid var(--line);
+    border-bottom: 1px solid #eef0f6;
+
+    &--seat0 { border-left-color: #4f9bea; }
+    &--seat1 { border-left-color: #ef6a3b; }
+  }
+}
+
+// ---------------------------------------------------------------- hand-over, setup, result
+.handoff,
+.result {
+  max-width: 34rem;
+  margin: 1rem auto 2rem;
+  padding: 2rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  text-align: center;
+
+  h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+  p { margin-left: auto; margin-right: auto; color: var(--slate); }
+  .btn-row { justify-content: center; }
+}
+
+.result {
+  max-width: none;
+  margin-top: 0;
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+
+  h1 { color: var(--yellow); margin-bottom: 0.4rem; }
+  p { color: #c9d0e6; }
+  .btn-outline-dark { --bs-btn-color: #fff; --bs-btn-border-color: #fff; --bs-btn-hover-color: var(--ink); --bs-btn-hover-bg: #fff; }
+}
+
+.setup-list {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 44rem;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.setup-choice {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border: 2px solid var(--type, #cfd2d9);
+  border-radius: 12px;
+  background: #fff;
+
+  small { display: block; color: var(--slate); }
+  &__pick { display: inline-flex; align-items: center; gap: 0.3rem; font-weight: 700; }
+
+  @media (max-width: 575.98px) {
+    grid-template-columns: auto 1fr;
+    &__pick { grid-column: span 1; }
+  }
+}
+
+// ---------------------------------------------------------------- conditions, tools, Stadium
+.slot__status { display: flex; flex-wrap: wrap; gap: 0.25rem; margin: 0.25rem 0 0; }
+.slot__abilities { margin: 0.3rem 0 0; font-size: 0.7rem; color: var(--slate); }
+
+.condition,
+.tool-chip {
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.condition {
+  color: #fff;
+  &--poisoned { background: #8e44ad; }
+  &--burned { background: #e0561f; }
+  &--asleep { background: #5b6c8f; }
+  &--confused { background: #c59a00; }
+  &--paralyzed { background: #b58a00; }
+}
+
+.tool-chip { background: #e3e8f4; color: var(--ink); border: 1px solid #c4cce2; }
+
+.stadium-banner {
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  border: 1px dashed #98a3c4;
+  border-radius: var(--radius-card);
+  background: #f3f5fb;
+  font-size: 0.9rem;
+}
+
+// ---------------------------------------------------------------- choices and searching the deck
+.choice {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+
+  summary { padding: 0.3rem 0.6rem; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
+  form { display: grid; gap: 0.5rem; padding: 0.2rem 0.6rem 0.6rem; }
+  &__option { display: flex; gap: 0.4rem; align-items: center; font-size: 0.82rem; }
+}
+
+.search-panel {
+  padding: 1rem;
+  border: 2px solid var(--yellow);
+  border-radius: var(--radius-card);
+  background: #fffbea;
+
+  h2 { margin: 0 0 0.3rem; font-size: 1.1rem; }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 0.4rem;
+    max-height: 18rem;
+    margin: 0 0 0.75rem;
+    padding: 0;
+    overflow-y: auto;
+  }
+}
+
+.search-card {
+  padding: 0.35rem 0.6rem;
+  border: 2px solid var(--type, #cfd2d9);
+  border-radius: 10px;
+  background: #fff;
+  font-size: 0.85rem;
+
+  label { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; cursor: pointer; }
+  small { color: var(--slate); }
+  &.is-dim { opacity: 0.4; label { cursor: not-allowed; } }
+}
+
+// ---------------------------------------------------------------- online games
+.online-panel {
+  margin-top: 1.5rem;
+
+  h2 { margin: 0 0 0.3rem; font-size: 1.2rem; }
+  p { color: var(--slate); }
+}
+
+.invite__row { margin-bottom: 0.5rem; }

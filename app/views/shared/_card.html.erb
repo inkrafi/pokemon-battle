@@ -1,0 +1,89 @@
+<%# A card of the trading card game, drawn from its data. Official artwork and card text are not
+    part of this app, so the picture area shows the card's type instead.
+    Locals:
+      card - the Card
+      link - optional URL; makes the whole card clickable
+      tilt - true on the home page only: the card tilts and the shine follows the pointer.
+             Other cards stay still and only get a fixed holo shine on hover. %>
+<%
+  link = local_assigns[:link]
+  tilt = local_assigns[:tilt]
+  type = card.type || 'Colorless'
+%>
+<article class="tcg-card tcg-card--<%= card.supertype %>" data-type="<%= type.parameterize %>"<%= ' data-tilt' if tilt %>>
+  <div class="tcg-card__shine" aria-hidden="true"></div>
+  <div class="tcg-card__inner">
+    <header class="tcg-card__head">
+      <p class="tcg-card__stage">
+        <% if card.pokemon? %>
+          <%= card.stage_label %> Pokémon<%= " evolves from #{card.evolves_from}" if card.evolves_from %>
+        <% elsif card.trainer? %>
+          Trainer, <%= card.subtype.titleize %>
+        <% else %>
+          <%= card.basic_energy? ? 'Basic Energy' : 'Special Energy' %>
+        <% end %>
+      </p>
+      <div class="tcg-card__titlerow">
+        <h3 class="tcg-card__name">
+          <%= link ? link_to(card.name, link, class: 'stretched-link') : card.name %>
+        </h3>
+        <% if card.pokemon? %>
+          <p class="tcg-hp"><span>HP</span> <strong><%= card.hp %></strong> <%= energy_icon(type) %></p>
+        <% end %>
+      </div>
+    </header>
+
+    <div class="tcg-card__art" aria-hidden="true">
+      <%= energy_icon(card.pokemon? || card.basic_energy? ? type : 'Colorless', size: :xl) %>
+    </div>
+
+    <% if card.rule_box %>
+      <p class="tcg-card__rulebox">
+        <strong><%= card.rule_box %></strong> If this Pokémon is Knocked Out, your opponent takes <%= card.prize_value %> Prize cards.
+      </p>
+    <% end %>
+
+    <% if card.pokemon? %>
+      <ul class="tcg-attacks">
+        <% card.abilities.each do |ability| %>
+          <li class="tcg-attack tcg-attack--ability">
+            <span class="tcg-attack__name">
+              <% if ability['supported'] %>Ability<% else %><abbr title="This Ability is not available in play yet">Ability</abbr><% end %>
+              <%= ability['name'] %>
+            </span>
+          </li>
+        <% end %>
+        <% card.attacks.each do |attack| %>
+          <li class="tcg-attack">
+            <span class="tcg-attack__cost"><%= energy_cost(attack['cost']) %></span>
+            <span class="tcg-attack__name">
+              <%= attack['name'] %>
+              <% if attack['has_effect'] %><abbr class="tcg-attack__flag" title="This attack has an effect that is not available in play yet">effect</abbr><% end %>
+            </span>
+            <span class="tcg-attack__damage"><%= damage_text(attack) %></span>
+          </li>
+        <% end %>
+      </ul>
+
+      <footer class="tcg-card__foot">
+        <div>
+          <span class="tcg-card__foot-label">Weakness</span>
+          <% if card.weakness_type %><%= energy_icon(card.weakness_type) %> ×<%= card.weakness_multiplier %><% else %>–<% end %>
+        </div>
+        <div>
+          <span class="tcg-card__foot-label">Resistance</span>
+          <% if card.resistance_type %><%= energy_icon(card.resistance_type) %> −<%= card.resistance_amount %><% else %>–<% end %>
+        </div>
+        <div>
+          <span class="tcg-card__foot-label">Retreat</span>
+          <% if card.retreat_cost.to_i.positive? %><span class="tcg-card__foot-icons"><%= energy_cost(['Colorless'] * card.retreat_cost) %></span><% else %>–<% end %>
+        </div>
+      </footer>
+    <% end %>
+
+    <p class="tcg-card__set">
+      <%= card.card_set.name %> <%= card.number %>
+      <% if card.rarity.present? %><span class="tcg-card__rarity"><%= card.rarity %></span><% end %>
+    </p>
+  </div>
+</article>

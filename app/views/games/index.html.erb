@@ -1,0 +1,40 @@
+<% provide :title, 'Play' %>
+
+<div class="page-head">
+  <div>
+    <h1>Play</h1>
+    <p>Start a game against the computer, pass one screen between two players, or invite a friend to play online.</p>
+  </div>
+  <%= link_to 'New game', new_game_path, class: 'btn btn-primary' %>
+</div>
+
+<% if @games.any? %>
+  <ul class="deck-list">
+    <% @games.each do |game| %>
+      <li class="deck-row">
+        <div>
+          <h2><%= link_to "Game ##{game.id}", game_path(game) %></h2>
+          <p><%= mode_label(game) %>, started <%= time_ago_in_words(game.created_at) %> ago</p>
+        </div>
+        <div class="btn-row">
+          <% if game.waiting? %>
+            <span class="status-chip">Waiting for a friend</span>
+            <%= link_to 'Invite link', game_path(game), class: 'btn btn-outline-dark btn-sm' %>
+          <% elsif game.finished? %>
+            <span class="status-chip">Finished, Player <%= game.winner_seat + 1 %> won</span>
+            <%= link_to 'View', game_path(game), class: 'btn btn-outline-dark btn-sm' %>
+          <% else %>
+            <span class="status-chip status-chip--live">In progress</span>
+            <%= link_to 'Continue', game_path(game), class: 'btn btn-outline-dark btn-sm' %>
+          <% end %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <div class="empty-state">
+    <h2>No games yet</h2>
+    <p>Pick a deck for each side and start playing. The sample decks are ready to go.</p>
+    <%= link_to 'Start a game', new_game_path, class: 'btn btn-primary' %>
+  </div>
+<% end %>

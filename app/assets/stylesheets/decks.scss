@@ -1,0 +1,171 @@
+// Deck list and the deck builder.
+
+.deck-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+}
+
+.deck-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+
+  h2 { margin: 0; font-size: 1.15rem; }
+  p { margin: 0.15rem 0 0; font-size: 0.9rem; color: var(--slate); }
+}
+
+// ---------------------------------------------------------------- builder
+.builder {
+  display: grid;
+  gap: 2rem;
+  align-items: start;
+
+  @media (min-width: 1000px) {
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+.deck-panel {
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+
+  @media (min-width: 1000px) {
+    position: sticky;
+    top: 5.5rem;
+    max-height: calc(100vh - 7rem);
+    overflow-y: auto;
+  }
+
+  h2 { margin: 0 0 0.75rem; font-size: 1.1rem; }
+}
+
+.deck-meter {
+  margin-bottom: 1rem;
+
+  &__label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.3rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__bar {
+    height: 10px;
+    border-radius: 5px;
+    background: #e3e7f1;
+    overflow: hidden;
+
+    > i {
+      display: block;
+      height: 100%;
+      border-radius: 5px;
+      background: var(--focus);
+      transition: width 0.3s ease-out;
+    }
+
+    &.is-full > i { background: #2e9d57; }
+    &.is-over > i { background: var(--red); }
+  }
+}
+
+.problems {
+  margin: 0 0 1rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid #f0d28c;
+  border-left: 5px solid var(--yellow);
+  border-radius: var(--radius-control);
+  background: #fffbea;
+  font-size: 0.9rem;
+
+  ul { margin: 0; padding-left: 1.1rem; }
+  li { list-style: disc; }
+
+  &--ready {
+    border-color: #a8dcbd;
+    border-left-color: #2e9d57;
+    background: #effaf3;
+    font-weight: 700;
+  }
+}
+
+.deck-group {
+  margin-bottom: 1rem;
+
+  h3 {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 0.4rem;
+    font-size: 0.85rem;
+    color: var(--slate);
+  }
+}
+
+.deck-entry {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--line);
+
+  &__name { min-width: 0; font-weight: 700; line-height: 1.25; }
+  &__name small { display: block; font-weight: 400; color: var(--slate); }
+
+  &__qty {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+
+    form { margin: 0; }
+  }
+}
+
+.step-btn {
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  padding: 0;
+  border: 1px solid #c3cadc;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink);
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover:not(:disabled) { border-color: var(--ink); background: #f0f2f8; }
+  &:disabled { opacity: 0.35; cursor: not-allowed; }
+}
+
+.pool-card {
+  display: grid;
+  gap: 0.6rem;
+  justify-items: center;
+  width: 100%;
+
+  form { margin: 0; }
+}
+
+.rename {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+
+  .form-control { flex: 1; }
+}

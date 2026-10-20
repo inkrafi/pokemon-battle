@@ -1,0 +1,117 @@
+<% provide :title, @deck.name %>
+<% count = @deck.card_count %>
+<% base = params.permit(:q, :supertype).to_h %>
+
+<%= link_to '‹ All decks', decks_path, class: 'breadcrumb-link' %>
+
+<div class="builder">
+  <aside class="deck-panel" aria-labelledby="deck-heading">
+    <h2 id="deck-heading"><%= @deck.name %></h2>
+
+    <%= form_with model: @deck, class: 'rename' do |f| %>
+      <%= f.label :name, 'Deck name', class: 'visually-hidden' %>
+      <%= f.text_field :name, class: 'form-control', required: true, maxlength: 40 %>
+      <%= f.button 'Rename', type: 'submit', class: 'btn btn-outline-dark btn-sm' %>
+    <% end %>
+
+    <div class="deck-meter">
+      <div class="deck-meter__label"><span>Cards</span><span><%= count %> / <%= Deck::SIZE %></span></div>
+      <div class="deck-meter__bar <%= 'is-full' if count == Deck::SIZE %> <%= 'is-over' if count > Deck::SIZE %>">
+        <i style="width: <%= [count * 100 / Deck::SIZE, 100].min %>%"></i>
+      </div>
+    </div>
+
+    <% if @problems.empty? %>
+      <p class="problems problems--ready" role="status">This deck is legal and ready to play.</p>
+    <% else %>
+      <div class="problems" role="status">
+        <ul>
+          <% @problems.each do |problem| %><li><%= problem %></li><% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <% if @entries.empty? %>
+      <p class="text-slate">No cards yet. Add some from the list.</p>
+    <% else %>
+      <% @entries.group_by { |entry| entry.card.supertype }.each do |supertype, entries| %>
+        <section class="deck-group">
+          <h3><span><%= { 'pokemon' => 'Pokémon', 'trainer' => 'Trainer', 'energy' => 'Energy' }[supertype] %></span><span><%= entries.sum(&:quantity) %></span></h3>
+          <% entries.each do |entry| %>
+            <% card = entry.card %>
+            <div class="deck-entry">
+              <%= energy_icon(card.type || 'Colorless') %>
+              <div class="deck-entry__name">
+                <%= link_to card.name, card_path(card) %>
+                <small><%= card.card_set.name %> <%= card.number %></small>
+              </div>
+              <div class="deck-entry__qty">
+                <%= button_to '−', remove_card_deck_path(@deck, card_id: card.id), method: :delete, class: 'step-btn', form: { class: 'd-inline' }, 'aria-label': "Remove one #{card.name}" %>
+                <span><%= entry.quantity %></span>
+                <%= button_to '+', add_card_deck_path(@deck, card_id: card.id), class: 'step-btn', form: { class: 'd-inline' }, 'aria-label': "Add one #{card.name}" %>
+              </div>
+            </div>
+          <% end %>
+        </section>
+      <% end %>
+    <% end %>
+
+    <div class="btn-row mt-3">
+      <%= link_to 'Delete deck', deck_path(@deck), method: :delete, data: { confirm: "Delete #{@deck.name}?" }, class: 'btn btn-outline-danger btn-sm' %>
+    </div>
+  </aside>
+
+  <section aria-labelledby="pool-heading">
+    <h2 id="pool-heading" class="mb-3">Add cards</h2>
+
+    <div class="filter-bar">
+      <%= form_with url: deck_path(@deck), method: :get, class: 'search', role: 'search' do %>
+        <label class="visually-hidden" for="q">Search by name</label>
+        <%= search_field_tag :q, @query, id: 'q', class: 'form-control', placeholder: 'Search by name' %>
+        <label class="visually-hidden" for="supertype">Kind of card</label>
+        <%= select_tag :supertype, options_for_select([['Pokémon', 'pokemon'], ['Energy', 'energy']], params[:supertype]),
+                       include_blank: 'All cards', id: 'supertype', class: 'form-select' %>
+        <%= hidden_field_tag :type, params[:type] if params[:type].present? %>
+        <button type="submit" class="btn btn-outline-dark">Search</button>
+      <% end %>
+
+      <ul class="chips" aria-label="Filter by type">
+        <li><%= link_to 'All types', deck_path(@deck, base), class: ['chip', ('is-active' if params[:type].blank?)] %></li>
+        <% Card::TYPES.each do |type| %>
+          <li>
+            <%= link_to deck_path(@deck, base.merge(type: type)), class: ['chip', ('is-active' if params[:type] == type)], data: { type: type.downcase } do %>
+              <%= energy_icon(type, size: :sm) %><%= type %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <% if @pool.any? %>
+      <p class="result-count"><%= pluralize(@pool.total_count, 'card') %> you can add</p>
+
+      <ul class="card-grid">
+        <% @pool.each do |card| %>
+          <% in_deck = @deck.quantity_of(card) %>
+          <li class="pool-card">
+            <div class="position-relative w-100 d-flex justify-content-center">
+              <%= render 'shared/card', card: card, link: card_path(card) %>
+              <% if in_deck.positive? %><span class="card-count" title="In your deck"><%= in_deck %></span><% end %>
+            </div>
+            <%= button_to "Add #{card.name}", add_card_deck_path(@deck, card_id: card.id), class: 'btn btn-primary btn-sm' %>
+          </li>
+        <% end %>
+      </ul>
+
+      <div class="d-flex justify-content-center my-5">
+        <%= paginate @pool %>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <h2>No cards match</h2>
+        <p>Try a different name or type.</p>
+        <%= link_to 'Clear filters', deck_path(@deck), class: 'btn btn-outline-dark' %>
+      </div>
+    <% end %>
+  </section>
+</div>

@@ -1,0 +1,23 @@
+<div class="board-layout"<% if board.game.online? && !board.finished? %> data-live-game="<%= board.game.id %>" data-version="<%= board.version %>"<% end %>>
+  <div class="board-main">
+    <% if board.stadium %>
+      <p class="stadium-banner"><b>Stadium</b> <%= link_to board.stadium[:card].name, card_path(board.stadium[:card]), target: '_blank', rel: 'noopener' %>,
+        played by <%= board.seat_name(board.stadium[:owner]) %></p>
+    <% end %>
+    <% if board.viewer %>
+      <%= render 'games/side', board: board, seat: board.opponent, mine: false %>
+      <%= render 'games/side', board: board, seat: board.viewer, mine: true %>
+      <%= render 'games/search', board: board if board.searching? %>
+      <%= render 'games/hand', board: board %>
+    <% else %>
+      <%# a finished game: both sides are open, nobody holds a hand any more %>
+      <%= render 'games/side', board: board, seat: 0, mine: false %>
+      <%= render 'games/side', board: board, seat: 1, mine: false %>
+    <% end %>
+  </div>
+
+  <aside class="board-aside">
+    <%= render 'games/controls', board: board if board.viewer %>
+    <%= render 'games/log', board: board %>
+  </aside>
+</div>

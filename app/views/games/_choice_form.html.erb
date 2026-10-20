@@ -1,0 +1,34 @@
+<%# A move that needs choices (a Trainer card, an Ability): one select per choice, one list of
+    checkboxes where several cards are wanted. The engine named the choices and every value that is allowed.
+    Locals:
+      board  - the GameBoard
+      label  - what the button says
+      move   - the fixed part of the move, e.g. { type: 'play', card: 12 }
+      fields - what play_fields gave: [{ 'field', 'label', 'options' => [[value, text]], 'count' }] %>
+<% if fields.empty? %>
+  <%= game_action board, label, move, class: 'btn btn-outline-dark btn-sm' %>
+<% else %>
+  <details class="choice">
+    <summary><%= label %></summary>
+    <%= form_with url: actions_game_path(board.game) do %>
+      <%= hidden_field_tag :version, board.version, id: nil %>
+      <% move.each do |name, value| %><%= hidden_field_tag name, value, id: nil %><% end %>
+      <% fields.each do |field| %>
+        <% if field['count'] %>
+          <fieldset class="field">
+            <legend class="form-label"><%= field['label'] %> (<%= field['count'] %>)</legend>
+            <% field['options'].each_with_index do |(value, text), index| %>
+              <label class="choice__option"><%= check_box_tag "#{field['field']}[]", value, false, id: nil %> <%= text %></label>
+            <% end %>
+          </fieldset>
+        <% else %>
+          <div class="field">
+            <label class="form-label"><%= field['label'] %></label>
+            <%= select_tag field['field'], options_for_select(field['options'].map { |value, text| [text, value] }), id: nil, class: 'form-select form-select-sm' %>
+          </div>
+        <% end %>
+      <% end %>
+      <%= button_tag label, type: 'submit', class: 'btn btn-primary btn-sm' %>
+    <% end %>
+  </details>
+<% end %>

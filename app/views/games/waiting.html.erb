@@ -1,0 +1,18 @@
+<% provide :title, "Game ##{@game.id}" %>
+
+<%= link_to '‹ All games', games_path, class: 'breadcrumb-link' %>
+
+<div class="page-head" data-live-game="<%= @game.id %>" data-version="<%= @game.version %>">
+  <div>
+    <h1>Waiting for your opponent</h1>
+    <p>Send this link to a friend. They pick a deck, and the game starts as soon as they join. This page updates by itself.</p>
+  </div>
+</div>
+
+<div class="form-panel invite" style="max-width: 40rem">
+  <label class="form-label" for="invite-link">Invite link</label>
+  <div class="invite__row">
+    <input id="invite-link" class="form-control" type="text" readonly value="<%= join_game_url(@game.invite_token) %>" onclick="this.select()">
+  </div>
+  <p class="form-hint">Anyone with the link can take the second seat, so only send it to the person you want to play. Your deck is chosen and stays hidden until the game starts.</p>
+</div>

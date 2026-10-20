@@ -1,25 +1,137 @@
-<h1>About</h1>
-<div class="row d-flex justify-content-center my-4">
-  <div class="col-md-8">
-    <p>
-      Welcome to the world of Pokemon Battle Generation I. Here, you will discover a captivating experience of Generation I Pokemon battles, reminiscent of a childhood filled with adventure and excitement.
+<% provide :title, 'Guide' %>
 
-      In this game, you will encounter the joy and uniqueness of battles between Pokemon that became iconic in the first generation. Rediscover the charm of Pikachu, the prowess of Charizard, and the wonders of the Pokemon world that stole the hearts of millions of fans.
-    </p>
-    <p>
-      As a developer, I brings a vision and enthusiasm to revive the nostalgia and beauty of classic Pokemon battles. Every feature and detail is crafted with love, providing an authentic and immersive gaming experience.
-
-      Built on the robust foundation of Ruby on Rails, this game offers more than just a walk down memory lane—it's a celebration of classic Pokemon battles infused with the elegance and efficiency of modern web development. I has harnessed the flexibility and scalability of Ruby on Rails to create a captivating and user-friendly gaming environment.
-    </p>
-    <p>
-      Join the adventure of Pokemon Battle Generation I. I invites you to explore the beauty of web development and relive the joy and wonder through a game designed with this uniquely crafted gaming experience.
-    </p>
-
-    <a href="https://github.com/inkrafi/" class="btn btn-dark my-5">
-      <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 30 30">
-      <path d="M15,3C8.373,3,3,8.373,3,15c0,5.623,3.872,10.328,9.092,11.63C12.036,26.468,12,26.28,12,26.047v-2.051 c-0.487,0-1.303,0-1.508,0c-0.821,0-1.551-0.353-1.905-1.009c-0.393-0.729-0.461-1.844-1.435-2.526 c-0.289-0.227-0.069-0.486,0.264-0.451c0.615,0.174,1.125,0.596,1.605,1.222c0.478,0.627,0.703,0.769,1.596,0.769 c0.433,0,1.081-0.025,1.691-0.121c0.328-0.833,0.895-1.6,1.588-1.962c-3.996-0.411-5.903-2.399-5.903-5.098 c0-1.162,0.495-2.286,1.336-3.233C9.053,10.647,8.706,8.73,9.435,8c1.798,0,2.885,1.166,3.146,1.481C13.477,9.174,14.461,9,15.495,9 c1.036,0,2.024,0.174,2.922,0.483C18.675,9.17,19.763,8,21.565,8c0.732,0.731,0.381,2.656,0.102,3.594 c0.836,0.945,1.328,2.066,1.328,3.226c0,2.697-1.904,4.684-5.894,5.097C18.199,20.49,19,22.1,19,23.313v2.734 c0,0.104-0.023,0.179-0.035,0.268C23.641,24.676,27,20.236,27,15C27,8.373,21.627,3,15,3z"></path>
-      </svg>
-      Rafi Ferdian
-    </a>
+<div class="page-head">
+  <div>
+    <h1>Guide</h1>
+    <p>How the Pokémon Trading Card Game is played, and what this app covers today.</p>
   </div>
+</div>
+
+<%= render 'shared/simulation_notice' %>
+
+<div class="guide">
+  <section class="guide__section" aria-labelledby="goal-heading">
+    <h2 id="goal-heading">The goal</h2>
+    <p>
+      Two players each bring a deck of 60 cards and take turns trying to Knock Out each other's Pokémon.
+      You win by taking your last Prize card, by Knocking Out your opponent's last Pokémon in play, or when
+      your opponent has no card to draw at the start of their turn.
+    </p>
+  </section>
+
+  <section class="guide__section" aria-labelledby="cards-heading">
+    <h2 id="cards-heading">The cards</h2>
+    <dl class="glossary">
+      <div>
+        <dt>Pokémon</dt>
+        <dd>The fighters. Each has HP, a type, attacks with an Energy cost, a Weakness, sometimes a Resistance, and a Retreat Cost. They come as Basic, Stage 1 or Stage 2; a Stage 1 evolves from a Basic, a Stage 2 from a Stage 1.</dd>
+      </div>
+      <div>
+        <dt>Energy</dt>
+        <dd>Powers attacks. The cost on an attack names the Energy types needed; Colorless costs can be paid with any type.</dd>
+      </div>
+      <div>
+        <dt>Trainer</dt>
+        <dd>Item cards, Supporter cards, Stadiums and Pokémon Tools. You can play any number of Items in a turn but only 1 Supporter.</dd>
+      </div>
+      <div>
+        <dt>ex and Mega ex</dt>
+        <dd>Stronger Pokémon that give up more Prize cards: your opponent takes 2 when a Pokémon ex is Knocked Out, and 3 for a Mega Evolution Pokémon ex.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="guide__section" aria-labelledby="setup-heading">
+    <h2 id="setup-heading">Setting up</h2>
+    <ul class="rule-list">
+      <li><strong>Shuffle and flip.</strong> Each player shuffles their deck. A coin flip decides who goes first.</li>
+      <li><strong>Draw 7.</strong> If there is no Basic Pokémon in your hand, show your hand, shuffle it back and draw 7 again. Each time that happens, your opponent may draw 1 extra card.</li>
+      <li><strong>Place your Pokémon.</strong> Put 1 Basic Pokémon in the Active Spot and up to 5 more on the Bench, face down.</li>
+      <li><strong>Set aside 6 Prize cards,</strong> then turn the Pokémon face up and begin.</li>
+    </ul>
+  </section>
+
+  <section class="guide__section" aria-labelledby="turn-heading">
+    <h2 id="turn-heading">A turn</h2>
+    <ul class="rule-list">
+      <li><strong>Draw a card.</strong> This always comes first.</li>
+      <li><strong>Bench Pokémon.</strong> Play as many Basic Pokémon onto your Bench as it has room for (5 at most).</li>
+      <li><strong>Attach 1 Energy</strong> from your hand to one of your Pokémon. Only once per turn.</li>
+      <li><strong>Evolve.</strong> Put a Stage 1 or Stage 2 card on the Pokémon it evolves from, keeping the damage and Energy. A Pokémon can't evolve in the turn it was played.</li>
+      <li><strong>Play Trainer cards.</strong> Any number of Items, but only 1 Supporter.</li>
+      <li><strong>Retreat.</strong> Once per turn, discard Energy equal to the Retreat Cost to swap your Active Pokémon with one from the Bench.</li>
+      <li><strong>Attack.</strong> If the Active Pokémon has the Energy an attack costs, it can use it. Attacking ends your turn.</li>
+    </ul>
+    <p>The player who goes first can't attack and can't play a Supporter on that first turn, and nobody can evolve a Pokémon on their own first turn.</p>
+  </section>
+
+  <section class="guide__section" aria-labelledby="attack-heading">
+    <h2 id="attack-heading">Attacks and Knock Outs</h2>
+    <ul class="rule-list">
+      <li><strong>Damage</strong> is the number printed next to the attack, put on the opponent's Active Pokémon as damage counters.</li>
+      <li><strong>Weakness.</strong> If the attacker's type matches the defender's Weakness, the damage is doubled.</li>
+      <li><strong>Resistance.</strong> If it matches the defender's Resistance, the damage is reduced by 30.</li>
+      <li><strong>Knock Out.</strong> A Pokémon with damage equal to its HP is Knocked Out. It goes to the discard pile with everything attached, and the player who did it takes a Prize card. The opponent then promotes a Pokémon from the Bench.</li>
+    </ul>
+  </section>
+
+  <section class="guide__section" aria-labelledby="conditions-heading">
+    <h2 id="conditions-heading">Special Conditions</h2>
+    <p>Only the Active Pokémon can have them, and they end when it moves to the Bench or evolves. They are checked between turns, in the Pokémon Checkup.</p>
+    <dl class="glossary">
+      <div><dt>Asleep</dt><dd>Can't attack or retreat. Flip a coin at each Checkup; heads wakes it up.</dd></div>
+      <div><dt>Burned</dt><dd>2 damage counters at each Checkup, then flip a coin; heads removes the Burn.</dd></div>
+      <div><dt>Confused</dt><dd>Flip a coin before attacking. On tails the attack fails and the Pokémon takes 3 damage counters.</dd></div>
+      <div><dt>Paralyzed</dt><dd>Can't attack or retreat. It recovers at the Checkup after its owner's next turn.</dd></div>
+      <div><dt>Poisoned</dt><dd>1 damage counter at each Checkup.</dd></div>
+    </dl>
+  </section>
+
+  <section class="guide__section" aria-labelledby="deck-heading">
+    <h2 id="deck-heading">Deck rules</h2>
+    <ul class="rule-list">
+      <li>Exactly 60 cards.</li>
+      <li>At most 4 copies of a card with the same name. Basic Energy has no limit.</li>
+      <li>At least 1 Basic Pokémon.</li>
+      <li>Only 1 ACE SPEC card.</li>
+      <li>Standard format: only cards that are currently legal. Legality follows the regulation mark on each card.</li>
+    </ul>
+    <p class="fine-print">The deck builder in this app enforces all of these.</p>
+  </section>
+
+  <section class="guide__section" aria-labelledby="today-heading">
+    <h2 id="today-heading">What the app covers today</h2>
+    <ul class="rule-list">
+      <li><strong>Card library.</strong> Card data from the Mega Evolution series, searchable by name, type and set.</li>
+      <li><strong>Deck builder.</strong> Build and save decks. The builder only offers cards the game can play, so some real cards are missing for now.</li>
+      <li><strong>Sample decks.</strong> A Water deck and a Grass deck, ready to play. Copy one to your decks and change it if you like.</li>
+      <li><strong>The rules.</strong> Setup, turns, Energy, evolving, retreating, attacks, Weakness, Resistance, Special Conditions with the Pokémon Checkup, Prize cards and all three ways to win, tested with thousands of simulated games. Play against the computer, on one screen with a friend, or online: send a link and the game updates live on both devices.</li>
+      <li><strong>Trainer cards and Abilities.</strong> Items, Supporters, Stadiums and Pokémon Tools work, and so do many attack effects and Abilities. A card whose effect isn't built yet is marked as not playable, and the list grows one effect at a time.</li>
+    </ul>
+    <p class="fine-print">
+      Only facts are used: names, types, numbers and costs. Card artwork and official card text aren't part of this app,
+      and each effect is written from scratch. For the complete official rules, see the
+      <a href="https://tcg.pokemon.com/en-us/learn/">Learn to Play</a> page.
+    </p>
+  </section>
+
+  <section class="guide__section" aria-labelledby="project-heading">
+    <h2 id="project-heading">About this project</h2>
+    <p>
+      Pokemon TCG is a portfolio project by Rafi Ferdian. It is a complete Rails app: card data imported
+      from the open TCGdex API, a rules-checked deck builder, tests and a responsive interface.
+    </p>
+    <ul class="tech-list" aria-label="Built with">
+      <li>Ruby on Rails 7.1</li>
+      <li>PostgreSQL</li>
+      <li>Bootstrap 5</li>
+      <li>Turbolinks</li>
+      <li>Webpacker</li>
+      <li>Docker Compose</li>
+      <li>Render</li>
+    </ul>
+    <div class="btn-row">
+      <a href="https://github.com/inkrafi/" class="btn btn-outline-dark">See more on GitHub</a>
+    </div>
+  </section>
 </div>

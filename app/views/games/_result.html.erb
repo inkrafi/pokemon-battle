@@ -1,0 +1,8 @@
+<div class="result" role="status">
+  <h1><%= board.winner_name %> wins</h1>
+  <p><%= board.result_text %> The game lasted <%= pluralize(board.turn_number, 'turn') %>.</p>
+  <div class="btn-row">
+    <%= link_to 'New game', new_game_path(mode: board.game.mode), class: 'btn btn-primary' %>
+    <%= link_to 'All games', games_path, class: 'btn btn-outline-dark' %>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+# Local development:  docker compose up
+# Then open http://localhost:3000 (set WEB_PORT=3100 to use another port)
+#
+# Ruby changes in app/models, app/controllers and config need `docker compose restart web`
+# (file events don't cross the Windows bind mount). Views and JavaScript update on refresh.
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  # Builds app/javascript into public/packs and rebuilds on change.
+  webpack:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: node_modules/.bin/webpack --watch --watch-poll=1000 --config config/webpack/development.js
+    environment:
+      NODE_ENV: development
+      RAILS_ENV: development
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      - packs:/app/public/packs
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    # bundle exec rails (not bin/rails): the bin/ scripts have CRLF line endings on Windows checkouts.
+    command: >
+      bash -c "rm -f tmp/pids/server.pid
+      && until [ -f public/packs/manifest.json ]; do sleep 1; done
+      && bundle exec rails db:prepare
+      && bundle exec rails db:seed
+      && bundle exec rails server -b 0.0.0.0 -p 3000"
+    environment:
+      RAILS_ENV: development
+      DATABASE_URL: postgres://postgres:postgres@db:5432/pokemon_development
+      WEBPACKER_COMPILE: "false"
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    volumes:
+      - .:/app
+      - bundle:/usr/local/bundle
+      - node_modules:/app/node_modules
+      # caches and logs written on every request are much faster off the bind mount
+      - tmp:/app/tmp
+      - logs:/app/log
+      - packs:/app/public/packs
+    depends_on:
+      db:
+        condition: service_healthy
+      webpack:
+        condition: service_started
+
+volumes:
+  pgdata:
+  bundle:
+  node_modules:
+  tmp:
+  logs:
+  packs:

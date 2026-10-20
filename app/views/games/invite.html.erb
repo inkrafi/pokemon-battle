@@ -1,0 +1,28 @@
+<% provide :title, 'Join a game' %>
+
+<div class="page-head">
+  <div>
+    <h1>You are invited to a game</h1>
+    <p>Choose the deck you want to play. A coin flip decides who goes first.</p>
+  </div>
+</div>
+
+<% if @decks.empty? %>
+  <div class="empty-state">
+    <h2>No decks to play with</h2>
+    <p>Build a legal 60 card deck first, then open the link again.</p>
+    <%= link_to 'Build a deck', new_deck_path, class: 'btn btn-primary' %>
+  </div>
+<% else %>
+  <div class="form-panel" style="max-width: 40rem">
+    <%= form_with url: join_game_path(@game.invite_token) do %>
+      <div class="field">
+        <%= label_tag :deck, 'Your deck', class: 'form-label' %>
+        <%= select_tag :deck, deck_options(@decks), class: 'form-select', required: true %>
+      </div>
+      <div class="btn-row mt-4">
+        <%= button_tag 'Join the game', type: 'submit', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

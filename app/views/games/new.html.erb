@@ -1,0 +1,68 @@
+<% provide :title, 'New game' %>
+
+<div class="page-head">
+  <div>
+    <h1>New game</h1>
+    <p>A coin flip decides who goes first.</p>
+  </div>
+</div>
+
+<% if @decks.empty? %>
+  <div class="empty-state">
+    <h2>No decks to play with</h2>
+    <p>Build a legal 60 card deck first, or load the sample decks with <code>rails db:seed</code>.</p>
+    <%= link_to 'Build a deck', new_deck_path, class: 'btn btn-primary' %>
+  </div>
+<% else %>
+  <% samples, own = @decks.partition(&:sample?) %>
+  <% options = lambda do |selected|
+       groups = []
+       groups << ['Sample decks', samples.map { |deck| [deck.name, deck.id] }] if samples.any?
+       groups << ['Your decks', own.map { |deck| [deck.name, deck.id] }] if own.any?
+       grouped_options_for_select(groups, selected)
+     end %>
+
+  <div class="form-panel" style="max-width: 40rem">
+    <%= form_with url: games_path do %>
+      <fieldset class="field">
+        <legend class="form-label">Who plays?</legend>
+        <div class="form-check">
+          <%= radio_button_tag :mode, 'bot', @mode == 'bot', class: 'form-check-input' %>
+          <%= label_tag :mode_bot, 'Against the computer', class: 'form-check-label' %>
+        </div>
+        <div class="form-check">
+          <%= radio_button_tag :mode, 'hotseat', @mode == 'hotseat', class: 'form-check-input' %>
+          <%= label_tag :mode_hotseat, 'Two players, one screen', class: 'form-check-label' %>
+        </div>
+        <p class="form-hint">On one screen, each player's hand is hidden until they say it is their turn.</p>
+      </fieldset>
+
+      <div class="field">
+        <%= label_tag :deck0, 'Player 1 deck', class: 'form-label' %>
+        <%= select_tag :deck0, options.call(params[:deck0]), class: 'form-select', required: true %>
+      </div>
+
+      <div class="field">
+        <%= label_tag :deck1, 'Player 2 deck (or the computer)', class: 'form-label' %>
+        <%= select_tag :deck1, options.call(params[:deck1] || samples.last&.id), class: 'form-select', required: true %>
+      </div>
+
+      <div class="btn-row mt-4">
+        <%= button_tag 'Start game', type: 'submit', class: 'btn btn-primary' %>
+        <%= link_to 'Cancel', games_path, class: 'btn btn-outline-dark' %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="form-panel online-panel" style="max-width: 40rem">
+    <h2>Play online with a friend</h2>
+    <p>Pick your deck and get a link. Your friend opens it on their own device, picks a deck, and you play in real time.</p>
+    <%= form_with url: online_games_path do %>
+      <div class="field">
+        <%= label_tag :online_deck, 'Your deck', class: 'form-label' %>
+        <%= select_tag :deck0, deck_options(@decks), id: 'online_deck', class: 'form-select', required: true %>
+      </div>
+      <%= button_tag 'Get an invite link', type: 'submit', class: 'btn btn-outline-dark mt-2' %>
+    <% end %>
+  </div>
+<% end %>

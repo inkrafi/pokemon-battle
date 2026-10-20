@@ -1,0 +1,282 @@
+// The trading card, Energy symbols and type colors.
+// Color comes from one custom property, --type, which everything inside a [data-type]
+// scope inherits. Unknown types fall back to Colorless.
+
+[data-type] {
+  --type: #c9ccd4;
+  --type-ink: #1c2340;
+}
+
+[data-type="grass"]     { --type: #67bf5f; }
+[data-type="fire"]      { --type: #ef6a3b; }
+[data-type="water"]     { --type: #4f9bea; }
+[data-type="lightning"] { --type: #f6cb2f; }
+[data-type="psychic"]   { --type: #b76ad0; --type-ink: #fff; }
+[data-type="fighting"]  { --type: #b95b33; --type-ink: #fff; }
+[data-type="darkness"]  { --type: #4a4766; --type-ink: #fff; }
+[data-type="metal"]     { --type: #8d99a8; }
+[data-type="dragon"]    { --type: #c9a23a; }
+[data-type="colorless"] { --type: #cfd2d9; }
+
+// ---------------------------------------------------------------- Energy symbol
+.energy {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: var(--type);
+  color: var(--type-ink);
+  box-shadow: inset 0 0 0 1.5px rgba(28, 35, 64, 0.28);
+  vertical-align: middle;
+
+  svg { width: 62%; height: 62%; fill: currentColor; }
+
+  &--sm { width: 1.05rem; height: 1.05rem; }
+  &--lg { width: 2rem; height: 2rem; }
+  &--xl { width: 5.5rem; height: 5.5rem; box-shadow: inset 0 0 0 3px rgba(28, 35, 64, 0.2); }
+}
+
+// ---------------------------------------------------------------- the card
+.tcg-card {
+  --tint: color-mix(in srgb, var(--type) 16%, #fff);
+  --tint-strong: color-mix(in srgb, var(--type) 42%, #fff);
+  --frame-dark: color-mix(in srgb, var(--type) 62%, #1c2340);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 63 / 88;
+  padding: 9px;
+  border-radius: 18px;
+  background: linear-gradient(155deg, var(--type) 0%, var(--frame-dark) 100%);
+  box-shadow: var(--shadow-card);
+  color: var(--ink);
+
+  // only the cards on the home page follow the pointer (data-tilt); everywhere else they stay still
+  &[data-tilt] {
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.18s ease-out, box-shadow 0.2s;
+
+    &:hover,
+    &:focus-within {
+      box-shadow: 0 2px 0 rgba(28, 35, 64, 0.06), 0 22px 34px -16px rgba(28, 35, 64, 0.5);
+    }
+  }
+
+  &__inner {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.6rem 0.7rem 0.55rem;
+    border-radius: 11px;
+    background: linear-gradient(180deg, #fff 0%, var(--tint) 100%);
+  }
+
+  // holo foil: a soft highlight that follows the pointer, plus a faint rainbow sweep
+  &__shine {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    background:
+      radial-gradient(circle at var(--mx, 50%) var(--my, 25%), rgba(255, 255, 255, 0.95), transparent 42%),
+      linear-gradient(115deg, transparent 18%, rgba(255, 60, 150, 0.35) 34%, rgba(60, 200, 255, 0.4) 50%, rgba(255, 230, 60, 0.35) 66%, transparent 82%);
+    transition: opacity 0.25s;
+  }
+
+  // the blend mode is only switched on while the card is hovered, so idle cards stay cheap to paint
+  &[data-tilt]:hover &__shine,
+  &[data-tilt]:focus-within &__shine {
+    opacity: 1;
+    mix-blend-mode: soft-light;
+  }
+
+  // a card that stays still: the same foil, fixed in place and drawn without a blend mode, which
+  // is cheap enough for a page full of cards
+  &:not([data-tilt]) &__shine {
+    background: linear-gradient(115deg, transparent 18%, rgba(255, 60, 150, 0.2) 34%, rgba(60, 200, 255, 0.26) 50%, rgba(255, 230, 60, 0.2) 66%, transparent 82%),
+                linear-gradient(160deg, rgba(255, 255, 255, 0.55), transparent 45%);
+  }
+
+  &:not([data-tilt]):hover &__shine {
+    opacity: 0.85;
+  }
+
+  &__stage {
+    margin: 0 0 0.1rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--slate);
+  }
+
+  &__titlerow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  &__name {
+    margin: 0;
+    min-width: 0;
+    font-size: 1.05rem;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    a { color: var(--ink); }
+    a:hover { text-decoration: none; }
+    a:focus-visible { outline-offset: 4px; }
+  }
+
+  // The picture area. The official illustration is not part of this app, so the card's
+  // type is shown instead.
+  &__art {
+    flex: 1 1 5rem;
+    display: grid;
+    place-items: center;
+    min-height: 5rem;
+    border-radius: 8px;
+    border: 3px solid color-mix(in srgb, var(--type) 70%, #fff);
+    background:
+      repeating-linear-gradient(135deg, transparent 0 10px, rgba(255, 255, 255, 0.35) 10px 20px),
+      radial-gradient(circle at 50% 40%, #fff 0%, var(--tint-strong) 100%);
+    overflow: hidden;
+
+    // the symbol shrinks on cards with a lot of text so it is never cut off
+    .energy {
+      width: auto;
+      height: 78%;
+      max-height: 5.5rem;
+      aspect-ratio: 1;
+      opacity: 0.9;
+    }
+  }
+
+  &__rulebox {
+    margin: 0;
+    padding: 0.25rem 0.4rem;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--type) 22%, #fff);
+    font-size: 0.68rem;
+    line-height: 1.3;
+  }
+
+  &__set {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 0.66rem;
+    color: var(--slate);
+  }
+
+  &__rarity { font-style: italic; }
+}
+
+.tcg-hp {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+  flex: none;
+  font-family: var(--font-display);
+
+  span { font-size: 0.65rem; font-weight: 800; color: var(--red-deep); }
+  strong { font-size: 1.25rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+}
+
+.tcg-attacks {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0;
+}
+
+.tcg-attack {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.4rem;
+  padding-top: 0.3rem;
+  border-top: 1px solid color-mix(in srgb, var(--type) 35%, #fff);
+  font-size: 0.82rem;
+
+  &__cost { display: inline-flex; gap: 2px; }
+  &__name { font-weight: 800; line-height: 1.2; }
+  &__damage { font-family: var(--font-display); font-weight: 800; font-size: 1rem; font-variant-numeric: tabular-nums; }
+
+  &__flag {
+    margin-left: 0.25rem;
+    padding: 0 0.3rem;
+    border-radius: 4px;
+    background: #fff3c4;
+    font-size: 0.6rem;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: help;
+  }
+
+  &--ability {
+    grid-template-columns: 1fr;
+    color: var(--red-deep);
+    abbr { text-decoration: none; font-weight: 800; }
+  }
+}
+
+.tcg-card__foot {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid color-mix(in srgb, var(--type) 35%, #fff);
+  font-size: 0.72rem;
+  font-weight: 700;
+
+  > div { display: grid; justify-items: center; gap: 0.15rem; }
+  &-label { font-size: 0.6rem; color: var(--slate); }
+  &-icons { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; }
+}
+
+// A quantity badge on a card in a deck or a list
+.card-count {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.4rem;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+// ---------------------------------------------------------------- card grid
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem 1.25rem;
+  justify-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+@media (hover: none) {
+  .tcg-card[data-tilt] { transform: none; }
+}

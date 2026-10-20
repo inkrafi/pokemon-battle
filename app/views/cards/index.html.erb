@@ -1,0 +1,67 @@
+<% provide :title, 'Cards' %>
+<% base = params.permit(:q, :supertype, :set, :playable).to_h %>
+
+<div class="page-head">
+  <div>
+    <h1>Cards</h1>
+    <p>Card data from the Mega Evolution series. Open a card for its details.</p>
+  </div>
+  <% if params.permit(:q, :supertype, :type, :set, :playable).to_h.any? %>
+    <%= link_to 'Clear filters', cards_path, class: 'btn btn-outline-dark' %>
+  <% end %>
+</div>
+
+<div class="filter-bar">
+  <%= form_with url: cards_path, method: :get, class: 'search', role: 'search' do %>
+    <label class="visually-hidden" for="q">Search by name</label>
+    <%= search_field_tag :q, @query, id: 'q', class: 'form-control', placeholder: 'Search by name' %>
+
+    <label class="visually-hidden" for="supertype">Kind of card</label>
+    <%= select_tag :supertype, options_for_select([['Pokémon', 'pokemon'], ['Trainer', 'trainer'], ['Energy', 'energy']], params[:supertype]),
+                   include_blank: 'All cards', id: 'supertype', class: 'form-select' %>
+
+    <label class="visually-hidden" for="set">Set</label>
+    <%= select_tag :set, options_for_select(@sets.map { |set| [set.name, set.id] }, params[:set]),
+                   include_blank: 'All sets', id: 'set', class: 'form-select' %>
+
+    <label class="check">
+      <%= check_box_tag :playable, '1', params[:playable] == '1' %> Playable only
+    </label>
+    <%= hidden_field_tag :type, params[:type] if params[:type].present? %>
+    <button type="submit" class="btn btn-outline-dark">Search</button>
+  <% end %>
+
+  <ul class="chips" aria-label="Filter by type">
+    <li><%= link_to 'All types', cards_path(base), class: ['chip', ('is-active' if params[:type].blank?)] %></li>
+    <% Card::TYPES.each do |type| %>
+      <li>
+        <%= link_to cards_path(base.merge(type: type)), class: ['chip', ('is-active' if params[:type] == type)], data: { type: type.downcase },
+                    aria: { current: (params[:type] == type ? 'true' : nil) } do %>
+          <%= energy_icon(type, size: :sm) %><%= type %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<% if @cards.any? %>
+  <p class="result-count"><%= pluralize(@cards.total_count, 'card') %></p>
+
+  <ul class="card-grid">
+    <% @cards.each do |card| %>
+      <li class="w-100 d-flex justify-content-center">
+        <%= render 'shared/card', card: card, link: card_path(card) %>
+      </li>
+    <% end %>
+  </ul>
+
+  <div class="d-flex justify-content-center my-5">
+    <%= paginate @cards %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <h2>No cards match</h2>
+    <p>Try a different name or clear the filters.</p>
+    <%= link_to 'Clear filters', cards_path, class: 'btn btn-outline-dark' %>
+  </div>
+<% end %>

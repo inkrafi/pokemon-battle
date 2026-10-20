@@ -1,0 +1,69 @@
+<% provide :title, @card.name %>
+
+<%= link_to '‹ All cards', cards_path, class: 'breadcrumb-link' %>
+
+<div class="detail">
+  <div class="detail__card">
+    <%= render 'shared/card', card: @card %>
+  </div>
+
+  <div class="detail__body">
+    <div class="detail-section">
+      <h1><%= @card.name %></h1>
+      <div class="btn-row">
+        <span class="status-chip <%= @card.standard_legal ? 'status-chip--ok' : 'status-chip--warn' %>">
+          <%= @card.standard_legal ? 'Legal in Standard' : 'Not legal in Standard' %>
+        </span>
+        <span class="status-chip <%= @card.playable ? 'status-chip--ok' : 'status-chip--warn' %>">
+          <%= @card.playable ? 'Playable here' : 'Not playable here yet' %>
+        </span>
+      </div>
+    </div>
+
+    <section class="detail-section" aria-labelledby="facts-heading">
+      <h2 id="facts-heading">Details</h2>
+      <dl class="facts">
+        <div><dt>Set</dt><dd><%= @card.card_set.name %>, number <%= @card.number %></dd></div>
+        <% if @card.rarity.present? %><div><dt>Rarity</dt><dd><%= @card.rarity %></dd></div><% end %>
+        <% if @card.regulation_mark.present? %><div><dt>Regulation mark</dt><dd><%= @card.regulation_mark %></dd></div><% end %>
+        <% if @card.pokemon? %>
+          <div><dt>Stage</dt><dd><%= @card.stage_label %><%= ", evolves from #{@card.evolves_from}" if @card.evolves_from %></dd></div>
+          <div><dt>Prize cards</dt><dd>Your opponent takes <%= @card.prize_value %> when it is Knocked Out</dd></div>
+        <% end %>
+      </dl>
+    </section>
+
+    <% unless @card.playable %>
+      <section class="detail-section" aria-labelledby="why-heading">
+        <h2 id="why-heading">Why it can't be played yet</h2>
+        <p class="text-slate">
+          <% if @card.trainer? %>
+            What this Trainer card does isn't available in play yet. Effects are added one at a time.
+          <% elsif @card.pokemon? && @card.abilities.any? { |ability| !ability['supported'] } %>
+            This Pokémon has an Ability that isn't available in play yet.
+          <% elsif @card.pokemon? %>
+            Every attack on this Pokémon has an effect that isn't available in play yet.
+          <% else %>
+            Special Energy cards arrive in a later release.
+          <% end %>
+        </p>
+      </section>
+    <% end %>
+
+    <% if @card.playable && @card.standard_legal %>
+      <section class="detail-section" aria-labelledby="add-heading">
+        <h2 id="add-heading">Add to a deck</h2>
+        <% if @decks.present? %>
+          <div class="btn-row">
+            <% @decks.each do |deck| %>
+              <%= button_to "Add to #{deck.name}", add_card_deck_path(deck, card_id: @card.id), class: 'btn btn-outline-dark btn-sm' %>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-slate">You don't have a deck yet.</p>
+          <%= link_to 'Start a deck', new_deck_path, class: 'btn btn-primary' %>
+        <% end %>
+      </section>
+    <% end %>
+  </div>
+</div>

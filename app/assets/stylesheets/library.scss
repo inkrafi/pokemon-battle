@@ -1,0 +1,123 @@
+// The card library: filters, result count and the card detail page.
+
+.filter-bar {
+  display: grid;
+  gap: 0.9rem;
+  margin-bottom: 1.75rem;
+
+  .search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    .form-control { flex: 1 1 14rem; max-width: 22rem; }
+    .form-select { flex: 0 1 12rem; }
+  }
+
+  .check {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0 0.5rem;
+    font-weight: 700;
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.75rem;
+  border: 1px solid #c3cadc;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  &:hover { text-decoration: none; border-color: var(--ink); }
+
+  &.is-active {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: #fff;
+  }
+}
+
+.result-count {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  color: var(--slate);
+}
+
+// ---------------------------------------------------------------- card detail
+.detail {
+  display: grid;
+  gap: 2.25rem;
+  align-items: start;
+
+  @media (min-width: 900px) {
+    grid-template-columns: 340px minmax(0, 1fr);
+    gap: 3.5rem;
+  }
+
+  &__card {
+    display: flex;
+    justify-content: center;
+
+    .tcg-card { max-width: 340px; }
+
+    @media (min-width: 900px) {
+      position: sticky;
+      top: 5.5rem;
+    }
+  }
+
+  &__body { display: grid; gap: 1.75rem; min-width: 0; }
+  h1 { margin: 0 0 0.5rem; }
+}
+
+.detail-section {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+
+  &:first-child { padding-top: 0; border-top: 0; }
+  h2 { margin: 0 0 0.9rem; font-size: 1.15rem; }
+}
+
+.facts {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  max-width: 30rem;
+
+  > div {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 0.75rem;
+  }
+
+  dt { font-weight: 700; color: var(--slate); }
+  dd { margin: 0; }
+}
+
+.status-chip {
+  display: inline-block;
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--slate);
+  background: #e6e9f2;
+
+  &--ok { color: #0f5f34; background: #c9ecd8; }
+  &--warn { color: #7a4b00; background: #ffe7a6; }
+}

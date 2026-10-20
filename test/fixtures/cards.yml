@@ -1,0 +1,187 @@
+# Invented cards, shaped like the real data. Fixtures skip callbacks, so playable is set by hand
+# to what Card#engine_ready? would give.
+
+sprigling:
+  card_set: test_set
+  tcgdex_id: test1-001
+  number: "001"
+  name: Sprigling
+  supertype: pokemon
+  subtype: basic
+  hp: 60
+  energy_types: ["Grass"]
+  retreat_cost: 1
+  weakness_type: Fire
+  weakness_multiplier: 2
+  prize_value: 1
+  regulation_mark: I
+  standard_legal: true
+  rarity: Common
+  attacks: [{ name: Leaf Poke, cost: [Grass], damage: 20, modifier: null, has_effect: false }]
+  abilities: []
+  playable: true
+
+bloomling:
+  card_set: test_set
+  tcgdex_id: test1-002
+  number: "002"
+  name: Bloomling
+  supertype: pokemon
+  subtype: stage1
+  hp: 110
+  energy_types: ["Grass"]
+  evolves_from: Sprigling
+  retreat_cost: 2
+  weakness_type: Fire
+  weakness_multiplier: 2
+  resistance_type: Water
+  resistance_amount: 30
+  prize_value: 1
+  regulation_mark: I
+  standard_legal: true
+  rarity: Uncommon
+  attacks: [{ name: Petal Slash, cost: [Grass, Colorless], damage: 60, modifier: null, has_effect: false }]
+  abilities: []
+  playable: true
+
+thornlord:
+  card_set: test_set
+  tcgdex_id: test1-006
+  number: "006"
+  name: Thornlord
+  supertype: pokemon
+  subtype: stage2
+  hp: 160
+  energy_types: ["Grass"]
+  evolves_from: Bloomling
+  retreat_cost: 3
+  weakness_type: Fire
+  weakness_multiplier: 2
+  prize_value: 1
+  regulation_mark: I
+  standard_legal: true
+  rarity: Rare
+  attacks: [{ name: Thorn Crash, cost: [Grass, Grass, Colorless], damage: 120, modifier: null, has_effect: false }]
+  abilities: []
+  playable: true
+
+emberpup:
+  card_set: test_set
+  tcgdex_id: test1-003
+  number: "003"
+  name: Emberpup
+  supertype: pokemon
+  subtype: basic
+  hp: 70
+  energy_types: ["Fire"]
+  retreat_cost: 1
+  weakness_type: Water
+  weakness_multiplier: 2
+  prize_value: 1
+  regulation_mark: I
+  standard_legal: true
+  rarity: Common
+  attacks: [{ name: Spark, cost: [Fire], damage: 30, modifier: null, has_effect: false }]
+  abilities: []
+  playable: true
+
+shellpal:
+  card_set: test_set
+  tcgdex_id: test1-004
+  number: "004"
+  name: Shellpal
+  supertype: pokemon
+  subtype: basic
+  hp: 70
+  energy_types: ["Water"]
+  retreat_cost: 1
+  weakness_type: Lightning
+  weakness_multiplier: 2
+  prize_value: 1
+  regulation_mark: I
+  standard_legal: true
+  rarity: Common
+  attacks: [{ name: Splash, cost: [Water], damage: 20, modifier: null, has_effect: false }, { name: Tidal Crash, cost: [Water, Water], damage: 50, modifier: "+", has_effect: true }]
+  abilities: []
+  playable: true
+
+mega_rexor:
+  card_set: test_set
+  tcgdex_id: test1-005
+  number: "005"
+  name: Mega Rexor ex
+  supertype: pokemon
+  subtype: basic
+  hp: 300
+  energy_types: ["Colorless"]
+  retreat_cost: 3
+  weakness_type: Fighting
+  weakness_multiplier: 2
+  prize_value: 3
+  regulation_mark: I
+  standard_legal: true
+  rarity: Double rare
+  attacks: [{ name: Big Stomp, cost: [Colorless, Colorless, Colorless], damage: 200, modifier: "+", has_effect: true }]
+  abilities: [{ name: Frenzy, kind: Ability }]
+  playable: false
+
+grass_energy:
+  card_set: test_set
+  tcgdex_id: test1-010
+  number: "010"
+  name: Grass Energy
+  supertype: energy
+  subtype: basic
+  energy_types: ["Grass"]
+  standard_legal: true
+  playable: true
+
+fire_energy:
+  card_set: test_set
+  tcgdex_id: test1-011
+  number: "011"
+  name: Fire Energy
+  supertype: energy
+  subtype: basic
+  energy_types: ["Fire"]
+  standard_legal: true
+  playable: true
+
+water_energy:
+  card_set: test_set
+  tcgdex_id: test1-012
+  number: "012"
+  name: Water Energy
+  supertype: energy
+  subtype: basic
+  energy_types: ["Water"]
+  standard_legal: true
+  playable: true
+
+healing_item:
+  card_set: test_set
+  tcgdex_id: test1-020
+  number: "020"
+  name: Healing Salve
+  supertype: trainer
+  subtype: item
+  standard_legal: true
+  rarity: Common
+  playable: false
+
+retired_pup:
+  card_set: test_set
+  tcgdex_id: test1-030
+  number: "030"
+  name: Retired Pup
+  supertype: pokemon
+  subtype: basic
+  hp: 50
+  energy_types: ["Fighting"]
+  retreat_cost: 1
+  prize_value: 1
+  regulation_mark: G
+  standard_legal: false
+  attacks: [{ name: Tackle, cost: [Fighting], damage: 10, modifier: null, has_effect: false }]
+  abilities: []
+  playable: true

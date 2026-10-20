@@ -1,13 +1,7 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+# Cards. db/cards.json is a snapshot of the card database (see lib/tasks/cards.rake), so this
+# works offline and can be run as often as you like.
+snapshot = Rails.root.join('db', 'cards.json')
+CardSnapshot.load(snapshot) if snapshot.exist?
 
-# require 'csv'
-
-# CSV.foreach('db/csv/pokedexes.csv', headers: true) do |row|
-#   Pokedex.create(name: row['name'], hp: row['hp'], attack: row['attack'], defense: row['defense'], speed: row['speed'], image_url: row['image_url'], created_at: row['created_at'], updated_at: row['updated_at'])
-# end
+# Two decks that are ready to play, for guests who don't want to build one first.
+SampleDecks.create! if Card.playable.exists?

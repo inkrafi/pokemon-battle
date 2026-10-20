@@ -1,0 +1,58 @@
+<% provide :title, 'Decks' %>
+
+<div class="page-head">
+  <div>
+    <h1>Decks</h1>
+    <p>Your decks stay in this browser. A deck is ready to play at 60 cards.</p>
+  </div>
+  <%= link_to 'New deck', new_deck_path, class: 'btn btn-primary' %>
+</div>
+
+<% if @decks.any? %>
+  <ul class="deck-list">
+    <% @decks.each do |deck| %>
+      <li class="deck-row">
+        <div>
+          <h2><%= link_to deck.name, deck_path(deck) %></h2>
+          <p><%= pluralize(deck.card_count, 'card') %> of <%= Deck::SIZE %></p>
+        </div>
+        <div class="btn-row">
+          <span class="status-chip <%= deck.legal? ? 'status-chip--ok' : 'status-chip--warn' %>">
+            <%= deck.legal? ? 'Ready to play' : 'Needs work' %>
+          </span>
+          <%= link_to 'Open', deck_path(deck), class: 'btn btn-outline-dark btn-sm' %>
+          <%= link_to 'Delete', deck_path(deck), method: :delete, data: { confirm: "Delete #{deck.name}?" }, class: 'btn btn-outline-danger btn-sm' %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <div class="empty-state">
+    <h2>No decks yet</h2>
+    <p>A deck is 60 cards. Start one and the builder tells you what is missing.</p>
+    <%= link_to 'Start a deck', new_deck_path, class: 'btn btn-primary' %>
+  </div>
+<% end %>
+
+<% if @samples.any? %>
+  <section class="mt-5" aria-labelledby="samples-heading">
+    <h2 id="samples-heading" class="mb-1">Sample decks</h2>
+    <p class="text-slate">Ready to play. Copy one to your decks, then change it if you like.</p>
+
+    <ul class="deck-list">
+      <% @samples.each do |deck| %>
+        <% names = deck.pokemon_names %>
+        <li class="deck-row">
+          <div>
+            <h3 class="h5 mb-0"><%= deck.name %></h3>
+            <p><%= names.first(4).join(', ') %><%= ", and #{names.size - 4} more" if names.size > 4 %></p>
+          </div>
+          <div class="btn-row">
+            <span class="status-chip status-chip--ok">Ready to play</span>
+            <%= button_to 'Copy to my decks', copy_deck_path(deck), class: 'btn btn-outline-dark btn-sm' %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+<% end %>

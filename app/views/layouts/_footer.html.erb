@@ -1,47 +1,6 @@
-<%# <footer class="content">
-    <p>made by ink</p>
-</footer> %>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var pokedexSelect = document.getElementById('pokedex-select');
-        var skillsContainer = document.getElementById('skills-container');
-        var btnSkill = document.getElementById('btn-skill')
-        var selectedSkills = 0;
-
-        pokedexSelect.addEventListener('change', function() {
-            var selectedTypeId = pokedexSelect.options[pokedexSelect.selectedIndex].getAttribute('data-type-id');
-
-            // Hide all skill containers
-            var skillContainers = document.querySelectorAll('.skill-checkbox');
-            skillContainers.forEach(function(container) {
-                container.classList.add('d-none');
-            });
-
-            // Show skill containers with the selected type
-            var selectedTypeContainers = document.querySelectorAll('.skill-checkbox[data-type-id="' + selectedTypeId + '"]');
-            selectedTypeContainers.forEach(function(container) {
-                container.classList.remove('d-none');
-            });
-        });
-
-        skillsContainer.addEventListener('change', function(event) {
-            var checkbox = event.target;
-
-            if (checkbox.checked) {
-                if (selectedSkills >= 4) {
-                    checkbox.checked = false;
-                } else {
-                    selectedSkills++;
-                }
-            } else {
-                selectedSkills--;
-            }
-        });
-    });
-</script>
-
-</body>
-</html>
+<footer class="site-footer">
+  <div class="container">
+    <p>Pokemon TCG is a portfolio project by <a href="https://github.com/inkrafi/">Rafi Ferdian</a>, built with Ruby on Rails.</p>
+    <p class="fine-print">Pokémon and its character names are trademarks of Nintendo, Creatures Inc. and Game Freak. This is an unofficial fan project and a simulation for portfolio purposes, not the official game.</p>
+  </div>
+</footer>

@@ -1,0 +1,51 @@
+<%# One player's half of the table. Hands stay hidden, only their size is public. %>
+<% name = board.seat_name(seat) %>
+<% active = board.active(seat) %>
+<section class="mat mat--<%= mine ? 'mine' : 'theirs' %>" aria-label="<%= name %>">
+  <header class="mat__head">
+    <h2>
+      <%= name %><%= ' (you)' if mine %>
+      <% if !board.finished? && board.acting_seat == seat %><span class="mat__turn">to move</span><% end %>
+    </h2>
+    <ul class="mat__counts">
+      <li>Hand <b><%= board.hand_count(seat) %></b></li>
+      <li>Deck <b><%= board.deck_count(seat) %></b></li>
+      <li>
+        <details>
+          <summary>Discard <b><%= board.discard_cards(seat).size %></b></summary>
+          <p class="mat__discard"><%= board.discard_cards(seat).map(&:name).tally.map { |card_name, count| count > 1 ? "#{card_name} x#{count}" : card_name }.to_sentence.presence || 'Empty' %></p>
+        </details>
+      </li>
+    </ul>
+    <div class="prizes" role="img" aria-label="<%= pluralize(board.prizes_left(seat), 'Prize card') %> left">
+      <% 6.times do |index| %><i class="prize<%= ' is-taken' if index >= board.prizes_left(seat) %>"></i><% end %>
+    </div>
+  </header>
+
+  <div class="mat__field">
+    <div class="mat__active">
+      <h3 class="mat__label">Active</h3>
+      <% if active %>
+        <%= render 'games/slot', view: active, board: board, mine: mine %>
+      <% else %>
+        <div class="slot slot--empty">No Active Pokémon</div>
+      <% end %>
+    </div>
+
+    <div class="mat__bench">
+      <h3 class="mat__label">Bench</h3>
+      <ol class="mat__bench-slots">
+        <% bench = board.bench(seat) %>
+        <% 5.times do |index| %>
+          <li>
+            <% if bench[index] %>
+              <%= render 'games/slot', view: bench[index], board: board, mine: mine %>
+            <% else %>
+              <div class="slot slot--empty">Empty</div>
+            <% end %>
+          </li>
+        <% end %>
+      </ol>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+<% provide :title, 'New deck' %>
+
+<div class="page-head">
+  <div>
+    <h1>New deck</h1>
+    <p>Name it now, add cards on the next page.</p>
+  </div>
+</div>
+
+<div class="form-panel" style="max-width: 32rem">
+  <%= form_with model: @deck do |f| %>
+    <%= render 'shared/error_messages', record: @deck %>
+
+    <div class="field">
+      <%= f.label :name, 'Name', class: 'form-label' %>
+      <%= f.text_field :name, class: 'form-control', placeholder: 'e.g. Fire rush', required: true, maxlength: 40, autofocus: true %>
+    </div>
+
+    <div class="btn-row">
+      <%= f.button 'Create deck', type: 'submit', class: 'btn btn-primary' %>
+      <%= link_to 'Cancel', decks_path, class: 'btn btn-outline-dark' %>
+    </div>
+  <% end %>
+</div>

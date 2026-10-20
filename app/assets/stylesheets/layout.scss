@@ -1,0 +1,121 @@
+// Navigation, footer, page headers and flash messages.
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  // solid, not a translucent blur: backdrop-filter repaints the whole header on every scroll frame
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+
+  .navbar { padding: 0.6rem 0; }
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: "Pokemon Solid", var(--font-display);
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+
+  &:hover { color: var(--ink); text-decoration: none; }
+
+  .brand__ball { width: 28px; height: 28px; flex: none; }
+}
+
+.site-header .navbar-nav {
+  gap: 0.25rem;
+
+  .nav-link {
+    position: relative;
+    padding: 0.5rem 0.85rem;
+    font-weight: 700;
+    color: var(--slate);
+    border-radius: var(--radius-control);
+
+    &:hover { color: var(--ink); text-decoration: none; background: #f0f2f8; }
+
+    &.active {
+      color: var(--ink);
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0.85rem;
+        right: 0.85rem;
+        bottom: 0.1rem;
+        height: 3px;
+        border-radius: 3px;
+        background: var(--red);
+      }
+    }
+  }
+}
+
+.navbar-toggler {
+  border-color: var(--line);
+  &:focus { box-shadow: 0 0 0 3px rgba(51, 85, 196, 0.2); }
+}
+
+.page {
+  padding-top: clamp(1.75rem, 4vw, 3rem);
+  padding-bottom: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  margin-bottom: 1.75rem;
+
+  h1 { margin: 0; }
+  p { margin: 0.4rem 0 0; color: var(--slate); }
+}
+
+.breadcrumb-link {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.flash-stack { margin-bottom: 1.5rem; }
+
+.flash {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--line);
+  border-left-width: 5px;
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  font-weight: 600;
+
+  &--success { border-left-color: #2e9d57; }
+  &--danger  { border-left-color: var(--red); background: #fff5f4; }
+  &--notice, &--alert { border-left-color: var(--yellow); }
+}
+
+.site-footer {
+  padding: 1.75rem 0 2.25rem;
+  border-top: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  color: var(--slate);
+
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+  }
+
+  p { margin: 0; }
+  a { font-weight: 700; }
+}

@@ -1,0 +1,57 @@
+<section class="controls" aria-labelledby="controls-heading">
+  <h2 id="controls-heading"><%= board.my_move? ? 'Your move' : 'Waiting' %></h2>
+
+  <% if board.finished? %>
+    <p class="text-slate"><%= board.result_text %></p>
+  <% elsif board.promoting? %>
+    <p>Your Active Pokémon was Knocked Out. Choose a new one from your Bench.</p>
+  <% elsif board.switching? %>
+    <p>Choose a Benched Pokémon to switch in. Use the Switch in button on your Bench.</p>
+    <%= game_action board, 'Keep the Active Pokémon', { type: 'switch', skip: 1 }, class: 'btn btn-outline-dark btn-sm' if board.switch_optional? %>
+  <% elsif board.searching? %>
+    <p>Pick the cards you want from your deck, in the list on the left.</p>
+  <% elsif board.my_move? %>
+    <p class="text-slate">Turn <%= board.turn_number %>. Attacking ends your turn.</p>
+
+    <% if board.can_retreat? %>
+      <details class="retreat">
+        <summary>Retreat</summary>
+        <%= form_with url: actions_game_path(board.game) do %>
+          <%= hidden_field_tag :type, 'retreat' %>
+          <%= hidden_field_tag :version, board.version %>
+          <div class="field">
+            <%= label_tag :retreat_to, 'Switch with', class: 'form-label' %>
+            <%= select_tag :to, options_for_select(board.bench(board.viewer).each_with_index.map { |view, index| ["#{view.name} (Bench #{index + 1})", index] }),
+                           id: 'retreat_to', class: 'form-select' %>
+          </div>
+          <% if board.retreat_cost.positive? %>
+            <fieldset class="field">
+              <legend class="form-label">Discard <%= pluralize(board.retreat_cost, 'Energy', 'Energy') %></legend>
+              <% board.active_energy.each do |uid, energy_card| %>
+                <label class="retreat__energy">
+                  <%= check_box_tag 'energy[]', uid, false, id: "energy_#{uid}" %>
+                  <%= energy_icon(energy_card.type || 'Colorless', size: :sm) %> <%= energy_card.name %>
+                </label>
+              <% end %>
+            </fieldset>
+          <% else %>
+            <p class="form-hint">This Pokémon retreats for free.</p>
+          <% end %>
+          <%= button_tag 'Retreat', type: 'submit', class: 'btn btn-outline-dark btn-sm' %>
+        <% end %>
+      </details>
+    <% end %>
+
+    <div class="btn-row mt-3">
+      <%= game_action board, 'End turn', { type: 'end_turn' }, class: 'btn btn-primary' if board.can_end_turn? %>
+    </div>
+  <% else %>
+    <p class="text-slate"><%= board.seat_name(board.acting_seat) %> <%= board.why_seat_acts %></p>
+  <% end %>
+
+  <% unless board.finished? %>
+    <div class="mt-3">
+      <%= game_action board, 'Concede', { type: 'concede' }, class: 'btn btn-outline-danger btn-sm', data: { confirm: 'Give up this game?' } %>
+    </div>
+  <% end %>
+</section>

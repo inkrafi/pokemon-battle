@@ -1,0 +1,46 @@
+<%# The viewer's hand. Each card offers the moves the rules allow for it right now. %>
+<section class="hand" aria-labelledby="hand-heading">
+  <h2 id="hand-heading">Your hand <small>(<%= board.hand.size %>)</small></h2>
+
+  <% if board.hand.empty? %>
+    <p class="text-slate">Your hand is empty.</p>
+  <% else %>
+    <ul class="hand__cards">
+      <% board.hand.each do |entry| %>
+        <% card = entry.card %>
+        <% type = (card.type || 'Colorless') %>
+        <li class="hand-card" data-type="<%= type.parameterize %>">
+          <header>
+            <%= energy_icon(type) %>
+            <strong><%= link_to card.name, card_path(card), target: '_blank', rel: 'noopener' %></strong>
+          </header>
+
+          <p class="hand-card__kind">
+            <% if card.pokemon? %>
+              <%= card.stage_label %>, HP <%= card.hp %><%= ", #{card.evolves_from} evolves" if card.evolves_from %>
+            <% elsif card.energy? %>
+              <%= card.basic_energy? ? 'Basic Energy' : 'Special Energy' %>
+            <% else %>
+              Trainer, <%= card.subtype.titleize %>
+            <% end %>
+          </p>
+
+          <div class="hand-card__actions">
+            <% if card.basic_pokemon? && board.can_bench?(entry.uid) %>
+              <%= game_action board, 'Put on Bench', { type: 'bench', card: entry.uid }, class: 'btn btn-outline-dark btn-sm' %>
+            <% end %>
+            <% board.evolve_targets(entry.uid).each do |target, label| %>
+              <%= game_action board, "Evolve #{label}", { type: 'evolve', card: entry.uid, target: target }, class: 'btn btn-outline-dark btn-sm' %>
+            <% end %>
+            <% board.attach_targets(entry.uid).each do |target, label| %>
+              <%= game_action board, "Attach to #{label}", { type: 'attach', card: entry.uid, target: target }, class: 'btn btn-outline-dark btn-sm' %>
+            <% end %>
+            <% if card.trainer? && (fields = board.play_fields(entry.uid)) %>
+              <%= render 'games/choice_form', board: board, label: 'Play', move: { type: 'play', card: entry.uid }, fields: fields %>
+            <% end %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</section>

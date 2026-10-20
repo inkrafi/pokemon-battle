@@ -1,4 +1,58 @@
-<h1 class="text-warning">Pokemon Battle</h1>
-<button class="button-primary my-5">
-  <p><%= link_to "Play game", new_pokemon_battle_path, class: "nav-link fs-4 fw-bold text-uppercase mt-3 px-3" %></p>
-</button>
+<% provide :title, 'Build a deck, learn the card game' %>
+
+<section class="hero">
+  <div class="hero__copy">
+    <h1>Build a deck. Play the Pokémon card game.</h1>
+    <p class="hero__lede">
+      Browse real card data from the Mega Evolution series, build a 60 card Standard deck that follows
+      the official rules, then play it: against the computer, with a friend on one screen, or online with a friend on their own device.
+    </p>
+    <div class="btn-row">
+      <%= link_to 'Play a game', new_game_path, class: 'btn btn-primary btn-lg' %>
+      <%= link_to 'Browse the cards', cards_path, class: 'btn btn-outline-dark btn-lg' %>
+    </div>
+  </div>
+
+  <% if @featured.size == 3 %>
+    <div class="card-fan" aria-label="Three cards from the library">
+      <% @featured.each do |card| %>
+        <div class="card-fan__item">
+          <%= render 'shared/card', card: card, link: card_path(card), tilt: true %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <h2>No cards yet</h2>
+      <p>The card library is empty. Run <code>rails db:seed</code> to load the card data.</p>
+    </div>
+  <% end %>
+</section>
+
+<%= render 'shared/simulation_notice' %>
+
+<ol class="steps">
+  <li>
+    <h2>Browse the cards</h2>
+    <p>Search by name, type or set. Every card shows its HP, attacks, Weakness and Retreat Cost.</p>
+    <%= link_to 'Open the library', cards_path %>
+  </li>
+  <li>
+    <h2>Build a legal deck</h2>
+    <p>Exactly 60 cards, at most 4 copies of a card, at least 1 Basic Pokémon. The builder checks as you go.</p>
+    <%= link_to 'Start a deck', new_deck_path %>
+  </li>
+  <li>
+    <h2>Play a game</h2>
+    <p>Pick a sample deck or your own. Set up, attach Energy, evolve, retreat and take your Prize cards.</p>
+    <%= link_to 'Start a game', new_game_path %>
+  </li>
+</ol>
+
+<aside class="guide-teaser">
+  <div>
+    <h2>New to the card game?</h2>
+    <p>The guide covers setup, what you can do in a turn and how a game is won.</p>
+  </div>
+  <%= link_to 'Read the guide', about_path, class: 'btn btn-outline-light' %>
+</aside>

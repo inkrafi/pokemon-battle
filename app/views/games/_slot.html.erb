@@ -1,0 +1,69 @@
+<%# A Pokémon in play: its card, how much HP is left, the Energy on it, and what can be done with it. %>
+<% card = view.card %>
+<% bench_index = view.target.start_with?('bench') ? view.target.split('-').last.to_i : nil %>
+<article class="slot<%= ' slot--active' if view.target == 'active' %>" data-type="<%= (card.type || 'Colorless').parameterize %>">
+  <header>
+    <h4 class="slot__name"><%= link_to card.name, card_path(card), target: '_blank', rel: 'noopener' %></h4>
+    <p class="slot__stage">
+      <%= view.evolved? ? view.stack.map(&:name).join(', then ') : card.stage_label %>
+      <%= card.rule_box %>
+    </p>
+  </header>
+
+  <div class="slot__hp" role="img" aria-label="<%= view.hp_left %> of <%= view.hp %> HP left">
+    <span class="slot__hp-bar"><i style="width: <%= view.hp_percent %>%"></i></span>
+    <b><%= view.hp_left %>/<%= view.hp %></b>
+  </div>
+
+  <p class="slot__energy"><%= attached_energy(view.energy) %></p>
+
+  <% if view.conditions.any? || view.tool %>
+    <p class="slot__status">
+      <% view.conditions.each do |condition| %><span class="condition condition--<%= condition %>"><%= condition.capitalize %></span><% end %>
+      <% if view.tool %><span class="tool-chip" title="Pokémon Tool"><%= view.tool.name %></span><% end %>
+    </p>
+  <% end %>
+
+  <% if mine && view.target == 'active' && board.my_move? && board.pending_type.nil? %>
+    <ul class="slot__moves" aria-label="Attacks">
+      <% card.attacks.each_with_index do |attack, index| %>
+        <% error = board.attack_error(index) %>
+        <li>
+          <%= game_action_with board, { type: 'attack', index: index }, class: 'attack-btn', disabled: error.present?, title: error do %>
+            <span class="attack-btn__cost"><%= energy_cost(attack['cost']) %></span>
+            <span class="attack-btn__name"><%= attack['name'] %></span>
+            <span class="attack-btn__damage"><%= damage_text(attack) %></span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <details class="slot__attacks">
+      <summary>Attacks</summary>
+      <ul>
+        <% card.attacks.each do |attack| %>
+          <li><span><%= energy_cost(attack['cost']) %></span> <%= attack['name'] %> <b><%= damage_text(attack) %></b></li>
+        <% end %>
+      </ul>
+      <p>Weakness <%= card.weakness_type ? "#{card.weakness_type} x#{card.weakness_multiplier}" : 'none' %>,
+         Resistance <%= card.resistance_type ? "#{card.resistance_type} -#{card.resistance_amount}" : 'none' %>,
+         Retreat <%= card.retreat_cost.to_i %></p>
+    </details>
+  <% end %>
+
+  <% if view.abilities.any? && !(mine && board.my_move?) %>
+    <p class="slot__abilities"><%= view.abilities.to_sentence %></p>
+  <% end %>
+  <% if mine && board.pending_type.nil? %>
+    <% board.usable_abilities(view.target).each do |index, name, fields| %>
+      <%= render 'games/choice_form', board: board, label: "Use #{name}", move: { type: 'ability', slot: view.target, index: index }, fields: fields %>
+    <% end %>
+  <% end %>
+
+  <% if mine && board.promoting? && bench_index %>
+    <%= game_action board, 'Make Active', { type: 'promote', index: bench_index }, class: 'btn btn-primary btn-sm' %>
+  <% end %>
+  <% if mine && board.switching? && bench_index %>
+    <%= game_action board, 'Switch in', { type: 'switch', index: bench_index }, class: 'btn btn-primary btn-sm' %>
+  <% end %>
+</article>

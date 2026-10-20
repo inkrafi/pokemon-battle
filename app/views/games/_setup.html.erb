@@ -1,0 +1,35 @@
+<%# Placing the first Pokémon, in secret: only the player placing them is shown anything. %>
+<% seat = board.viewer %>
+<div class="page-head">
+  <div>
+    <h1><%= board.seat_name(seat) %>: place your Pokémon</h1>
+    <p>Choose 1 Basic Pokémon for the Active Spot and up to 5 more for the Bench. Your opponent can't see them yet.</p>
+  </div>
+</div>
+
+<%= form_with url: actions_game_path(board.game), class: 'setup' do %>
+  <%= hidden_field_tag :type, 'setup' %>
+  <%= hidden_field_tag :version, board.version %>
+
+  <ul class="setup-list">
+    <% board.setup_basics.each do |entry| %>
+      <% card = entry.card %>
+      <li class="setup-choice" data-type="<%= (card.type || 'Colorless').parameterize %>">
+        <%= energy_icon(card.type || 'Colorless', size: :lg) %>
+        <div>
+          <strong><%= link_to card.name, card_path(card), target: '_blank', rel: 'noopener' %></strong>
+          <small>HP <%= card.hp %>, <%= card.attacks.map { |attack| attack['name'] }.to_sentence %></small>
+        </div>
+        <label class="setup-choice__pick">
+          <%= radio_button_tag :active, entry.uid, false, required: true %> Active
+        </label>
+        <label class="setup-choice__pick">
+          <%= check_box_tag 'bench[]', entry.uid, false, id: "bench_#{entry.uid}" %> Bench
+        </label>
+      </li>
+    <% end %>
+  </ul>
+
+  <p class="form-hint">Your hand also has <%= pluralize(board.hand.size - board.setup_basics.size, 'other card') %>. Those stay in your hand.</p>
+  <%= button_tag 'Place my Pokémon', type: 'submit', class: 'btn btn-primary' %>
+<% end %>

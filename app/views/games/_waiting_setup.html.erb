@@ -1,0 +1,7 @@
+<%# This player has placed their Pokémon; the other one hasn't yet. %>
+<div class="page-head" data-live-game="<%= board.game.id %>" data-version="<%= board.version %>">
+  <div>
+    <h1>Waiting for your opponent</h1>
+    <p>Your Pokémon are placed and hidden. The game begins when <%= board.seat_name(board.opponent) %> has placed theirs. This page updates by itself.</p>
+  </div>
+</div>

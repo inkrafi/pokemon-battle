@@ -8,6 +8,14 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
+import { initCardTilt } from "../src/card_tilt"
+import "../src/nav_toggle"
+
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+// turbolinks:load fires on the first page load and after every Turbolinks visit.
+document.addEventListener("turbolinks:load", () => {
+  initCardTilt()
+})

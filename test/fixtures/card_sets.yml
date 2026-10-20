@@ -1,0 +1,5 @@
+test_set:
+  tcgdex_id: test1
+  name: Test Set
+  released_on: 2025-01-01
+  card_count: 20

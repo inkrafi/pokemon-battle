@@ -49,7 +49,9 @@ default: &default
 
 development:
   <<: *default
-  compile: true
+  # The Docker setup runs a webpack watcher instead (WEBPACKER_COMPILE=false), because
+  # checking whether packs are stale on every request is slow on a bind mount.
+  compile: <%= ENV.fetch('WEBPACKER_COMPILE', 'true') %>
 
   # Reference: https://webpack.js.org/configuration/dev-server/
   dev_server:

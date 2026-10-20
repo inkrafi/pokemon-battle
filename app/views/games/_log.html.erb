@@ -1,0 +1,8 @@
+<section class="game-log" aria-labelledby="log-heading">
+  <h2 id="log-heading">What happened</h2>
+  <ol>
+    <% board.log.each do |entry| %>
+      <li class="game-log__entry<%= " game-log__entry--seat#{entry['seat']}" unless entry['seat'].nil? %>"><%= entry['text'] %></li>
+    <% end %>
+  </ol>
+</section>
