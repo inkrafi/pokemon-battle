@@ -7,7 +7,7 @@
   </div>
 </div>
 
-<%= form_with url: actions_game_path(board.game), class: 'setup' do %>
+<%= form_with url: actions_game_path(board.game), local: false, class: 'setup' do %>
   <%= hidden_field_tag :type, 'setup' %>
   <%= hidden_field_tag :version, board.version %>
 
@@ -15,7 +15,7 @@
     <% board.setup_basics.each do |entry| %>
       <% card = entry.card %>
       <li class="setup-choice" data-type="<%= (card.type || 'Colorless').parameterize %>">
-        <%= energy_icon(card.type || 'Colorless', size: :lg) %>
+        <%= card_thumb(card, size: :sm) %>
         <div>
           <strong><%= link_to card.name, card_path(card), target: '_blank', rel: 'noopener' %></strong>
           <small>HP <%= card.hp %>, <%= card.attacks.map { |attack| attack['name'] }.to_sentence %></small>

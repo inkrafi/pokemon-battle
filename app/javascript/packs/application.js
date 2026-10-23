@@ -9,6 +9,9 @@ import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
 import { initCardTilt } from "../src/card_tilt"
+import "../src/card_zoom"
+import "../src/sound"
+import "../src/game_fx"
 import "../src/nav_toggle"
 
 Rails.start()

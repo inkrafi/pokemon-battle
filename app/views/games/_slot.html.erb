@@ -1,7 +1,12 @@
 <%# A Pokémon in play: its card, how much HP is left, the Energy on it, and what can be done with it. %>
 <% card = view.card %>
 <% bench_index = view.target.start_with?('bench') ? view.target.split('-').last.to_i : nil %>
-<article class="slot<%= ' slot--active' if view.target == 'active' %>" data-type="<%= (card.type || 'Colorless').parameterize %>">
+<%# data-fx-* tell src/game_fx.js what changed since the page was last drawn: the key follows the
+    Pokémon (its first card) wherever it moves, top is the card on top (it changes when it evolves). %>
+<article class="slot<%= ' slot--active' if view.target == 'active' %>" data-type="<%= (card.type || 'Colorless').parameterize %>"
+         data-fx-slot="<%= seat %>-<%= view.slot['stack'].first %>" data-fx-seat="<%= seat %>" data-fx-active="<%= view.target == 'active' %>"
+         data-fx-damage="<%= view.damage %>" data-fx-hp="<%= view.hp %>" data-fx-top="<%= view.slot['stack'].last %>" data-fx-energy="<%= view.energy.size %>">
+  <%= card_thumb(card) %>
   <header>
     <h4 class="slot__name"><%= link_to card.name, card_path(card), target: '_blank', rel: 'noopener' %></h4>
     <p class="slot__stage">

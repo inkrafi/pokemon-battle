@@ -7,6 +7,7 @@ class GameBoardTrainersTest < ActiveSupport::TestCase
     @deck = build_legal_deck(player: @player)
     @game = Game.start!(decks: [@deck, @deck], players: [@player, @player], first_player: 0, shuffle: false)
     2.times { |seat| place(seat) }
+    draw_for(@game)
   end
 
   def board(viewer = 0)

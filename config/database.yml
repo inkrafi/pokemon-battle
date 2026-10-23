@@ -22,7 +22,9 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: postgres
   password: postgres
-  host: localhost
+  # Docker Compose sets DB_HOST=db. Each environment keeps its own database name below, so
+  # tests never run against the development database.
+  host: <%= ENV.fetch('DB_HOST', 'localhost') %>
 
 development:
   <<: *default

@@ -48,6 +48,7 @@ class GameBotTest < ActiveSupport::TestCase
   test "the computer answers after each human move" do
     game = start_bot_game
     place_first_basic(game)
+    game.perform!(0, 'type' => 'draw')
 
     game.perform!(0, 'type' => 'end_turn')
 

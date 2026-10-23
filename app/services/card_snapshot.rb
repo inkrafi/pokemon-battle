@@ -4,7 +4,7 @@ module CardSnapshot
   SET_FIELDS  = %w[tcgdex_id name released_on card_count].freeze
   CARD_FIELDS = %w[tcgdex_id number name supertype subtype hp energy_types evolves_from retreat_cost
                    weakness_type weakness_multiplier resistance_type resistance_amount prize_value ace_spec
-                   regulation_mark standard_legal rarity attacks abilities effects].freeze
+                   regulation_mark standard_legal rarity attacks abilities effects image_url].freeze
 
   def self.dump(path)
     data = {

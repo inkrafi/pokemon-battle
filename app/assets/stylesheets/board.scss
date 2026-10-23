@@ -130,6 +130,7 @@
   font-size: 0.78rem;
   line-height: 1.3;
 
+  > .card-thumb { margin-bottom: 0.45rem; }
   &__name { margin: 0; font-size: 0.95rem; line-height: 1.2; a { color: var(--ink); } }
   &__stage { margin: 0 0 0.3rem; font-size: 0.7rem; color: var(--slate); }
 
@@ -232,8 +233,6 @@
   border-radius: 12px;
   background: #fff;
 
-  header { display: flex; align-items: center; gap: 0.45rem; strong a { color: var(--ink); } }
-  &__kind { margin: 0; font-size: 0.78rem; color: var(--slate); }
   &__actions { display: grid; gap: 0.3rem; form { margin: 0; } .btn { width: 100%; text-align: left; } }
 }
 
@@ -308,7 +307,7 @@
 
 .setup-choice {
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: 4rem 1fr auto auto;
   align-items: center;
   gap: 0.75rem;
   padding: 0.6rem 0.8rem;
@@ -320,7 +319,7 @@
   &__pick { display: inline-flex; align-items: center; gap: 0.3rem; font-weight: 700; }
 
   @media (max-width: 575.98px) {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 4rem 1fr;
     &__pick { grid-column: span 1; }
   }
 }
@@ -350,12 +349,17 @@
 .tool-chip { background: #e3e8f4; color: var(--ink); border: 1px solid #c4cce2; }
 
 .stadium-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   margin: 0;
   padding: 0.5rem 0.9rem;
   border: 1px dashed #98a3c4;
   border-radius: var(--radius-card);
   background: #f3f5fb;
   font-size: 0.9rem;
+
+  p { margin: 0; }
 }
 
 // ---------------------------------------------------------------- choices and searching the deck
@@ -389,6 +393,9 @@
 }
 
 .search-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.35rem 0.6rem;
   border: 2px solid var(--type, #cfd2d9);
   border-radius: 10px;
@@ -409,3 +416,425 @@
 }
 
 .invite__row { margin-bottom: 0.5rem; }
+
+// ---------------------------------------------------------------- card pictures and the card viewer
+// A card's picture (GamesHelper#card_thumb). Clicking it opens the card large in .card-zoom.
+.card-thumb {
+  display: block;
+  flex: none;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 4.5% / 3.3%;
+  background: color-mix(in srgb, var(--type, #cfd2d9) 30%, #fff);
+  aspect-ratio: 245 / 337;
+  overflow: hidden;
+  box-shadow: 0 2px 6px -2px rgba(28, 35, 64, 0.35);
+  cursor: zoom-in;
+  transition: transform 0.15s ease-out, box-shadow 0.15s;
+
+  img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  &:hover { transform: translateY(-2px); box-shadow: 0 8px 16px -6px rgba(28, 35, 64, 0.45); }
+  &:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+  &--sm { width: 4rem; }
+  &--xs { width: 2.6rem; }
+
+  // a card without a picture: its type symbol and name
+  &--plain {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem;
+    color: var(--ink);
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  &__name { font-size: 0.8rem; font-weight: 800; line-height: 1.2; }
+  &--sm &__name, &--xs &__name { display: none; }
+  &--sm .energy--lg, &--xs .energy--lg { width: 1.4rem; height: 1.4rem; }
+}
+
+.card-zoom {
+  width: 26rem;
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+
+  &::backdrop { background: rgba(14, 18, 36, 0.78); }
+
+  &__body { display: grid; gap: 0.6rem; }
+
+  &__picture {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: calc(100dvh - 6rem);
+    object-fit: contain;
+    border-radius: 4.5% / 3.3%;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.6);
+  }
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #fff;
+
+    form { margin: 0 0 0 auto; }
+  }
+
+  &__name { margin: 0; font-size: 1.05rem; color: #fff; }
+  &__link { color: var(--yellow); font-weight: 700; font-size: 0.9rem; }
+
+  &__close {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--ink);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+}
+
+// ---------------------------------------------------------------- drawing a card
+// The deck, face down, at the start of the hand while a card has to be drawn.
+.hand-card--deck {
+  border-style: dashed;
+  border-color: var(--red, #e4372a);
+  background: #fff5f4;
+}
+
+.deck-pile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 245 / 337;
+  padding: 0;
+  border: 4px solid #fff;
+  border-radius: 4.5% / 3.3%;
+  background:
+    radial-gradient(circle at 50% 50%, #fff 0 13%, #1c2340 13% 16%, transparent 16%),
+    linear-gradient(180deg, #e4372a 0 47%, #1c2340 47% 53%, #f4f5f9 53%);
+  box-shadow: 4px 4px 0 -1px #c9ced9, 8px 8px 0 -2px #b2b8c7, 0 6px 14px -6px rgba(28, 35, 64, 0.5);
+  cursor: pointer;
+  animation: deck-pulse 1.6s ease-in-out infinite;
+
+  &:hover { transform: translateY(-3px); }
+  &:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+  &__count {
+    position: absolute;
+    right: 0.4rem;
+    bottom: 0.4rem;
+    padding: 0.05rem 0.5rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  @media (prefers-reduced-motion: reduce) { animation: none; }
+}
+
+@keyframes deck-pulse {
+  50% { box-shadow: 4px 4px 0 -1px #c9ced9, 8px 8px 0 -2px #b2b8c7, 0 0 0 6px rgba(228, 55, 42, 0.25); }
+}
+
+.hand-card--deck form { margin: 0; }
+
+// the card drawn this turn
+.hand-card.is-new {
+  position: relative;
+  border-color: var(--yellow);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--yellow) 45%, transparent);
+}
+
+.hand-card__new {
+  position: absolute;
+  top: 0.9rem;
+  left: 50%;
+  z-index: 1;
+  transform: translateX(-50%);
+  padding: 0.05rem 0.6rem;
+  border-radius: 999px;
+  background: var(--yellow);
+  color: var(--ink);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.card-zoom__note {
+  margin: 0;
+  color: var(--yellow);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+// ---------------------------------------------------------------- notifications and animations
+// Played by src/game_fx.js for what is new since the screen was last drawn (games/_fx).
+.toasts {
+  position: fixed;
+  top: 4.75rem;
+  right: 1rem;
+  z-index: 1050;
+  display: grid;
+  gap: 0.5rem;
+  width: 21rem;
+  max-width: calc(100vw - 2rem);
+  pointer-events: none;
+}
+
+.toast-note {
+  --accent: #5b6c8f;
+  display: grid;
+  grid-template-columns: 2.4rem 1fr;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.8rem 0.6rem 0.6rem;
+  border-left: 5px solid var(--accent);
+  border-radius: 12px;
+  background: rgba(20, 26, 48, 0.94);
+  color: #fff;
+  box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.55);
+  animation: toast-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+
+  &[data-seat="mine"] { --accent: #4f9bea; }
+  &[data-seat="theirs"] { --accent: #ef6a3b; }
+  &--knockout, &--prize { --accent: var(--yellow); background: linear-gradient(120deg, #3a1420, #1c2340); }
+  &--knockout .toast-note__icon { animation: pop 0.5s 0.15s both; }
+
+  &.is-leaving { animation: toast-out 0.4s ease-in forwards; }
+
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    font-size: 1.3rem;
+  }
+
+  &__body { display: grid; font-size: 0.85rem; line-height: 1.3; }
+  strong { font-family: var(--font-display); font-size: 0.95rem; color: var(--yellow); letter-spacing: 0.02em; }
+}
+
+.turn-banner {
+  position: fixed;
+  inset: 40% 0 auto;
+  z-index: 1040;
+  display: grid;
+  justify-items: center;
+  padding: 1rem;
+  background: linear-gradient(90deg, transparent, rgba(20, 26, 48, 0.92) 18%, rgba(20, 26, 48, 0.92) 82%, transparent);
+  color: #fff;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+
+  &__title { font-family: var(--font-display); font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.1; color: var(--yellow); }
+  &__sub { font-weight: 700; color: #c9d0e6; }
+  &[data-tone="theirs"] &__title { color: #ff8a5c; }
+
+  &.is-showing { visibility: visible; animation: banner 1.9s ease-in-out both; }
+}
+
+// the attacker charges at the other side, the Pokémon hit shakes
+.fx-lunge-up { animation: lunge-up 0.45s ease-in-out; }
+.fx-lunge-down { animation: lunge-down 0.45s ease-in-out; }
+.fx-hit { animation: hit 0.5s ease-in-out; }
+.fx-enter { animation: enter 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.4) both; }
+.fx-evolve { animation: evolve 1.1s ease-out; }
+.fx-pulse { animation: pop 0.5s ease-out; }
+.fx-deal { animation: deal 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+
+.slot { position: relative; }
+.slot__hp-bar i { transition: width 0.9s ease-out; }
+
+.fx-number {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  z-index: 3;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  pointer-events: none;
+  -webkit-text-stroke: 1.5px #1c2340;
+  animation: float-up 1.3s ease-out forwards;
+
+  &--hurt { color: #ff5a4a; }
+  &--heal { color: #4cd07d; }
+}
+
+@keyframes toast-in { from { opacity: 0; transform: translateX(110%) scale(0.9); } }
+@keyframes toast-out { to { opacity: 0; transform: translateX(40%); } }
+@keyframes banner {
+  0% { opacity: 0; transform: scaleY(0.2); }
+  15%, 80% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+@keyframes lunge-up { 40% { transform: translateY(-26px) scale(1.04); } }
+@keyframes lunge-down { 40% { transform: translateY(26px) scale(1.04); } }
+@keyframes hit {
+  0%, 100% { transform: none; }
+  20%, 60% { transform: translateX(-7px); filter: brightness(1.5) saturate(0.4); }
+  40%, 80% { transform: translateX(7px); }
+}
+@keyframes enter { from { opacity: 0; transform: scale(0.6) translateY(12px); } }
+@keyframes evolve {
+  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); filter: brightness(2.2); }
+  50% { box-shadow: 0 0 28px 8px rgba(255, 233, 140, 0.9); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 233, 140, 0); filter: none; }
+}
+@keyframes pop { 50% { transform: scale(1.3); } }
+@keyframes deal { from { opacity: 0; transform: translate(-60px, 30px) rotate(-12deg); } }
+@keyframes float-up {
+  0% { opacity: 0; transform: translate(-50%, 10px) scale(0.6); }
+  20% { opacity: 1; transform: translate(-50%, -10px) scale(1.15); }
+  100% { opacity: 0; transform: translate(-50%, -60px) scale(1); }
+}
+
+// without motion the notes and the banner only fade; nothing moves on the table (game_fx.js)
+@media (prefers-reduced-motion: reduce) {
+  .toast-note { animation-name: fade; }
+  .toast-note.is-leaving { animation-name: fade-out; }
+  .turn-banner.is-showing { animation-name: fade-in-out; }
+}
+
+@keyframes fade { from { opacity: 0; } }
+@keyframes fade-out { to { opacity: 0; } }
+@keyframes fade-in-out { 0%, 100% { opacity: 0; } 15%, 80% { opacity: 1; } }
+
+// ---------------------------------------------------------------- the deck, cards in flight, sound
+// A face-down card, as the deck on each side of the table and on cards flying face down.
+%card-back {
+  border: 2px solid #fff;
+  border-radius: 4px;
+  background:
+    radial-gradient(circle at 50% 50%, #fff 0 14%, #1c2340 14% 19%, transparent 19%),
+    linear-gradient(180deg, #e4372a 0 46%, #1c2340 46% 54%, #f4f5f9 54%);
+  box-shadow: 0 1px 3px rgba(28, 35, 64, 0.4);
+}
+
+.mat__deck {
+  position: relative;
+  width: 1.9rem;
+  height: 2.6rem;
+  margin-right: 0.25rem;
+
+  i {
+    @extend %card-back;
+    position: absolute;
+    inset: 0;
+  }
+  i:nth-child(1) { transform: translate(3px, 3px); }
+  i:nth-child(2) { transform: translate(1.5px, 1.5px); }
+
+  // riffle: the top cards split to both sides and come back together, a few times
+  &.is-shuffling i:nth-child(2) { animation: riffle-left 0.7s ease-in-out; }
+  &.is-shuffling i:nth-child(3) { animation: riffle-right 0.7s ease-in-out; }
+}
+
+@keyframes riffle-left {
+  25%, 75% { transform: translate(-16px, -2px) rotate(-14deg); }
+  50% { transform: translate(1.5px, 1.5px); }
+}
+@keyframes riffle-right {
+  25%, 75% { transform: translate(16px, -2px) rotate(14deg); }
+  50% { transform: none; }
+}
+
+.flying-card {
+  position: fixed;
+  z-index: 1030;
+  overflow: hidden;
+  border-radius: 6px;
+  pointer-events: none;
+  box-shadow: 0 18px 30px -10px rgba(0, 0, 0, 0.5);
+  will-change: transform, opacity;
+
+  img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  &--back { @extend %card-back; }
+  &--small { border-radius: 3px; }
+}
+
+.sound-controls {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 1050;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.sound-toggle {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--ink);
+  font-size: 1.15rem;
+  line-height: 1;
+  box-shadow: 0 6px 16px -6px rgba(28, 35, 64, 0.6);
+  cursor: pointer;
+
+  &.is-off { opacity: 0.45; filter: grayscale(1); }
+  &.is-off::after {
+    content: "";
+    position: absolute;
+    width: 2rem;
+    height: 3px;
+    border-radius: 2px;
+    background: #ff5a4a;
+    transform: rotate(-45deg);
+  }
+  &:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+}
+.sound-toggle { position: relative; }
+
+// the deck in the hand riffles before a card is drawn (src/game_fx.js)
+.deck-pile__half {
+  @extend %card-back;
+  position: absolute;
+  inset: 8% 14%;
+  border-width: 3px;
+  border-radius: 6px;
+  opacity: 0;
+}
+
+.deck-pile.is-shuffling {
+  animation: none;
+
+  .deck-pile__half { opacity: 1; }
+  .deck-pile__half--left { animation: riffle-big-left 0.75s ease-in-out; }
+  .deck-pile__half--right { animation: riffle-big-right 0.75s ease-in-out; }
+}
+
+@keyframes riffle-big-left {
+  0%, 100% { transform: none; }
+  20%, 60% { transform: translateX(-38%) rotate(-12deg); }
+  40%, 80% { transform: translateY(-4%); }
+}
+@keyframes riffle-big-right {
+  0%, 100% { transform: none; }
+  20%, 60% { transform: translateX(38%) rotate(12deg); }
+  40%, 80% { transform: translateY(4%); }
+}

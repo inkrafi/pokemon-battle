@@ -12,7 +12,7 @@ class Tcg::EngineEffectsTest < ActiveSupport::TestCase
     put_in_play(engine, 1, theirs, where: :active)
     put_in_play(engine, 0, :sprigling) if bench
     put_in_play(engine, 1, :sprigling) if bench
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
     engine
   end
 
@@ -24,8 +24,10 @@ class Tcg::EngineEffectsTest < ActiveSupport::TestCase
     engine.instance_variable_set(:@rng, rng)
   end
 
+  # Seat 0 attacks; when that ends the turn, seat 1 draws the card that starts theirs.
   def attack!(engine)
     engine.perform(0, 'type' => 'attack', 'index' => 0)
+    draw_for_turn(engine)
   end
 
   test "flipping coins for damage counts the heads" do
@@ -208,8 +210,8 @@ class Tcg::EngineEffectsTest < ActiveSupport::TestCase
   test "the protection ends after the opponent's turn" do
     engine = duel({ 'op' => 'mark', 'target' => 'self', 'kind' => 'reduce_incoming', 'amount' => 10, 'turns' => 1 })
     attack!(engine)
-    engine.perform(1, 'type' => 'end_turn')
-    engine.perform(0, 'type' => 'end_turn')
+    end_turn(engine)
+    end_turn(engine)
 
     engine.perform(1, 'type' => 'attack', 'index' => 0)
 
@@ -244,12 +246,12 @@ class Tcg::EngineEffectsTest < ActiveSupport::TestCase
   test "a Pokémon that can't use an attack next turn is blocked in its own next turn" do
     engine = duel({ 'op' => 'mark', 'target' => 'self', 'kind' => 'no_attack', 'name' => 'Special', 'turns' => 2 })
     attack!(engine)
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
 
     assert_match(/can't attack right now/, engine.error_for(0, 'type' => 'attack', 'index' => 0))
 
-    engine.perform(0, 'type' => 'end_turn')
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
+    end_turn(engine)
     assert_nil engine.error_for(0, 'type' => 'attack', 'index' => 0)
   end
 
@@ -273,7 +275,7 @@ class Tcg::EngineEffectsTest < ActiveSupport::TestCase
     engine.perform(1, 'type' => 'switch', 'index' => 0)
 
     assert_equal 'Sprigling', engine.top_card(engine.active(1)).name
-    assert_nil engine.pending
+    assert_equal({ 'type' => 'draw', 'seat' => 1 }, engine.pending) # their turn starts with a draw
     assert_equal 1, engine.current
   end
 
@@ -310,7 +312,7 @@ class Tcg::EngineEffectsTest < ActiveSupport::TestCase
     fire = make_card(name: 'Fire-type', hp: 200, type: 'Fire', attacks: [attack(name: 'Special', cost: [], damage: 30, effects: [{ 'op' => 'ignore', 'what' => 'matchup' }])])
     engine = start_play(first_player: 1)
     put_in_play(engine, 0, fire, where: :active)
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
 
     attack!(engine)
 

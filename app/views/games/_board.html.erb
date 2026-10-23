@@ -1,8 +1,10 @@
 <div class="board-layout"<% if board.game.online? && !board.finished? %> data-live-game="<%= board.game.id %>" data-version="<%= board.version %>"<% end %>>
   <div class="board-main">
     <% if board.stadium %>
-      <p class="stadium-banner"><b>Stadium</b> <%= link_to board.stadium[:card].name, card_path(board.stadium[:card]), target: '_blank', rel: 'noopener' %>,
-        played by <%= board.seat_name(board.stadium[:owner]) %></p>
+      <div class="stadium-banner">
+        <%= card_thumb(board.stadium[:card], size: :xs) %>
+        <p><b>Stadium</b> <%= board.stadium[:card].name %>, played by <%= board.seat_name(board.stadium[:owner]) %></p>
+      </div>
     <% end %>
     <% if board.viewer %>
       <%= render 'games/side', board: board, seat: board.opponent, mine: false %>

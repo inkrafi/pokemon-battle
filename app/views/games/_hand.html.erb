@@ -1,29 +1,29 @@
 <%# The viewer's hand. Each card offers the moves the rules allow for it right now. %>
-<section class="hand" aria-labelledby="hand-heading">
+<section class="hand" data-fx-my-hand aria-labelledby="hand-heading">
   <h2 id="hand-heading">Your hand <small>(<%= board.hand.size %>)</small></h2>
 
-  <% if board.hand.empty? %>
+  <% if board.hand.empty? && !board.drawing? %>
     <p class="text-slate">Your hand is empty.</p>
   <% else %>
     <ul class="hand__cards">
+      <% if board.drawing? %>
+        <li class="hand-card hand-card--deck">
+          <%= game_action_with board, { type: 'draw' }, class: 'deck-pile', aria: { label: 'Draw a card' } do %>
+            <%# the two halves of the deck that riffle into each other before the draw (src/game_fx.js) %>
+            <span class="deck-pile__half deck-pile__half--left" aria-hidden="true"></span>
+            <span class="deck-pile__half deck-pile__half--right" aria-hidden="true"></span>
+            <span class="deck-pile__count"><%= board.deck_count(board.viewer) %></span>
+          <% end %>
+          <%= game_action board, 'Draw a card', { type: 'draw' }, class: 'btn btn-primary btn-sm' %>
+        </li>
+      <% end %>
+      <% drawn = board.drawn_uid %>
       <% board.hand.each do |entry| %>
         <% card = entry.card %>
-        <% type = (card.type || 'Colorless') %>
-        <li class="hand-card" data-type="<%= type.parameterize %>">
-          <header>
-            <%= energy_icon(type) %>
-            <strong><%= link_to card.name, card_path(card), target: '_blank', rel: 'noopener' %></strong>
-          </header>
-
-          <p class="hand-card__kind">
-            <% if card.pokemon? %>
-              <%= card.stage_label %>, HP <%= card.hp %><%= ", #{card.evolves_from} evolves" if card.evolves_from %>
-            <% elsif card.energy? %>
-              <%= card.basic_energy? ? 'Basic Energy' : 'Special Energy' %>
-            <% else %>
-              Trainer, <%= card.subtype.titleize %>
-            <% end %>
-          </p>
+        <% just_drawn = entry.uid == drawn %>
+        <li class="hand-card<%= ' is-new' if just_drawn %>" data-fx-card="<%= entry.uid %>" data-type="<%= (card.type || 'Colorless').parameterize %>"<% if just_drawn %> data-just-drawn="game-<%= board.game.id %>-turn-<%= board.turn_number %>"<% end %>>
+          <% if just_drawn %><span class="hand-card__new">New</span><% end %>
+          <%= card_thumb(card) %>
 
           <div class="hand-card__actions">
             <% if card.basic_pokemon? && board.can_bench?(entry.uid) %>

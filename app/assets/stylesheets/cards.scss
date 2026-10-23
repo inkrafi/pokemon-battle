@@ -280,3 +280,29 @@
 @media (hover: none) {
   .tcg-card[data-tilt] { transform: none; }
 }
+
+// ---------------------------------------------------------------- a card shown by its picture
+// The picture is the whole card, so the frame and padding of a drawn card go away.
+.tcg-card--picture {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 4.5% / 3.3%;
+  background: var(--tint-strong);
+
+  .tcg-card__picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tcg-card__picture-link {
+    display: block;
+    height: 100%;
+
+    &:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: -3px;
+    }
+  }
+}

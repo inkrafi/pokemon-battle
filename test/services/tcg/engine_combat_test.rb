@@ -7,7 +7,7 @@ class Tcg::EngineCombatTest < ActiveSupport::TestCase
     basics = actives.map { |name| cards(name).basic_pokemon? ? name : :sprigling }
     engine = start_play(first_player: 1, actives: basics)
     actives.each_with_index { |name, seat| put_in_play(engine, seat, name, where: :active) unless cards(name).basic_pokemon? }
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
     engine
   end
 
@@ -92,7 +92,7 @@ class Tcg::EngineCombatTest < ActiveSupport::TestCase
     engine = second_turn(actives: %i[sprigling bloomling])
     energize(engine, 0, :grass_energy)
     engine.perform(0, 'type' => 'attack', 'index' => 0)
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
 
     engine.perform(0, 'type' => 'attack', 'index' => 0)
 
@@ -176,9 +176,10 @@ class Tcg::EngineCombatTest < ActiveSupport::TestCase
 
     assert_equal 'Sprigling', engine.top_card(engine.active(1)).name
     assert_empty engine.bench(1)
-    assert_nil engine.pending
+    assert_equal({ 'type' => 'draw', 'seat' => 1 }, engine.pending) # their turn starts with a draw
     assert_equal 1, engine.current
-    assert_equal hand_before + 1, engine.player(1)['hand'].size # their turn began with a draw
+    engine.perform(1, 'type' => 'draw')
+    assert_equal hand_before + 1, engine.player(1)['hand'].size
   end
 
   test "knocking out the last Pokémon in play wins the game" do

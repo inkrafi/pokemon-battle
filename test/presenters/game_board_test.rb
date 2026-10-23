@@ -17,8 +17,10 @@ class GameBoardTest < ActiveSupport::TestCase
     @game.perform!(seat, 'type' => 'setup', 'active' => active, 'bench' => [])
   end
 
+  # Both players place their Pokémon and the first player draws the card that starts their turn.
   def start_play
     2.times { |seat| place(seat) }
+    draw_for(@game)
   end
 
   def give_to_hand(seat, fixture)
@@ -87,7 +89,9 @@ class GameBoardTest < ActiveSupport::TestCase
     assert_empty board(0).evolve_targets(evolution) # nobody evolves on their first turn
 
     @game.perform!(0, 'type' => 'end_turn')
+    draw_for(@game)
     @game.perform!(1, 'type' => 'end_turn')
+    draw_for(@game)
 
     assert_equal [['active', 'Sprigling (Active)']], board(0).evolve_targets(evolution)
   end
@@ -110,6 +114,22 @@ class GameBoardTest < ActiveSupport::TestCase
     assert board(0).can_retreat?
     assert_equal 1, board(0).retreat_cost
     assert_equal 1, board(0).active_energy.size
+  end
+
+  test "a turn starts with drawing a card, and the card drawn is known until it leaves the hand" do
+    2.times { |seat| place(seat) }
+
+    assert board(0).drawing?
+    assert_not board(1).drawing?
+    assert_not board(0).can_end_turn?
+    assert_match(/by drawing a card/, board(1).why_seat_acts)
+    assert_nil board(0).drawn_uid
+
+    @game.perform!(0, 'type' => 'draw')
+
+    assert_not board(0).drawing?
+    assert_equal board(0).hand.last.uid, board(0).drawn_uid
+    assert_nil board(1).drawn_uid
   end
 
   test "the turn can be ended by the player whose turn it is" do
@@ -144,10 +164,22 @@ class GameBoardTest < ActiveSupport::TestCase
     assert_equal 'Player 1 won because the opponent conceded.', result.result_text
   end
 
+  test "the feed numbers the log entries and says what kind each one is" do
+    start_play
+    feed = board.feed
+
+    assert_equal feed.map { |entry| entry['n'] }.sort, feed.map { |entry| entry['n'] }
+    assert_equal 'turn', feed.find { |entry| entry['text'] == "Player 1's turn." }['kind']
+    assert_equal 'draw', feed.last['kind']
+    assert_equal 'Your turn', board(0).turn_title(0)
+    assert_equal "Player 1's turn", board(1).turn_title(0)
+  end
+
   test "the log lists the latest events first" do
     start_play
 
-    assert_match(/turn/, board.log.first['text'])
+    assert_equal 'Player 1 drew a card.', board.log.first['text']
+    assert_equal "Player 1's turn.", board.log.second['text']
     assert_operator board.log.size, :<=, 14
   end
 end

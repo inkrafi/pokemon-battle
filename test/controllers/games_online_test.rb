@@ -185,10 +185,10 @@ class GamesOnlineTest < ActionDispatch::IntegrationTest
     sizes = game.reload.engine
     @host.get game_url(game)
     @host.assert_select '.mat', 2
-    @host.assert_select '.hand-card', sizes.player(0)['hand'].size
+    @host.assert_select '.hand-card:not(.hand-card--deck)', sizes.player(0)['hand'].size
     @host.assert_select '.mat--theirs .hand-card', 0
     @friend.get game_url(game)
-    @friend.assert_select '.hand-card', sizes.player(1)['hand'].size
+    @friend.assert_select '.hand-card:not(.hand-card--deck)', sizes.player(1)['hand'].size
     @friend.assert_select "[data-live-game='#{game.id}']"
   end
 
@@ -198,6 +198,7 @@ class GamesOnlineTest < ActionDispatch::IntegrationTest
     place(@friend, game, 1)
     engine = game.reload.engine
     waiting = engine.seat_to_act == 0 ? @friend : @host
+    play(engine.seat_to_act == 0 ? @host : @friend, game, 'type' => 'draw')
 
     play(waiting, game, 'type' => 'end_turn')
 
@@ -213,7 +214,7 @@ class GamesOnlineTest < ActionDispatch::IntegrationTest
     stale = game.version
 
     travel 1.second do
-      play(mover, game, 'type' => 'end_turn')
+      play(mover, game, 'type' => 'draw')
     end
     mover.post actions_game_url(game), params: { type: 'end_turn', version: stale }
 

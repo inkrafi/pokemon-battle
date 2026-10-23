@@ -1,0 +1,13 @@
+<%# The card viewer: a card picture opened large, so its text can be read. src/card_zoom.js fills
+    it in when a card_thumb is clicked. Esc, the close button or a click outside the card closes it. %>
+<dialog class="card-zoom" aria-labelledby="card-zoom-name">
+  <div class="card-zoom__body">
+    <p class="card-zoom__note" hidden>You drew</p>
+    <img class="card-zoom__picture" alt="" width="600" height="825">
+    <div class="card-zoom__bar">
+      <h2 id="card-zoom-name" class="card-zoom__name"></h2>
+      <a class="card-zoom__link" target="_blank" rel="noopener">Card details</a>
+      <form method="dialog"><button class="card-zoom__close" aria-label="Close">×</button></form>
+    </div>
+  </div>
+</dialog>

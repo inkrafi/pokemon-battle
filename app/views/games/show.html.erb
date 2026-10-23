@@ -14,3 +14,6 @@
 <% else %>
   <%= render 'games/board', board: @board %>
 <% end %>
+
+<%= render 'games/card_zoom' %>
+<%= render 'games/fx', board: @board if @board.phase != 'setup' %>

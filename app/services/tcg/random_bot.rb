@@ -15,7 +15,7 @@ module Tcg
       return nil if actions.empty?
 
       by_type = actions.group_by { |action| action['type'] }
-      %w[setup promote switch].each { |type| return pick(by_type[type]) if by_type[type] }
+      %w[setup draw promote switch].each { |type| return pick(by_type[type]) if by_type[type] }
       return by_type['choose'].first if by_type['choose'] # the fullest search comes first
 
       return pick(by_type['attack']) if by_type['attack'] && @rng.rand < ATTACK_CHANCE

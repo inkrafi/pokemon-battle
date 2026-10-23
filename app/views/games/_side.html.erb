@@ -7,17 +7,21 @@
       <%= name %><%= ' (you)' if mine %>
       <% if !board.finished? && board.acting_seat == seat %><span class="mat__turn">to move</span><% end %>
     </h2>
+    <%# data-fx-* mark where cards fly from and to in src/game_fx.js %>
+    <div class="mat__deck" data-fx-deck="<%= seat %>" data-count="<%= board.deck_count(seat) %>" role="img" aria-label="Deck, <%= pluralize(board.deck_count(seat), 'card') %>">
+      <i></i><i></i><i></i>
+    </div>
     <ul class="mat__counts">
-      <li>Hand <b><%= board.hand_count(seat) %></b></li>
+      <li data-fx-hand="<%= seat %>" data-count="<%= board.hand_count(seat) %>">Hand <b><%= board.hand_count(seat) %></b></li>
       <li>Deck <b><%= board.deck_count(seat) %></b></li>
-      <li>
+      <li data-fx-discard="<%= seat %>" data-count="<%= board.discard_cards(seat).size %>">
         <details>
           <summary>Discard <b><%= board.discard_cards(seat).size %></b></summary>
           <p class="mat__discard"><%= board.discard_cards(seat).map(&:name).tally.map { |card_name, count| count > 1 ? "#{card_name} x#{count}" : card_name }.to_sentence.presence || 'Empty' %></p>
         </details>
       </li>
     </ul>
-    <div class="prizes" role="img" aria-label="<%= pluralize(board.prizes_left(seat), 'Prize card') %> left">
+    <div class="prizes" data-fx-prizes="<%= seat %>" data-count="<%= board.prizes_left(seat) %>" role="img" aria-label="<%= pluralize(board.prizes_left(seat), 'Prize card') %> left">
       <% 6.times do |index| %><i class="prize<%= ' is-taken' if index >= board.prizes_left(seat) %>"></i><% end %>
     </div>
   </header>
@@ -26,7 +30,7 @@
     <div class="mat__active">
       <h3 class="mat__label">Active</h3>
       <% if active %>
-        <%= render 'games/slot', view: active, board: board, mine: mine %>
+        <%= render 'games/slot', view: active, board: board, mine: mine, seat: seat %>
       <% else %>
         <div class="slot slot--empty">No Active Pokémon</div>
       <% end %>
@@ -39,7 +43,7 @@
         <% 5.times do |index| %>
           <li>
             <% if bench[index] %>
-              <%= render 'games/slot', view: bench[index], board: board, mine: mine %>
+              <%= render 'games/slot', view: bench[index], board: board, mine: mine, seat: seat %>
             <% else %>
               <div class="slot slot--empty">Empty</div>
             <% end %>

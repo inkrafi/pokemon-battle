@@ -75,7 +75,8 @@ class GamesController < ApplicationController
       end
 
     flash[:danger] = message if message
-    redirect_to game_path(@game)
+    # a move sent in the background gets a Turbolinks visit (it replaces this page in the history)
+    redirect_to game_path(@game), turbolinks: :replace
   end
 
   # Whoever picks up the device says who they are, but only the player who has to act can.
@@ -84,7 +85,7 @@ class GamesController < ApplicationController
       seat_memory[@game.id.to_s] = @game.engine.seat_to_act
       save_seat_memory
     end
-    redirect_to game_path(@game)
+    redirect_to game_path(@game), turbolinks: :replace
   end
 
   private

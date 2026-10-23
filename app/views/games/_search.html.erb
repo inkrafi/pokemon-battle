@@ -6,15 +6,15 @@
     Cards that don't fit are greyed out. You may also take nothing.
   </p>
 
-  <%= form_with url: actions_game_path(board.game) do %>
+  <%= form_with url: actions_game_path(board.game), local: false do %>
     <%= hidden_field_tag :type, 'choose' %>
     <%= hidden_field_tag :version, board.version, id: nil %>
     <ul class="search-panel__cards">
       <% board.search_options.each do |option| %>
         <li class="search-card<%= ' is-dim' unless option.fits %>" data-type="<%= (option.card.type || 'Colorless').parameterize %>">
+          <%= card_thumb(option.card, size: :xs) %>
           <label>
             <%= check_box_tag 'cards[]', option.uid, false, id: nil, disabled: !option.fits %>
-            <%= energy_icon(option.card.type || 'Colorless', size: :sm) %>
             <%= option.card.name %>
             <small><%= option.card.pokemon? ? "#{option.card.stage_label}, HP #{option.card.hp}" : option.card.subtype.to_s.titleize %></small>
           </label>

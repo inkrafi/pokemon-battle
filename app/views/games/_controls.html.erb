@@ -3,6 +3,9 @@
 
   <% if board.finished? %>
     <p class="text-slate"><%= board.result_text %></p>
+  <% elsif board.drawing? %>
+    <p>Turn <%= board.turn_number %> starts. Draw a card from your deck first.</p>
+    <%= game_action board, 'Draw a card', { type: 'draw' }, class: 'btn btn-primary' %>
   <% elsif board.promoting? %>
     <p>Your Active Pokémon was Knocked Out. Choose a new one from your Bench.</p>
   <% elsif board.switching? %>
@@ -16,7 +19,7 @@
     <% if board.can_retreat? %>
       <details class="retreat">
         <summary>Retreat</summary>
-        <%= form_with url: actions_game_path(board.game) do %>
+        <%= form_with url: actions_game_path(board.game), local: false do %>
           <%= hidden_field_tag :type, 'retreat' %>
           <%= hidden_field_tag :version, board.version %>
           <div class="field">

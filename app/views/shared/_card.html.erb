@@ -1,5 +1,5 @@
-<%# A card of the trading card game, drawn from its data. Official artwork and card text are not
-    part of this app, so the picture area shows the card's type instead.
+<%# A card of the trading card game. A card with a picture on TCGdex shows that picture; any other
+    card (the basic Energy cards) is drawn from its data, with its type in the picture area.
     Locals:
       card - the Card
       link - optional URL; makes the whole card clickable
@@ -10,6 +10,17 @@
   tilt = local_assigns[:tilt]
   type = card.type || 'Colorless'
 %>
+<% if card.image_url.present? %>
+<article class="tcg-card tcg-card--picture tcg-card--<%= card.supertype %>" data-type="<%= type.parameterize %>"<%= ' data-tilt' if tilt %>>
+  <div class="tcg-card__shine" aria-hidden="true"></div>
+  <% picture = image_tag("#{card.image_url}/low.webp",
+                         srcset: { "#{card.image_url}/low.webp" => '245w', "#{card.image_url}/high.webp" => '600w' },
+                         sizes: '(max-width: 575px) 45vw, 300px',
+                         alt: "#{card.name}, #{card.card_set.name} #{card.number}",
+                         class: 'tcg-card__picture', width: 600, height: 825, loading: 'lazy', decoding: 'async') %>
+  <%= link ? link_to(picture, link, class: 'tcg-card__picture-link') : picture %>
+</article>
+<% else %>
 <article class="tcg-card tcg-card--<%= card.supertype %>" data-type="<%= type.parameterize %>"<%= ' data-tilt' if tilt %>>
   <div class="tcg-card__shine" aria-hidden="true"></div>
   <div class="tcg-card__inner">
@@ -87,3 +98,4 @@
     </p>
   </div>
 </article>
+<% end %>

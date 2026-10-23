@@ -1,6 +1,7 @@
 module Tcgdex
   # Turns a TCGdex card payload into attributes for Card.
-  # Only facts are copied. Illustrations, flavour text and the wording of effects are left behind:
+  # Only facts are copied, plus a link to the card picture hosted by TCGdex. Flavour text and
+  # the wording of effects are left behind:
   # an attack keeps what it does as operations (see Tcg::EffectParser), or has_effect when
   # the engine can't do it yet. The wording itself is never stored.
   class CardMapper
@@ -33,7 +34,8 @@ module Tcgdex
         name: @payload.fetch('name'),
         rarity: @payload['rarity'],
         regulation_mark: @payload['regulationMark'],
-        standard_legal: @payload.dig('legal', 'standard') == true
+        standard_legal: @payload.dig('legal', 'standard') == true,
+        image_url: @payload['image']
       }
     end
 

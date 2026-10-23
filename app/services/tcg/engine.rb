@@ -9,7 +9,7 @@ module Tcg
   #   engine.legal_actions(0)                       # what seat 0 may do now
   #   engine.perform(0, 'type' => 'setup', 'active' => uid, 'bench' => [])
   #
-  # Rules covered: setup with mulligans, the turn (draw, Bench, one Energy, evolve, retreat,
+  # Rules covered: setup with mulligans, the turn (draw a card first, Bench, one Energy, evolve, retreat,
   # attack), Weakness and Resistance, Special Conditions with the Pokémon Checkup, Knock Outs
   # and Prize cards, and the three ways to win.
   class Engine
@@ -22,9 +22,10 @@ module Tcg
     PRIZE_CARDS = 6
     BENCH_SIZE = 5
     LOG_LIMIT = 300
-    ACTIONS = %w[setup bench attach evolve retreat attack end_turn promote switch play choose ability concede].freeze
+    ACTIONS = %w[setup draw bench attach evolve retreat attack end_turn promote switch play choose ability concede].freeze
     # The action each kind of pending choice waits for, and what the other player sees meanwhile.
     PENDING = {
+      'draw' => { action: 'draw', waiting: 'Your opponent is drawing a card.', prompt: 'Draw a card first.' },
       'promote' => { action: 'promote', waiting: 'Your opponent is choosing a new Active Pokémon.', prompt: 'Choose your new Active Pokémon.' },
       'switch' => { action: 'switch', waiting: 'Your opponent is choosing which Pokémon to switch in.', prompt: 'Choose which Pokémon to switch in.' },
       'search' => { action: 'choose', waiting: 'Your opponent is searching their deck.', prompt: 'Finish your search first.' }
@@ -299,6 +300,12 @@ module Tcg
       nil
     end
 
+    def check_draw(seat, _action)
+      return 'There is nothing to draw now.' unless pending && pending['type'] == 'draw' && pending['seat'] == seat
+
+      nil
+    end
+
     def check_end_turn(_seat, _action)
       nil
     end
@@ -415,6 +422,15 @@ module Tcg
       after_turn(seat)
     end
 
+    # The draw that starts a turn. The card is remembered so the player's screen can show it.
+    def do_draw(seat, _action)
+      state['pending'] = nil
+      p = player(seat)
+      draw(seat, 1)
+      p['drawn'] = { 'uid' => p['hand'].last, 'turn' => turn_number }
+      say(seat, "Player #{seat + 1} drew a card.")
+    end
+
     def do_end_turn(seat, _action)
       say(seat, "Player #{seat + 1} ended their turn.")
       after_turn(seat)
@@ -477,8 +493,9 @@ module Tcg
         return finish(opponent_of(seat), 'deck_out')
       end
 
-      draw(seat, 1)
-      say(seat, "Player #{seat + 1}'s turn. They drew a card.")
+      # the turn starts with drawing a card (do_draw); nothing else can be done before it
+      state['pending'] = { 'type' => 'draw', 'seat' => seat }
+      say(seat, "Player #{seat + 1}'s turn.")
     end
 
     # Every Pokémon with no HP left is Knocked Out: it and what is attached go to the discard
@@ -570,8 +587,10 @@ module Tcg
       p['hand'].concat(p['deck'].shift(count))
     end
 
+    # Every entry has a running number, n, so a page can tell which entries are new to it.
     def say(seat, text)
-      state['log'] << { 'turn' => turn_number, 'seat' => seat, 'text' => text }
+      state['log_seq'] = state['log_seq'].to_i + 1
+      state['log'] << { 'n' => state['log_seq'], 'turn' => turn_number, 'seat' => seat, 'text' => text }
       state['log'].shift while state['log'].size > LOG_LIMIT
     end
 
@@ -597,6 +616,7 @@ module Tcg
 
     def pending_candidates(seat)
       return [{ 'type' => 'concede' }] unless pending['seat'] == seat
+      return [{ 'type' => 'draw' }, { 'type' => 'concede' }] if pending['type'] == 'draw'
 
       choices = bench(pending['type'] == 'switch' ? pending['side'] : seat).each_index.map { |index| { 'type' => pending['type'], 'index' => index } }
       choices << { 'type' => 'switch', 'skip' => true } if pending['type'] == 'switch' && pending['optional']

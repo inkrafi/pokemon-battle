@@ -10,7 +10,7 @@
 <% else %>
   <details class="choice">
     <summary><%= label %></summary>
-    <%= form_with url: actions_game_path(board.game) do %>
+    <%= form_with url: actions_game_path(board.game), local: false do %>
       <%= hidden_field_tag :version, board.version, id: nil %>
       <% move.each do |name, value| %><%= hidden_field_tag name, value, id: nil %><% end %>
       <% fields.each do |field| %>

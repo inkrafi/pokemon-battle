@@ -7,7 +7,8 @@ class GamesTrainersTest < ActionDispatch::IntegrationTest
     @grass = build_legal_deck(name: 'Grass starter', sample: true)
   end
 
-  # A game against the computer in which seat 0 (the guest) goes first and has placed a Pokémon.
+  # A game against the computer in which seat 0 (the guest) goes first, has placed a Pokémon and
+  # has drawn the card that starts the turn.
   def started_game
     get games_url # makes this browser a guest
     guest = Player.order(:id).last
@@ -15,6 +16,7 @@ class GamesTrainersTest < ActionDispatch::IntegrationTest
     engine = game.engine
     active = engine.player(0)['hand'].find { |uid| engine.card(uid).basic_pokemon? }
     play(game, 'type' => 'setup', 'active' => active)
+    play(game, 'type' => 'draw')
     game.reload
   end
 

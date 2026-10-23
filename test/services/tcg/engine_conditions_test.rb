@@ -7,7 +7,7 @@ class Tcg::EngineConditionsTest < ActiveSupport::TestCase
     engine = start_play(first_player: 1)
     put_in_play(engine, 0, tank, where: :active)
     put_in_play(engine, 1, tank, where: :active)
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
     engine
   end
 
@@ -27,7 +27,7 @@ class Tcg::EngineConditionsTest < ActiveSupport::TestCase
     rigged(engine, heads: false)
     inflict(engine, 1, 'poisoned', 'burned')
 
-    engine.perform(0, 'type' => 'end_turn')
+    end_turn(engine)
 
     assert_equal 20, engine.active(1)['damage']
     assert_equal ['poisoned', 'burned'], engine.active(1)['conditions']
@@ -37,7 +37,7 @@ class Tcg::EngineConditionsTest < ActiveSupport::TestCase
     engine = setup_play
     inflict(engine, 0, 'poisoned')
 
-    engine.perform(0, 'type' => 'end_turn')
+    end_turn(engine)
 
     assert_equal 10, engine.active(0)['damage']
   end
@@ -47,7 +47,7 @@ class Tcg::EngineConditionsTest < ActiveSupport::TestCase
     rigged(engine, heads: true)
     inflict(engine, 1, 'burned', 'asleep')
 
-    engine.perform(0, 'type' => 'end_turn')
+    end_turn(engine)
 
     assert_empty engine.active(1)['conditions']
   end
@@ -57,7 +57,7 @@ class Tcg::EngineConditionsTest < ActiveSupport::TestCase
     rigged(engine, heads: false)
     inflict(engine, 1, 'burned', 'asleep')
 
-    engine.perform(0, 'type' => 'end_turn')
+    end_turn(engine)
 
     assert_equal %w[burned asleep], engine.active(1)['conditions']
   end
@@ -66,10 +66,10 @@ class Tcg::EngineConditionsTest < ActiveSupport::TestCase
     engine = setup_play
     inflict(engine, 1, 'paralyzed')
 
-    engine.perform(0, 'type' => 'end_turn') # the Checkup after the attacker's turn
+    end_turn(engine) # the Checkup after the attacker's turn
     assert_equal ['paralyzed'], engine.active(1)['conditions']
 
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
     assert_empty engine.active(1)['conditions']
   end
 
@@ -109,8 +109,8 @@ class Tcg::EngineConditionsTest < ActiveSupport::TestCase
 
   test "evolving cures every condition" do
     engine = start_play(first_player: 0)
-    engine.perform(0, 'type' => 'end_turn')
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
+    end_turn(engine)
     inflict(engine, 0, 'poisoned', 'confused')
     evolution = give(engine, 0, :bloomling)
 
@@ -148,7 +148,7 @@ class Tcg::EngineConditionsTest < ActiveSupport::TestCase
     inflict(engine, 1, 'poisoned')
     put_in_play(engine, 1, :sprigling)
 
-    engine.perform(0, 'type' => 'end_turn')
+    end_turn(engine)
 
     assert_equal 5, engine.player(0)['prizes'].size
     assert_equal 1, engine.pending['seat']
@@ -156,7 +156,7 @@ class Tcg::EngineConditionsTest < ActiveSupport::TestCase
 
     engine.perform(1, 'type' => 'promote', 'index' => 0)
 
-    assert_nil engine.pending
+    assert_equal({ 'type' => 'draw', 'seat' => 1 }, engine.pending) # their turn starts with a draw
     assert_equal 1, engine.current
   end
 
@@ -178,7 +178,7 @@ class Tcg::EngineConditionsTest < ActiveSupport::TestCase
     engine.perform(0, 'type' => 'promote', 'index' => 0)
 
     assert_equal 1, engine.current
-    assert_nil engine.pending
+    assert_equal({ 'type' => 'draw', 'seat' => 1 }, engine.pending) # their turn starts with a draw
   end
 
   test "Poison can knock out the last Pokémon and win the game" do
@@ -186,7 +186,7 @@ class Tcg::EngineConditionsTest < ActiveSupport::TestCase
     engine.active(1)['damage'] = 195
     inflict(engine, 1, 'poisoned')
 
-    engine.perform(0, 'type' => 'end_turn')
+    end_turn(engine)
 
     assert engine.finished?
     assert_equal 0, engine.winner

@@ -1,0 +1,18 @@
+<%# Notifications and the turn banner. src/game_fx.js plays the log entries that are new to this screen
+    (it remembers the last one per game and seat) and animates what changed on the table. %>
+<div class="game-fx" data-game-fx="game-<%= board.game.id %>-seat-<%= board.viewer.nil? ? 'all' : board.viewer %>"
+     data-fx-viewer="<%= board.viewer %>"<%= ' data-fx-finished' if board.finished? %>>
+  <ol class="game-fx__feed" hidden>
+    <% board.feed.each do |entry| %>
+      <li data-n="<%= entry['n'] %>" data-kind="<%= entry['kind'] %>" data-seat="<%= entry['seat'] %>" data-turn="<%= entry['turn'] %>"
+          <% if entry['kind'] == 'turn' %>data-title="<%= board.turn_title(entry['seat']) %>"<% end %>
+          <% if entry['kind'] == 'win' %>data-title="<%= board.viewer.nil? ? "#{board.seat_name(entry['seat'])} wins" : (entry['seat'] == board.viewer ? 'Victory!' : 'Defeat') %>"<% end %>><%= entry['text'] %></li>
+    <% end %>
+  </ol>
+  <div class="toasts" role="status" aria-live="polite"></div>
+  <div class="sound-controls" role="group" aria-label="Sound">
+    <button type="button" class="sound-toggle" data-sound-toggle="sound" aria-pressed="true" title="Sound effects">🔊<span class="visually-hidden">Sound effects</span></button>
+    <button type="button" class="sound-toggle" data-sound-toggle="music" aria-pressed="true" title="Music">🎵<span class="visually-hidden">Music</span></button>
+  </div>
+  <div class="turn-banner" aria-hidden="true"><span class="turn-banner__title"></span><span class="turn-banner__sub"></span></div>
+</div>

@@ -56,6 +56,19 @@ class GameBoard
 
   def pending_type = engine.pending && engine.pending['type']
 
+  # The start of the viewer's turn: a card has to be drawn before anything else.
+  def drawing?
+    my_move? && pending_type == 'draw'
+  end
+
+  # The uid of the card the viewer drew at the start of this turn, while it is still in their hand.
+  def drawn_uid
+    drawn = viewer && engine.player(viewer)['drawn']
+    return nil unless drawn && drawn['turn'] == turn_number && engine.player(viewer)['hand'].include?(drawn['uid'])
+
+    drawn['uid']
+  end
+
   # Choosing a new Active Pokémon after a Knock Out.
   def promoting?
     my_move? && pending_type == 'promote'
@@ -105,6 +118,8 @@ class GameBoard
   def why_seat_acts
     if setup?
       'places their Pokémon.'
+    elsif pending_type == 'draw'
+      "starts turn #{engine.turn_number} by drawing a card."
     elsif pending_type == 'promote'
       'chooses a new Active Pokémon.'
     elsif pending_type == 'switch'
@@ -118,6 +133,29 @@ class GameBoard
 
   def log(count = 14)
     engine.log.last(count).reverse
+  end
+
+  # What kind of event a log entry is, for the notifications on the page (games/_fx).
+  LOG_KINDS = [
+    [:win, / wins\.\z/], [:turn, /'s turn\.\z/], [:knockout, /Knocked Out|no Pokémon left/], [:prize, /took \d+ Prize/],
+    [:coin, /flipped a coin/], [:attack, / used /], [:damage, /took \d+ damage|hurt itself/], [:heal, /healed/],
+    [:condition, /is now (Poisoned|Burned|Asleep|Confused|Paralyzed)/], [:evolve, /evolved/],
+    [:draw, /drew|searched their deck/], [:trainer, /played /], [:energy, /attached|Energy/],
+    [:bench, /on the Bench|is now Active|new Active/], [:end, /ended their turn/]
+  ].freeze
+
+  # The latest log entries, oldest first, with their kind. Entries from before log entries were
+  # numbered have no n and are left out.
+  def feed(count = 30)
+    engine.log.last(count).select { |entry| entry['n'] }.map do |entry|
+      kind = LOG_KINDS.find { |_, pattern| entry['text'].match?(pattern) }&.first || :info
+      entry.merge('kind' => kind.to_s)
+    end
+  end
+
+  # The title of a turn banner for a seat: "Your turn" on the viewer's own screen.
+  def turn_title(seat)
+    seat == viewer ? 'Your turn' : "#{seat_name(seat)}'s turn"
   end
 
   # ---------------------------------------------------------------- zones

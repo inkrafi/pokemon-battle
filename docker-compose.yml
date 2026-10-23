@@ -3,6 +3,10 @@
 #
 # Ruby changes in app/models, app/controllers and config need `docker compose restart web`
 # (file events don't cross the Windows bind mount). Views and JavaScript update on refresh.
+#
+# Tests (in the pokemon_test database, created on the first run):
+#   docker compose exec -e RAILS_ENV=test web bundle exec rails db:prepare
+#   docker compose exec -e RAILS_ENV=test web bundle exec rails test
 services:
   db:
     image: postgres:15
@@ -43,7 +47,9 @@ services:
       && bundle exec rails server -b 0.0.0.0 -p 3000"
     environment:
       RAILS_ENV: development
-      DATABASE_URL: postgres://postgres:postgres@db:5432/pokemon_development
+      # only the host: config/database.yml names the database for each environment (a DATABASE_URL
+      # here would also point the tests at the development database)
+      DB_HOST: db
       WEBPACKER_COMPILE: "false"
     ports:
       - "${WEB_PORT:-3000}:3000"

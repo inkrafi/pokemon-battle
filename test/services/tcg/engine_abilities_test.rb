@@ -14,8 +14,8 @@ class Tcg::EngineAbilitiesTest < ActiveSupport::TestCase
     engine = start_play(first_player: 0)
     put_in_play(engine, 0, mine, where: :active)
     put_in_play(engine, 1, theirs, where: :active) if theirs
-    engine.perform(0, 'type' => 'end_turn')
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
+    end_turn(engine)
     engine
   end
 
@@ -96,8 +96,8 @@ class Tcg::EngineAbilitiesTest < ActiveSupport::TestCase
     assert_equal hand + 2, engine.player(0)['hand'].size
     assert_match(/already used Run Errand/, engine.error_for(0, 'type' => 'ability', 'slot' => 'active', 'index' => 0))
 
-    engine.perform(0, 'type' => 'end_turn')
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
+    end_turn(engine)
     assert_nil engine.error_for(0, 'type' => 'ability', 'slot' => 'active', 'index' => 0)
   end
 
@@ -141,8 +141,8 @@ class Tcg::EngineAbilitiesTest < ActiveSupport::TestCase
     smart = make_card(name: 'Smartling', hp: 100, subtype: 'stage1', evolves_from: 'Sprigling', attacks: [attack],
                       abilities: [ability('Quick Study', 'on_evolve', { 'op' => 'draw', 'count' => 2 })])
     engine = start_play(first_player: 0)
-    engine.perform(0, 'type' => 'end_turn')
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
+    end_turn(engine)
     uid = give(engine, 0, smart)
     hand = engine.player(0)['hand'].size
 
@@ -155,8 +155,8 @@ class Tcg::EngineAbilitiesTest < ActiveSupport::TestCase
     smart = make_card(name: 'Daze', hp: 100, subtype: 'stage1', evolves_from: 'Sprigling', attacks: [attack],
                       abilities: [ability('Daze Them', 'on_evolve', { 'op' => 'inflict', 'condition' => 'confused' })])
     engine = start_play(first_player: 0)
-    engine.perform(0, 'type' => 'end_turn')
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
+    end_turn(engine)
 
     engine.perform(0, 'type' => 'evolve', 'card' => give(engine, 0, smart), 'target' => 'active')
 

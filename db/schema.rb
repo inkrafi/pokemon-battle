@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_24_100000) do
+ActiveRecord::Schema[7.1].define(version: 2026_10_25_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,6 +50,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_24_100000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "effects", default: [], null: false
+    t.string "image_url"
     t.index ["card_set_id"], name: "index_cards_on_card_set_id"
     t.index ["name"], name: "index_cards_on_name"
     t.index ["playable"], name: "index_cards_on_playable"

@@ -4,8 +4,8 @@ class Tcg::EngineTrainersTest < ActiveSupport::TestCase
   # Seat 0 is to move in turn 3: both players have had a turn, so first-turn rules are over.
   def play_state
     engine = start_play(first_player: 0)
-    engine.perform(0, 'type' => 'end_turn')
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
+    end_turn(engine)
     engine
   end
 
@@ -63,15 +63,15 @@ class Tcg::EngineTrainersTest < ActiveSupport::TestCase
     play!(engine, one)
     assert_match(/already played a Supporter/, error(engine, two))
 
-    engine.perform(0, 'type' => 'end_turn')
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
+    end_turn(engine)
     assert_nil error(engine, two)
   end
 
   test "the second player may play a Supporter in their first turn" do
     boss = make_trainer('Order', 'supporter', { 'op' => 'shuffle_hand_draw', 'count' => 1, 'if_prizes' => 0, 'else_count' => 1 })
     engine = start_play(first_player: 1)
-    engine.perform(1, 'type' => 'end_turn')
+    end_turn(engine)
     uid = give(engine, 0, boss)
 
     assert_nil error(engine, uid)
@@ -316,7 +316,7 @@ class Tcg::EngineTrainersTest < ActiveSupport::TestCase
     put_in_play(engine, 1, make_card(name: 'Hitter', hp: 100, attacks: [attack(cost: [], damage: 50)]), where: :active)
     uid = give(engine, 0, shield)
     play!(engine, uid)
-    engine.perform(0, 'type' => 'end_turn')
+    end_turn(engine)
 
     engine.perform(1, 'type' => 'attack', 'index' => 0)
 
@@ -329,7 +329,7 @@ class Tcg::EngineTrainersTest < ActiveSupport::TestCase
     put_in_play(engine, 1, make_card(name: 'Bully ex', hp: 200, prize_value: 2, attacks: [attack(cost: [], damage: 50)]), where: :active)
     uid = give(engine, 0, charm)
     play!(engine, uid, 'target' => 'active')
-    engine.perform(0, 'type' => 'end_turn')
+    end_turn(engine)
 
     engine.perform(1, 'type' => 'attack', 'index' => 0)
 
@@ -403,7 +403,7 @@ class Tcg::EngineTrainersTest < ActiveSupport::TestCase
     put_in_play(engine, 0, tank, where: :active)
     put_in_play(engine, 1, make_card(name: 'Hitter', hp: 100, attacks: [attack(cost: [], damage: 50)]), where: :active)
     engine.player(0)['active']['tool'] = give(engine, 0, helmet, zone: 'discard').tap { |tool| engine.player(0)['discard'].delete(tool) }
-    engine.perform(0, 'type' => 'end_turn')
+    end_turn(engine)
 
     engine.perform(1, 'type' => 'attack', 'index' => 0)
 
@@ -417,7 +417,7 @@ class Tcg::EngineTrainersTest < ActiveSupport::TestCase
     hitter = make_card(name: 'Talker', hp: 100, attacks: [attack(cost: [], damage: 50)], abilities: [{ 'name' => 'Chat', 'kind' => 'Ability' }])
     put_in_play(engine, 1, hitter, where: :active)
     play!(engine, give(engine, 0, charm), 'target' => 'active')
-    engine.perform(0, 'type' => 'end_turn')
+    end_turn(engine)
 
     engine.perform(1, 'type' => 'attack', 'index' => 0)
 
@@ -435,7 +435,7 @@ class Tcg::EngineTrainersTest < ActiveSupport::TestCase
 
     assert_equal first, engine.state['stadium']['uid']
     assert_match(/already played a Stadium/, error(engine, give(engine, 0, other)))
-    assert_match(/Garden is already in play/, (engine.perform(0, 'type' => 'end_turn'); engine.perform(1, 'type' => 'end_turn'); error(engine, give(engine, 0, garden))))
+    assert_match(/Garden is already in play/, (end_turn(engine); end_turn(engine); error(engine, give(engine, 0, garden))))
 
     play!(engine, give(engine, 0, other))
     assert_includes engine.player(0)['discard'], first

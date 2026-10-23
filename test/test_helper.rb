@@ -1,6 +1,11 @@
 ENV['RAILS_ENV'] ||= 'test'
 require_relative "../config/environment"
 require "rails/test_help"
+
+# Fixtures replace whole tables, so never run against anything but a test database.
+test_database = ActiveRecord::Base.connection_db_config.database.to_s
+abort "Refusing to run the tests against #{test_database.inspect}: it is not a test database." unless test_database.match?(/_test(-\d+)?\z/)
+
 require_relative "support/tcg_helpers"
 
 class ActiveSupport::TestCase
@@ -22,5 +27,11 @@ class ActiveSupport::TestCase
       deck.deck_cards.create!(card: cards(fixture), quantity: quantity)
     end
     deck
+  end
+
+  # Draws the card that starts the turn of a game's current player, when one is due.
+  def draw_for(game)
+    engine = game.reload.engine
+    game.perform!(engine.pending['seat'], 'type' => 'draw') if engine.pending && engine.pending['type'] == 'draw'
   end
 end

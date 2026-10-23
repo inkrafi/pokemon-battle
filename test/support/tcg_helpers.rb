@@ -29,15 +29,28 @@ module TcgHelpers
     engine.player(seat)[zone].find { |uid| engine.state['cards'][uid] == card_id }
   end
 
-  # Both players place a Basic Pokemon in the Active Spot and the game begins.
-  # +actives+ names the fixture each seat puts forward.
+  # Both players place a Basic Pokemon in the Active Spot and the game begins: the first player
+  # has drawn the card that starts their turn. +actives+ names the fixture each seat puts forward.
   def start_play(first_player: 0, actives: %i[sprigling sprigling], **options)
     engine = start_game(first_player: first_player, **options)
     2.times do |seat|
       uid = uid_of(engine, seat, actives[seat]) || give(engine, seat, actives[seat])
       engine.perform(seat, 'type' => 'setup', 'active' => uid, 'bench' => [])
     end
+    draw_for_turn(engine)
+  end
+
+  # Draws the card that starts a turn, when one is due. Returns the engine.
+  def draw_for_turn(engine)
+    engine.perform(engine.pending['seat'], 'type' => 'draw') if engine.pending && engine.pending['type'] == 'draw'
     engine
+  end
+
+  # Ends the turn of whoever is playing (drawing first if they haven't) and draws for the next player.
+  def end_turn(engine)
+    draw_for_turn(engine)
+    engine.perform(engine.current, 'type' => 'end_turn')
+    draw_for_turn(engine)
   end
 
   # Puts a Pokemon straight into play: 'active' replaces the Active Pokemon (which goes to the
@@ -60,9 +73,9 @@ module TcgHelpers
     count.times { slot['energy'] << give(engine, 0, fixture, zone: 'discard').tap { |uid| engine.player(0)['discard'].delete(uid) } }
   end
 
-  # Passes the turn back and forth until it is +seat+'s turn again, +turns+ turns later.
+  # Passes the turn back and forth +turns+ times; each new turn has drawn its card.
   def pass_turns(engine, turns)
-    turns.times { engine.perform(engine.current, 'type' => 'end_turn') }
+    turns.times { end_turn(engine) }
   end
 
   # A card made on the spot, for rules that need an unusual card.

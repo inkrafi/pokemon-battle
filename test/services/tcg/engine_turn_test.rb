@@ -12,14 +12,26 @@ class Tcg::EngineTurnTest < ActiveSupport::TestCase
     assert_raises(Tcg::IllegalAction) { @engine.perform(1, 'type' => 'bench', 'card' => give(@engine, 1, :sprigling)) }
   end
 
-  test "ending the turn passes it on and the next player draws" do
+  test "ending the turn passes it on and the next player has to draw a card first" do
     before = @engine.player(1)['hand'].size
+    deck = @engine.player(1)['deck'].size
 
     @engine.perform(0, 'type' => 'end_turn')
 
     assert_equal 1, @engine.current
     assert_equal 2, @engine.turn_number
+    assert_equal before, @engine.player(1)['hand'].size
+    assert_equal [{ 'type' => 'draw' }, { 'type' => 'concede' }], @engine.legal_actions(1)
+    assert_equal 'Draw a card first.', @engine.error_for(1, 'type' => 'end_turn')
+    assert_equal 'Your opponent is drawing a card.', @engine.error_for(0, 'type' => 'end_turn')
+
+    @engine.perform(1, 'type' => 'draw')
+
     assert_equal before + 1, @engine.player(1)['hand'].size
+    assert_equal deck - 1, @engine.player(1)['deck'].size
+    assert_equal({ 'uid' => @engine.player(1)['hand'].last, 'turn' => 2 }, @engine.player(1)['drawn'])
+    assert_nil @engine.pending
+    assert_equal 'There is nothing to draw now.', @engine.error_for(1, 'type' => 'draw')
   end
 
   test "a player who can't draw at the start of their turn loses" do
@@ -100,7 +112,7 @@ class Tcg::EngineTurnTest < ActiveSupport::TestCase
     evolution = uid_of(@engine, 0, :bloomling)
 
     assert_match(/first turn/, @engine.error_for(0, 'type' => 'evolve', 'card' => evolution, 'target' => 'active'))
-    @engine.perform(0, 'type' => 'end_turn')
+    end_turn(@engine)
     assert_match(/first turn/, @engine.error_for(1, 'type' => 'evolve', 'card' => give(@engine, 1, :bloomling), 'target' => 'active'))
   end
 

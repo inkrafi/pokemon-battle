@@ -169,12 +169,32 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
 
     assert_select '.mat--theirs .hand-card', 0
     assert_select '.mat--theirs .mat__counts', /Hand/
-    assert_select '.hand-card', game.reload.engine.player(0)['hand'].size
+    assert_select '.hand-card:not(.hand-card--deck)', game.reload.engine.player(0)['hand'].size
+  end
+
+  test "a turn starts with drawing a card, which is then marked in the hand" do
+    game = start_game_with_first_player(0)
+    place_first_basic(game)
+    hand = game.reload.engine.player(0)['hand'].size
+
+    get game_url(game)
+    assert_select '.hand-card--deck .deck-pile'
+    assert_select '.controls', /Draw a card from your deck first/
+    assert_select '.hand-card.is-new', 0
+
+    play(game, 'type' => 'draw')
+    get game_url(game)
+
+    assert_nil flash[:danger]
+    assert_equal hand + 1, game.reload.engine.player(0)['hand'].size
+    assert_select '.hand-card--deck', 0
+    assert_select '.hand-card.is-new[data-just-drawn=?]', "game-#{game.id}-turn-1", 1
   end
 
   test "moves the rules don't allow are refused with the reason" do
     game = start_game_with_first_player(0)
     place_first_basic(game)
+    play(game, 'type' => 'draw')
 
     play(game, 'type' => 'attack', 'index' => 0)
 
@@ -185,6 +205,7 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
   test "a move that isn't a move is refused too" do
     game = start_game_with_first_player(0)
     place_first_basic(game)
+    play(game, 'type' => 'draw')
 
     play(game, 'type' => 'dance')
     assert_match(/Unknown action/, flash[:danger])
@@ -193,12 +214,33 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
     assert_match(/not in your hand/, flash[:danger])
   end
 
+  test "a move sent in the background is answered with a Turbolinks visit of the board" do
+    game = start_game_with_first_player(0)
+    place_first_basic(game)
+
+    post actions_game_url(game), params: { type: 'draw', version: game.reload.version }, xhr: true
+
+    assert_match(/Turbolinks\.visit\("#{Regexp.escape(game_url(game))}", \{"action":"replace"\}\)/, response.body)
+    assert_nil game.reload.engine.pending
+  end
+
+  test "the buttons of the board send their moves in the background" do
+    game = start_game_with_first_player(0)
+    place_first_basic(game)
+
+    get game_url(game)
+
+    assert_select 'form[data-remote=true] button.deck-pile'
+    assert_select '.sound-controls [data-sound-toggle=music]'
+    assert_select '[data-fx-deck="0"]'
+  end
+
   test "a page that is out of date can't make a move" do
     game = start_game
     place_first_basic(game)
     stale = game.reload.version
     travel 1.second do
-      play(game, 'type' => 'end_turn')
+      play(game, 'type' => 'draw')
     end
 
     post actions_game_url(game), params: { type: 'end_turn', version: stale }
@@ -313,6 +355,7 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
     assert_select '.hand__cards'
     assert_select '.controls', /Your move/
 
+    play(game, 'type' => 'draw')
     play(game, 'type' => 'end_turn')
     get game_url(game)
 
